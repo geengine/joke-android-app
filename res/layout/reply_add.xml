@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="47dp"
+    android:layout_alignParentBottom="true"
+    android:layout_gravity="bottom"
+    
+    android:paddingTop="6dp"
+    android:paddingBottom="4dp"
+    android:background="@drawable/reply_add_bg" >
+
+    <ImageButton
+        android:id="@+id/btn_submit"
+        style="@style/btn"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_marginRight="5dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:background="@color/btn_bg"
+        android:contentDescription="@null"
+        android:src="@drawable/icon_save" />
+
+    <EditText
+        android:id="@+id/etxt_reply"
+        style="@style/edit_text"
+        android:inputType="text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginLeft="5dp"
+        android:layout_centerVertical="true"
+        android:layout_toLeftOf="@id/btn_submit"
+        android:hint="@string/hint_replay_text"
+        android:maxLength="500"
+        android:maxLines="3"
+        android:scrollHorizontally="true" />
+
+</RelativeLayout>

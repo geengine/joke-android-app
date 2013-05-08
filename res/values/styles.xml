@@ -1,0 +1,99 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="AppBaseTheme" parent="android:Theme.Black.NoTitleBar"></style>
+
+    <!-- Application theme. -->
+    <style name="AppTheme" parent="AppBaseTheme">
+        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    </style>
+
+    <style name="custom_window_title_background">
+        <item name="android:background">@drawable/title</item>
+    </style>
+
+    <style name="custom_title">
+        <item name="android:windowTitleSize">36dp</item>
+        <item name="android:windowTitleBackgroundStyle">@style/custom_window_title_background</item>
+    </style>
+
+    <style name="titlebar">
+        <item name="android:background">@drawable/title_bg</item>
+    </style>
+    <style name="Spinner">
+        <item name="android:indeterminate">true</item>
+        <item name="android:indeterminateDrawable">@drawable/loadingbar</item>
+        <item name="android:indeterminateDuration">2000</item>
+        <item name="android:indeterminateOnly">true</item>
+    </style>
+    <style name="ListSpinner" parent="Spinner">
+        <item name="android:layout_width">64dp</item>
+        <item name="android:layout_height">64dp</item>
+    </style>
+
+    <style name="titlebar_text">
+        <item name="android:textColor">@color/titlebar_txt_color</item>
+        <item name="android:paddingLeft">5dp</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
+    <style name="txt_joke_title">
+        <item name="android:textColor">@color/text_joke_title</item>
+        <item name="android:background">@color/bg_default</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:textSize">16sp</item>
+    </style>
+
+    <style name="txt_joke_content">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/bg_default</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="base_titlebar_icon">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingRight">5dp</item>
+    </style>
+
+    <style name="titlebar_icon" parent="base_titlebar_icon">
+        <item name="android:paddingLeft">3dp</item>
+    </style>
+
+    <style name="titlebar_app_icon" parent="base_titlebar_icon">
+        <item name="android:paddingLeft">10dp</item>
+    </style>
+
+    <style name="textview">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textSize">14sp</item>
+    </style>
+
+    <style name="btn">
+        <item name="android:paddingTop">5dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingLeft">7dp</item>
+        <item name="android:paddingRight">7dp</item>
+    </style>
+
+    <style name="edit_text">
+        <item name="android:textColor">@color/text</item>
+        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:padding">6dp</item>
+        <item name="android:background">@drawable/edit_text_background</item>
+    </style>
+
+    <style name="joke_operate">
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@color/bg_default</item>
+    </style>
+
+    <style name="joke_operate_btn">
+        <item name="android:background">@drawable/joke_operate_btn_background</item>
+        <item name="android:padding">5dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:text">@string/def_num</item>
+    </style>
+
+</resources>

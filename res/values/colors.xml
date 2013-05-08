@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="titlebar_bg_start">#6ea841</color>
+    <color name="titlebar_bg_end">#65a435</color>
+    <color name="titlebar_bg_top">#7fb654</color>
+    <color name="titlebar_bg_bottom">#4f8f1d</color>
+    <color name="titlebar_txt_color">#f0f0f0</color>
+    <color name="titlebar_icon_bg_default">#6ea841</color>
+    <color name="titlebar_icon_bg_pressed">#387905</color>
+    <color name="bg_default">#ffffff</color>
+    <color name="bg_gray">#d9d9d9</color>
+    <color name="btn_bg_default">#ffffff</color>
+    <color name="btn_bg_pressed">#ffffff</color>
+    <color name="background">#ffffff</color>
+    <color name="refresh_bg_top">#f0f0f0</color>
+    <color name="refresh_bg_bottom">#cccccc</color>
+    <color name="refresh_bg_start">#f0f0f0</color>
+    <color name="refresh_bg_end">#cccccc</color>
+    <!-- TextView  -->
+    <color name="text_joke_title">#4b4b4b</color>
+    <color name="text_joke_content">#5d5d5d</color>
+    <color name="text">#1E1E1E</color>
+    <color name="text_light">#AEAEAE</color>
+    <color name="text_icon">#A8A8A8</color>
+    <color name="text_recent">#3797C7</color>
+    <!-- joke title bg -->
+    <color name="joke_title_top">#fbf7f8</color>
+    <color name="joke_title_bottom">#f0f0f0</color>
+    <color name="joke_title_bg_start">#fbf7f8</color>
+    <color name="joke_title_bg_end">#f0f0f0</color>
+    <!-- EditText -->
+    <color name="edit_text_background">#F8F8F8</color>
+    <color name="edit_text_inner">#EDEDED</color>
+    <color name="edit_text_outer">#959595</color>
+    <color name="edit_text_cursor">#A6A6A6</color>
+
+</resources>

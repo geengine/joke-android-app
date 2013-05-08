@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+    
+ <item>
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/refresh_bg_bottom" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/refresh_bg_top" />
+        </shape>
+    </item>
+    <item
+        android:bottom="1dp"
+        android:top="1dp">
+        <shape>
+            <gradient
+                android:angle="270"
+                android:endColor="@color/refresh_bg_end"
+                android:startColor="@color/refresh_bg_start" />
+        </shape>
+    </item>
+</layer-list>

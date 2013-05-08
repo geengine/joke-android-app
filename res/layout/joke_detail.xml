@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_default"
+    android:orientation="vertical" >
+
+    <include layout="@layout/title_bar_with_back" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/titlebar"
+        android:scrollbars="none" >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/txt_jokeContent"
+                style="@style/txt_joke_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textIsSelectable="false" />
+
+            <ImageView
+                android:id="@+id/img_jokeImage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:contentDescription="@null" />
+
+            <include layout="@layout/joke_operate" />
+
+            <TextView
+                android:id="@+id/txt_noReply"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="@string/no_reply"
+                android:textColor="#aacccc"
+                android:textSize="20sp"
+                android:visibility="gone" />
+
+            <ListView
+                android:id="@+id/lv_replyList"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="50dp"
+                android:divider="@color/bg_default"
+                android:dividerHeight="5dp"
+                android:scrollbars="none"
+                android:cacheColorHint="@null" >
+            </ListView>
+        </LinearLayout>
+    </ScrollView>
+
+    <include layout="@layout/reply_add" />
+
+</RelativeLayout>
