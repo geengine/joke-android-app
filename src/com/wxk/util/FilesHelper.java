@@ -1,4 +1,4 @@
-package com.wxk.tools;
+package com.wxk.util;
 
 import java.io.BufferedOutputStream;
 import java.io.ByteArrayOutputStream;

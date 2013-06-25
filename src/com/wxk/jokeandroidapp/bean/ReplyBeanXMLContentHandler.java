@@ -1,4 +1,4 @@
-package com.wxk.tools;
+package com.wxk.jokeandroidapp.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,14 +9,14 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class ReplyListXMLContentHandler extends DefaultHandler {
+public class ReplyBeanXMLContentHandler extends DefaultHandler {
 
 	private String tagName="";
 	private StringBuffer replyContent=new StringBuffer();
 	private String replyTime="";
 	private List<Map<String,String>> replyList=null;
 	
-	public ReplyListXMLContentHandler(List<Map<String,String>> arrReplyList){
+	public ReplyBeanXMLContentHandler(List<Map<String,String>> arrReplyList){
 		replyList=arrReplyList;
 	}
 	@Override

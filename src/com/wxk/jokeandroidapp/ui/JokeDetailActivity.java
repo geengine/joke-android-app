@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp;
+package com.wxk.jokeandroidapp.ui;
 
 import java.io.StringReader;
 import java.net.URLEncoder;
@@ -13,34 +13,28 @@ import org.xml.sax.XMLReader;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.Window;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.wxk.tools.AsyncImageLoader;
-import com.wxk.tools.AsyncImageLoader.ImageCallback;
-import com.wxk.tools.Common;
-import com.wxk.tools.DownLoadHelper;
-import com.wxk.tools.ReplyListXMLContentHandler;
+import com.wxk.jokeandroidapp.bean.ReplyBeanXMLContentHandler;
+import com.wxk.util.AsyncImageLoader;
+import com.wxk.util.Common;
+import com.wxk.util.DownLoadHelper;
+import com.wxk.util.AsyncImageLoader.ImageCallback;
 
-public class JokeDetailActivity extends Activity {
+public class JokeDetailActivity extends BaseActivity {
 
 	private ImageButton btn_return = null;
 	private ImageButton btn_submit = null;
@@ -78,7 +72,7 @@ public class JokeDetailActivity extends Activity {
 			txt_jokecontent.setVisibility(View.GONE);
 		}
 
-		// ÉèÖÃ¶¥²ÈµÄÊý¾ÝºÍ°´Å¥ÊÂ¼þ
+		// ï¿½ï¿½ï¿½Ã¶ï¿½ï¿½Èµï¿½ï¿½ï¿½ÝºÍ°ï¿½Å¥ï¿½Â¼ï¿½
 		btn_good = (Button) findViewById(R.id.btn_good);
 		btn_good.setOnClickListener(new ButtonGoodOnCLickListener());
 		btn_bad = (Button) findViewById(R.id.btn_bad);
@@ -87,16 +81,16 @@ public class JokeDetailActivity extends Activity {
 		btn_bad.setText(intent.getStringExtra("haoleng"));
 
 		btn_return = (ImageButton) findViewById(R.id.titlebar_app_icon);
-		// btn_return.setText("<<·µ»Ø");
-		// ¸ø·µ»Ø°´Å¥Ìí¼Ó¼àÌýÊÂ¼þ
+		// btn_return.setText("<<ï¿½ï¿½ï¿½ï¿½");
+		// ï¿½ï¿½Ø°ï¿½Å¥ï¿½ï¿½Ó¼ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 		btn_return.setOnClickListener(new ButtonReturnOnClickListener());
-		// Ìá½»°´Å¥
+		// ï¿½á½»ï¿½ï¿½Å¥
 		btn_submit = (ImageButton) findViewById(R.id.btn_submit);
-		// Ìá½»°´Å¥ÕìÌýÊÂ¼þ
+		// ï¿½á½»ï¿½ï¿½Å¥ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½
 		btn_submit.setOnClickListener(new ButtonSubmitOnClickListener());
-		// ÆÀÂÛ¿ò
+		// ï¿½ï¿½ï¿½Û¿ï¿½
 		et_replyContent = (EditText) findViewById(R.id.etxt_reply);
-		// ¼ÓÔØÍ¼Æ¬
+		// ï¿½ï¿½ï¿½ï¿½Í¼Æ¬
 		if (jokeImg != "") {
 			String imgUrl = jokeImg;
 			LoadImg(imgUrl, imgView);
@@ -109,7 +103,7 @@ public class JokeDetailActivity extends Activity {
 		titleProgressBar.setVisibility(View.GONE);
 	}
 
-	// »Ø¸´°´Å¥ÊÂ¼þ
+	// ï¿½Ø¸ï¿½ï¿½ï¿½Å¥ï¿½Â¼ï¿½
 	class ButtonSubmitOnClickListener implements OnClickListener {
 
 		@Override
@@ -117,7 +111,7 @@ public class JokeDetailActivity extends Activity {
 			// TODO Auto-generated method stub
 			repContent = et_replyContent.getText().toString();
 			if (repContent.equals("")) {
-				Common.ShowDialog("ÆÀÂÛÄÚÈÝ²»ÄÜÎª¿Õ£¡");
+				Common.ShowDialog("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý²ï¿½ï¿½ï¿½Îªï¿½Õ£ï¿½");
 			} else {
 				doReply();
 			}
@@ -206,7 +200,7 @@ public class JokeDetailActivity extends Activity {
 							XMLReader reader = factory.newSAXParser()
 									.getXMLReader();
 							replyList = new ArrayList<Map<String, String>>();
-							reader.setContentHandler(new ReplyListXMLContentHandler(
+							reader.setContentHandler(new ReplyBeanXMLContentHandler(
 									replyList));
 							reader.parse(new InputSource(new StringReader(res)));
 							GetReplyListHandler.sendEmptyMessage(1);
@@ -306,17 +300,17 @@ public class JokeDetailActivity extends Activity {
 				setListViewHeightBasedOnChildren(listReply);
 				break;
 			case 2:
-				Common.ShowDialog("ÓÉÓÚÍøÂçÎÊÌâÎ´ÄÜ¼ÓÔØ³öÀ´ÆÀÂÛÄÚÈÝ£¡");
+				Common.ShowDialog("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î´ï¿½Ü¼ï¿½ï¿½Ø³ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý£ï¿½");
 				break;
 			}
 		}
 	};
 
 	/**
-	 * ÖØÐÂÉèÖÃlistviewµÄ¸ß¶È
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½listviewï¿½Ä¸ß¶ï¿½
 	 * 
 	 * @param listView
-	 *            Ä¿±êlistview
+	 *            Ä¿ï¿½ï¿½listview
 	 */
 	public static void setListViewHeightBasedOnChildren(ListView listView) {
 		ListAdapter listAdapter = listView.getAdapter();
@@ -344,17 +338,17 @@ public class JokeDetailActivity extends Activity {
 			int res = msg.what;
 			switch (res) {
 			case 0:
-				Common.ShowDialog("ÆÀÂÛ³É¹¦£¡¸ÐÐ»ÄúµÄÖ§³Ö!\nÇë¼ÌÐø¹Ø×¢52ÀäÐ¦»°£¡");
+				Common.ShowDialog("ï¿½ï¿½ï¿½Û³É¹ï¿½ï¿½ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½Ö§ï¿½ï¿½!\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½×¢52ï¿½ï¿½Ð¦ï¿½ï¿½ï¿½ï¿½");
 				et_replyContent.setText("");
 				loadReplyList();
 				break;
 			case 1:
-				Common.ShowDialog("ÆÀÂÛ³É¹¦£¡\nÓÉÓÚÆÀÂÛÄÚÈÝÖÐº¬ÓÐÃô¸Ð´Ê£¬ÐèÒª¹ÜÀíÔ±ÉóºËÖ®ºó²ÅÄÜÏÔÊ¾£¡");
+				Common.ShowDialog("ï¿½ï¿½ï¿½Û³É¹ï¿½ï¿½ï¿½\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ðºï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ð´Ê£ï¿½ï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½Ô±ï¿½ï¿½ï¿½Ö®ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½");
 				et_replyContent.setText("");
 				loadReplyList();
 				break;
 			case 2:
-				Common.ShowDialog("ÏµÍ³Òì³££¬ÇëÖØÊÔ£¡");
+				Common.ShowDialog("ÏµÍ³ï¿½ì³£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ô£ï¿½");
 				break;
 			}
 			isReplying = false;

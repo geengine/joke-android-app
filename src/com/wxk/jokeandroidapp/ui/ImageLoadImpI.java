@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp;
+package com.wxk.jokeandroidapp.ui;
 
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
@@ -8,14 +8,15 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.wxk.tools.AsyncImageLoader.ImageCallback;
-import com.wxk.tools.Common;
-import com.wxk.tools.FilesHelper;
+import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.util.Common;
+import com.wxk.util.FilesHelper;
+import com.wxk.util.AsyncImageLoader.ImageCallback;
 
 public class ImageLoadImpI implements ImageCallback {
 
 	private ImageView imgView;
-	private int showWidth=MApplication.dWidth-20;
+	private int showWidth=AppContext.dWidth-20;
 
 	public ImageLoadImpI(ImageView img) {
 		super();

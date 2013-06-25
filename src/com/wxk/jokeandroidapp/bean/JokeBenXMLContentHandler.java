@@ -1,4 +1,4 @@
-package com.wxk.tools;
+package com.wxk.jokeandroidapp.bean;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
-public class JokeListXMLContentHandler extends DefaultHandler {
+public class JokeBenXMLContentHandler extends DefaultHandler {
 	
 	private String tagName;
 	private String jokeID;
@@ -23,7 +23,7 @@ public class JokeListXMLContentHandler extends DefaultHandler {
 	private String haoleng;
 	private List<Map<String,String>> jokeList=null;
 	
-	public JokeListXMLContentHandler(List<Map<String,String>> arrJokeList){
+	public JokeBenXMLContentHandler(List<Map<String,String>> arrJokeList){
 		jokeList=arrJokeList;
 	}
 	@Override
