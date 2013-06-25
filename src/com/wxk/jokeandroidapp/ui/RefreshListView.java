@@ -1,7 +1,12 @@
-package com.wxk.jokeandroidapp;
+package com.wxk.jokeandroidapp.ui;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.R.id;
+import com.wxk.jokeandroidapp.R.layout;
+import com.wxk.jokeandroidapp.R.string;
 
 import android.content.Context;
 import android.os.Handler;

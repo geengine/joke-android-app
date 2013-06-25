@@ -1,4 +1,4 @@
-package com.wxk.tools;
+package com.wxk.util;
 
 import java.lang.ref.SoftReference;
 import java.net.URL;
@@ -10,7 +10,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.widget.Toast;
 
-import com.wxk.jokeandroidapp.MApplication;
+import com.wxk.jokeandroidapp.AppContext;
 
 public class AsyncImageLoader {
 
@@ -27,8 +27,8 @@ public class AsyncImageLoader {
 			}
 		};
 		// ≈–∂œÕº∆¨ «∑Ò‘⁄ª∫¥Ê÷–
-		if (MApplication.imgCache.containsKey(imgUrl)) {
-			SoftReference<Drawable> softReference = MApplication.imgCache
+		if (AppContext.imgCache.containsKey(imgUrl)) {
+			SoftReference<Drawable> softReference = AppContext.imgCache
 					.get(imgUrl);
 			if (softReference.get() != null) {
 				Message message = handler.obtainMessage(0, softReference.get());
@@ -42,7 +42,7 @@ public class AsyncImageLoader {
 		Bitmap bm = FilesHelper.GetImage("/52lxh/cacheimages",imageName);
 		if (bm != null) {
 			Drawable drawable = new BitmapDrawable(bm);
-			MApplication.imgCache.put(imgUrl, new SoftReference<Drawable>(
+			AppContext.imgCache.put(imgUrl, new SoftReference<Drawable>(
 					drawable));
 			Message message = handler.obtainMessage(0, drawable);
 			handler.sendMessage(message);
@@ -53,7 +53,7 @@ public class AsyncImageLoader {
 				try {
 					Drawable drawable = LoadImageFromUrl("http://www.52lxh.com"
 							+ imgUrl);
-					MApplication.imgCache.put(imgUrl,
+					AppContext.imgCache.put(imgUrl,
 							new SoftReference<Drawable>(drawable));
 					FilesHelper.CreateFile("/52lxh/cacheimages",imageName,Common.drawableToBitmap(drawable));
 					Message message = handler.obtainMessage(0, drawable);

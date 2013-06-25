@@ -1,6 +1,6 @@
-package com.wxk.tools;
+package com.wxk.util;
 
-import com.wxk.jokeandroidapp.MApplication;
+import com.wxk.jokeandroidapp.AppContext;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,7 +15,7 @@ import android.widget.Toast;
 public class Common {
 
 	/**
-	 * µÃµ½ÆÁÄ»µÄ¿í
+	 * ï¿½Ãµï¿½ï¿½ï¿½Ä»ï¿½Ä¿ï¿½
 	 * 
 	 * @param context
 	 * @return
@@ -44,18 +44,18 @@ public class Common {
 	}
 	
 	/*
-	 * ÏÔÊ¾Ò»¸öToast
+	 * ï¿½ï¿½Ê¾Ò»ï¿½ï¿½Toast
 	 */
 	public static void ShowDialog(String showText) {
-		Toast toast=Toast.makeText(MApplication.mcontext, showText,Toast.LENGTH_LONG);
+		Toast toast=Toast.makeText(AppContext.context, showText,Toast.LENGTH_LONG);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 	}
 
 	/**
-	 * ½ØÈ¡×Ö·û´®
-	 * @param content Ô­Ê¼ÄÚÈÝ
-	 * @param length ½áÊøÎªÖ¹
+	 * ï¿½ï¿½È¡ï¿½Ö·ï¿½
+	 * @param content Ô­Ê¼ï¿½ï¿½ï¿½ï¿½
+	 * @param length ï¿½ï¿½ï¿½ï¿½ÎªÖ¹
 	 * @return
 	 */
 	public static String GetSubString(String content, int length) {

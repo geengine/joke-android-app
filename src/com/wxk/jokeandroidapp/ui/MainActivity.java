@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp;
+package com.wxk.jokeandroidapp.ui.adapter;
 
 import java.io.File;
 import java.io.StringReader;
@@ -42,12 +42,17 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.wxk.tools.Common;
-import com.wxk.tools.DownLoadHelper;
-import com.wxk.tools.FilesHelper;
-import com.wxk.tools.JokeListXMLContentHandler;
+import com.wxk.jokeandroidapp.JokeDetailActivity;
+import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.R.id;
+import com.wxk.jokeandroidapp.R.layout;
+import com.wxk.jokeandroidapp.bean.JokeBenXMLContentHandler;
+import com.wxk.util.Common;
+import com.wxk.util.DownLoadHelper;
+import com.wxk.util.FilesHelper;
 
-public class MainActivity extends Activity {
+public class MainActivity extends BaseActivity {
 
 	private final String TAG = "MainActivity";
 	private ListView listMain = null;
@@ -56,7 +61,7 @@ public class MainActivity extends Activity {
 	private boolean isLoading = false;
 	private ProgressBar progressBar = null;
 	private ProgressBar pb_loading = null;
-	private JokeAdapter jokeAdapter = null;
+	private JokesAdapter jokeAdapter = null;
 	protected int listViewScrollState = 0;
 
 	@Override
@@ -67,10 +72,10 @@ public class MainActivity extends Activity {
 
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		// ¼ì²é°æ±¾¸üÐÂ
+		// ï¿½ï¿½ï¿½æ±¾ï¿½ï¿½ï¿½ï¿½
 		// CheckVesion();
 		listMain = (ListView) findViewById(R.id.list);
-		// ÏòÉÏ»¬¶¯¼ÓÔØ¸ü¶àµÄ½ø¶ÈÌõ
+		// ï¿½ï¿½ï¿½Ï»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ø¸ï¿½ï¿½Ä½ï¿½ï¿½ï¿½ï¿½
 		progressBar = (ProgressBar) findViewById(R.id.titlebar_progress);
 		pb_loading = (ProgressBar) findViewById(R.id.pb_loading);
 		loadingView = inflater.inflate(R.layout.loading, null);
@@ -117,7 +122,7 @@ public class MainActivity extends Activity {
 
 		listMain.addFooterView(listFooterView);
 		jokeList = new ArrayList<Map<String, String>>();
-		jokeAdapter = new JokeAdapter(jokeList, this);
+		jokeAdapter = new JokesAdapter(jokeList, this);
 
 		CheckLoadMore();
 		listMain.setAdapter(jokeAdapter);
@@ -125,22 +130,22 @@ public class MainActivity extends Activity {
 
 	@Override
 	/**
-	 * Ìí¼ÓÓÒ¼ü²Ëµ¥
+	 * ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½Ëµï¿½
 	 */
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		super.onCreateOptionsMenu(menu);
-		menu.add(0, 0, 0, "ÍË³ö");
+		menu.add(0, 0, 0, "ï¿½Ë³ï¿½");
 		return true;
 	}
 
 	@Override
 	/**
-	 * ÉèÖÃÓÒ¼ü²Ëµ¥ÊÂ¼þ
+	 * ï¿½ï¿½ï¿½ï¿½ï¿½Ò¼ï¿½Ëµï¿½ï¿½Â¼ï¿½
 	 */
 	public boolean onOptionsItemSelected(MenuItem item) {
 		// TODO Auto-generated method stub
-		if (item.getItemId() == 0) {// Èç¹ûµã»÷ÍË³ö°´Å¥ÌáÊ¾ÓÃ»§ÊÇ·ñÍË³ö£¡
+		if (item.getItemId() == 0) {// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½Å¥ï¿½ï¿½Ê¾ï¿½Ã»ï¿½ï¿½Ç·ï¿½ï¿½Ë³ï¿½ï¿½ï¿½
 			Dialog_Eixt(MainActivity.this);
 		}
 		return false;
@@ -148,7 +153,7 @@ public class MainActivity extends Activity {
 
 	@Override
 	/**
-	 * ÍË³öÊ±µ¯³öÍË³öÌáÊ¾¿ò
+	 * ï¿½Ë³ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½
 	 */
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		// TODO Auto-generated method stub
@@ -160,16 +165,16 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * ÍË³öÌáÊ¾ÐÅÏ¢
+	 * ï¿½Ë³ï¿½ï¿½ï¿½Ê¾ï¿½ï¿½Ï¢
 	 * 
 	 * @param context
-	 *            µ±Ç°ÎÄµµ
+	 *            ï¿½ï¿½Ç°ï¿½Äµï¿½
 	 */
 	private static boolean showExit = false;
 
 	private static void Dialog_Eixt(Context context) {
 		if (!showExit) {
-			Common.ShowDialog("ÔÙ°´Ò»´ÎÍË³ö³ÌÐò");
+			Common.ShowDialog("ï¿½Ù°ï¿½Ò»ï¿½ï¿½ï¿½Ë³ï¿½ï¿½ï¿½ï¿½ï¿½");
 			showExit = true;
 		} else {
 			android.os.Process.killProcess(android.os.Process.myPid());
@@ -177,7 +182,7 @@ public class MainActivity extends Activity {
 	}
 
 	/**
-	 * »ñÈ¡ÍøÂçÊý¾Ý
+	 * ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	 */
 	private Handler GetJokeList = new Handler() {
 		@Override
@@ -189,7 +194,7 @@ public class MainActivity extends Activity {
 				jokeAdapter.notifyDataSetChanged();
 			} else if (res == 1) {
 				loadingView.setVisibility(View.INVISIBLE);
-				Common.ShowDialog("¼ÓÔØÊý¾ÝÊ§°Ü£¬¿ÉÄÜÊÇÓÉÓÚÍøÂçÌ«Âý£¡\nÏÂÀ­ÖØÐÂ¼ÓÔØ");
+				Common.ShowDialog("ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Ü£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ì«ï¿½ï¿½\nï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Â¼ï¿½ï¿½ï¿½");
 			}
 			progressBar.setVisibility(View.GONE);
 			pb_loading.setVisibility(View.GONE);
@@ -231,7 +236,7 @@ public class MainActivity extends Activity {
 								.newInstance();
 						XMLReader reader = factory.newSAXParser()
 								.getXMLReader();
-						reader.setContentHandler(new JokeListXMLContentHandler(
+						reader.setContentHandler(new JokeBenXMLContentHandler(
 								jokeList));
 						reader.parse(new InputSource(new StringReader(res)));
 						GetJokeList.sendEmptyMessage(0);
@@ -246,87 +251,5 @@ public class MainActivity extends Activity {
 				}
 			}
 		}.start();
-	}
-
-	private Handler UpdateNewVesion = new Handler() {
-		@Override
-		public void handleMessage(Message msg) {
-			new AlertDialog.Builder(MainActivity.this)
-					.setTitle("°æ±¾¸üÐÂÌáÊ¾")
-					.setMessage("·¢ÏÖÐÂ°æ±¾£¬ÊÇ·ñ¸üÐÂ£¿")
-					.setPositiveButton("ÂíÉÏ¸üÐÂ",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-									downLoadApk();
-								}
-							})
-					.setNegativeButton("ÒÔºóÔÙËµ",
-							new DialogInterface.OnClickListener() {
-
-								@Override
-								public void onClick(DialogInterface dialog,
-										int which) {
-									// TODO Auto-generated method stub
-								}
-							}).show();
-		}
-	};
-
-	private void CheckVesion() {
-		new Thread() {
-			public void run() {
-				try {
-					DownLoadHelper downloadHelper = new DownLoadHelper();
-					String newVesion = downloadHelper
-							.DownLoad("http://www.52lxh.com/appinterface/getnewvesion.aspx");
-					if (Integer.parseInt(newVesion) > MApplication.currentVesion) {
-						UpdateNewVesion.sendEmptyMessage(0);
-					}
-				} catch (Exception e) {
-					// TODO: handle exception
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-
-	/*
-	 * ´Ó·þÎñÆ÷ÖÐÏÂÔØAPK
-	 */
-	private void downLoadApk() {
-		final ProgressDialog pd; // ½ø¶ÈÌõ¶Ô»°¿ò
-		pd = new ProgressDialog(this);
-		pd.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
-		pd.setMessage("ÕýÔÚÏÂÔØ¸üÐÂ");
-		pd.show();
-		new Thread() {
-			@Override
-			public void run() {
-				try {
-					File file = DownLoadHelper.getFileFromServer(
-							"http://www.52lxh.com/downloadandroidapk.html", pd);
-					// File file = new File(FilesHelper.GetPath("/52lxh/apk"),
-					// "MainActivityNew.apk");
-					installApk(file);
-					pd.dismiss(); // ½áÊøµô½ø¶ÈÌõ¶Ô»°¿ò
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-			}
-		}.start();
-	}
-
-	private void installApk(File file) {
-		Intent intent = new Intent();
-		// Ö´ÐÐ¶¯×÷
-		intent.setAction(Intent.ACTION_VIEW);
-		// Ö´ÐÐµÄÊý¾ÝÀàÐÍ
-		intent.setDataAndType(Uri.fromFile(file),
-				"application/vnd.android.package-archive");
-		startActivity(intent);
 	}
 }
