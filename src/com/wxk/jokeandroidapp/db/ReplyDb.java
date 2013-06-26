@@ -9,6 +9,13 @@ import android.database.Cursor;
 
 public class ReplyDb extends BaseDb<ReplyBean> {
 
+	final String TABLE = "t_reply";
+
+	@Override
+	public String getTableName() {
+		return TABLE;
+	}
+
 	@Override
 	public boolean update(ReplyBean e) {
 		// TODO Auto-generated method stub
@@ -22,9 +29,14 @@ public class ReplyDb extends BaseDb<ReplyBean> {
 	}
 
 	@Override
-	public ReplyBean getOne(String id) {
+	public ReplyBean getOne(long id) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	public List<ReplyBean> getList(int jokeId, int page, int size) {
+		return this.getList("j_id", new String[] { "" + jokeId },
+				"active_date DESC", page, size);
 	}
 
 	@Override
@@ -38,7 +50,5 @@ public class ReplyDb extends BaseDb<ReplyBean> {
 		// TODO Auto-generated method stub
 		return null;
 	}
-
-	
 
 }

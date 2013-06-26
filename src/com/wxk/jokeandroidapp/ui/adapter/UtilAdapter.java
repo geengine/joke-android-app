@@ -3,8 +3,10 @@ package com.wxk.jokeandroidapp.ui.adapter;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.bean.PagerBean;
+import com.wxk.jokeandroidapp.ui.listener.BaseOnScrollListener;
 import com.wxk.util.LogUtil;
 
 import android.annotation.SuppressLint;
@@ -12,7 +14,7 @@ import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
-import android.widget.AbsListView.OnScrollListener;
+import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 
@@ -37,6 +39,11 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	protected Handler handler;
 
 	public UtilAdapter(ListView listView, View header, View footer,
+			int itemLayout) {
+		this(listView, header, footer, itemLayout, null);
+	}
+
+	public UtilAdapter(ListView listView, View header, View footer,
 			int itemLayout, Handler handler) {
 
 		this.datas = new ArrayList<E>();
@@ -55,10 +62,15 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 
 	}
 
-	public void setOnScrollListener(OnScrollListener osl) {
+	public void initListView() {
+		BaseOnScrollListener l = new BaseOnScrollListener(this,
+				this.getHandler(), null != header, null != footer);
+		listView.setOnScrollListener(l);
+		preInitListView();
+		loadingData(cur_page, false);
+	}
 
-		this.listView.setOnScrollListener(osl);
-		loadingData(cur_page);
+	public void preInitListView() {
 	}
 
 	public Handler getHandler() {
@@ -104,11 +116,15 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	 * @param page
 	 * @return
 	 */
-	public abstract boolean loadingData(final int page);
+	public abstract boolean loadingData(final int page, final boolean isDbCache);
+
+	public boolean loadingData(final int page) {
+		return loadingData(page, true);
+	}
 
 	public void refreshingData() {
 		isRefreshingData = true;
-		loadingData(1);
+		loadingData(1, false);
 	}
 
 	public void loadingMoreData() {
@@ -116,31 +132,30 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 		if (cur_page < total_pager) {
 			showListFooter();
 			cur_page++;
-			loadingData(cur_page);
+			loadingData(cur_page, true);
 			LogUtil.d(TAG, "Loading page : " + cur_page);
 		} else {
-			LogUtil.d(TAG, "Loading page : " + cur_page);
+			LogUtil.d(TAG, "not loading more data !");
 		}
 	}
 
 	public void bindDatas(List<E> data) {
-		if (isRefreshingData) {
-			boolean ret = this.datas.addAll(0, data);
-			if (ret) {
-				this.notifyDataSetInvalidated();
+		if (data != null && data.size() > 0) {
+			if (isRefreshingData) {
+				boolean ret = this.datas.addAll(0, data);
+				if (ret) {
+					this.notifyDataSetInvalidated();
+				}
+				isRefreshingData = false;
+			} else {
+				boolean ret = this.datas.addAll(data);
+				if (ret)
+					this.notifyDataSetChanged();
 			}
-			isRefreshingData = false;
-		} else {
-			boolean ret = this.datas.addAll(data);
-			if (ret)
-				this.notifyDataSetChanged();
 		}
-		if (datas == null || datas.size() == 0 || cur_page == total_pager) {
+		if (datas == null || datas.size() == 0) {
 			hideListFooter();
-		} else {
-			showListFooter();
 		}
-
 	}
 
 	public void removeItem(int position) {
@@ -163,8 +178,39 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 		return position;
 	}
 
+	@Override
+	public View getView(int position, View convertView, ViewGroup viewGroup) {
+		E bean = datas.get(position);
+		if (bean != null) {
+			if (convertView == null) {
+				convertView = AppManager.getInstance().getInflater()
+						.inflate(item_layout, null);
+				Object viewHolder = initViewHolder(bean, convertView);
+				convertView.setTag(viewHolder);
+			} else {
+				Object viewHolder = convertView.getTag();
+				initViewHolder(bean, convertView, viewHolder);
+			}
+			return convertView;
+		}
+		return null;
+	}
+
+	protected abstract Object initViewHolder(E bean, View view, Object obj);
+
+	protected Object initViewHolder(E bean, View view) {
+
+		return initViewHolder(bean, view, null);
+	}
+
 	public abstract class UtilAsyncTask extends
 			AsyncTask<Integer, Integer, PagerBean<E>> {
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+
+		}
 
 		@Override
 		protected void onPostExecute(PagerBean<E> result) {

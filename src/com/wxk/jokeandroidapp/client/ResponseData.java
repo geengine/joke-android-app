@@ -7,7 +7,6 @@ import org.apache.http.util.EntityUtils;
 
 public class ResponseData implements Closeable {
 	public final static String HTTP_ENCODED = "UTF-8";
-	private Boolean status = false;
 	private Integer httpcode;
 	private String responseString;
 
@@ -32,8 +31,7 @@ public class ResponseData implements Closeable {
 
 	public void setHttpcode(Integer httpcode) {
 		this.httpcode = httpcode;
-		if (httpcode == 200)
-			this.status = true;
+
 	}
 
 	public String getResponseString() {
@@ -45,7 +43,10 @@ public class ResponseData implements Closeable {
 	}
 
 	public Boolean getStatus() {
-		return status;
+		if (this.httpcode == 200 && this.responseString != null
+				&& !"".equals(this.responseString))
+			return true;
+		return false;
 	}
 
 	@Override
@@ -55,7 +56,6 @@ public class ResponseData implements Closeable {
 
 	@Override
 	public void close() {
-		this.status = null;
 		this.responseString = null;
 	}
 }

@@ -28,12 +28,6 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
-import com.wxk.jokeandroidapp.bean.ReplyBeanXMLContentHandler;
-import com.wxk.util.AsyncImageLoader;
-import com.wxk.util.Common;
-import com.wxk.util.DownLoadHelper;
-import com.wxk.util.AsyncImageLoader.ImageCallback;
-
 public class JokeDetailActivity extends BaseActivity {
 
 	private ImageButton btn_return = null;

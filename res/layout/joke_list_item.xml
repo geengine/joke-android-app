@@ -3,8 +3,8 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_margin="5dp"
-    android:orientation="vertical"
-    android:background="@drawable/joke_list_item_bg" >
+    android:background="@drawable/joke_list_item_bg"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/txt_jokeTitle"
@@ -15,7 +15,7 @@
         android:textIsSelectable="false" />
 
     <TextView
-        android:id="@+id/joke_content"
+        android:id="@+id/txt_jokeContent"
         style="@style/txt_joke_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -23,7 +23,7 @@
         android:textIsSelectable="false" />
 
     <ImageView
-        android:id="@+id/img_jokeImg"
+        android:id="@+id/imgv_jokeImg"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
