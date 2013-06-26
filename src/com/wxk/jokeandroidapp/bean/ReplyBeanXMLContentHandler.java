@@ -10,6 +10,7 @@ public class ReplyBeanXMLContentHandler extends DefaultHandler {
 
 	private String tagName = "";
 	private int jokeID;
+	private String replyID;
 	private StringBuffer replyContent = new StringBuffer();
 	private String replyTime = "";
 	private List<ReplyBean> replyList = null;
@@ -22,7 +23,9 @@ public class ReplyBeanXMLContentHandler extends DefaultHandler {
 	@Override
 	public void characters(char[] ch, int start, int length)
 			throws SAXException {
-		// TODO Auto-generated method stub
+		if (tagName == "replyid") {
+			replyID = new String(ch, start, length);
+		}
 		if (tagName == "content") {
 			replyContent.append(new String(ch, start, length));
 		}
@@ -37,6 +40,7 @@ public class ReplyBeanXMLContentHandler extends DefaultHandler {
 		// TODO Auto-generated method stub
 		if (localName == "Reply") {
 			ReplyBean bean = new ReplyBean();
+			bean.setId(Integer.parseInt(replyID));
 			bean.setJokeID(jokeID);
 			bean.setContent(replyContent.toString());
 			bean.setActiveDate(replyTime);
@@ -56,6 +60,7 @@ public class ReplyBeanXMLContentHandler extends DefaultHandler {
 	private void ResetJokeParam() {
 		replyContent = new StringBuffer();
 		replyTime = "";
+		replyID = "";
 	}
 
 }
