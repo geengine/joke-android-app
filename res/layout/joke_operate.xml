@@ -1,10 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/joke_operate"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    style="@style/joke_operate"
-    android:orientation="vertical"
-    >
+    android:orientation="vertical" >
 
     <Button
         android:id="@+id/btn_good"
@@ -12,9 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginRight="15dp"
-        android:focusable="false"
-        android:drawableLeft="@drawable/point_up" />
+        android:layout_marginLeft="2dp"
+        android:layout_marginRight="5dp"
+        android:drawableLeft="@drawable/point_up"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/btn_bad"
@@ -23,8 +23,8 @@
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
         android:layout_toRightOf="@id/btn_good"
-        android:focusable="false"
-        android:drawableLeft="@drawable/point_down" />
+        android:drawableLeft="@drawable/point_down"
+        android:focusable="false" />
 
     <Button
         android:id="@+id/btn_comment"
@@ -33,7 +33,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:focusable="false"
-        android:drawableLeft="@drawable/comment_stroke" />
+        android:layout_marginRight="2dp"
+        android:drawableLeft="@drawable/comment_stroke"
+        android:focusable="false" />
 
 </RelativeLayout>

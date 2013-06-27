@@ -56,4 +56,26 @@ public class ReplyDao extends BaseDao {
 		}
 		return list;
 	}
+
+	/**
+	 * add joke reply
+	 * 
+	 * @param jokeid
+	 * @param content
+	 * @return
+	 */
+	public boolean doReply(int jokeid, String content) {
+		boolean retVal = false;
+		ResponseData responseData = null;
+		try {
+			responseData = client.doReply(jokeid, content);
+			retVal = responseData.getStatus();
+		} catch (Exception ex) {
+			LogUtil.e(TAG, ex.getMessage());
+		} finally {
+			if (responseData != null)
+				responseData.close();
+		}
+		return retVal;
+	}
 }

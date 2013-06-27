@@ -44,12 +44,12 @@ public class ReplyBean {
 		if (o == null)
 			return true;
 		ReplyBean b = (ReplyBean) o;
-		return this.getContent().equals(b.getContent());
+		return this.getId() == b.getId();
 	}
 
 	public boolean equalsAll(ReplyBean b) {
 		if (b == null)
 			return true;
-		return this.equals(b);
+		return this.equals(b) && this.getContent().equals(b.getContent());
 	}
 }

@@ -1,6 +1,5 @@
 package com.wxk.jokeandroidapp.ui.adapter;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import com.wxk.jokeandroidapp.AppManager;
@@ -8,6 +7,7 @@ import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.ui.listener.BaseOnScrollListener;
 import com.wxk.util.LogUtil;
+import com.wxk.util.UniqueList;
 
 import android.annotation.SuppressLint;
 import android.os.AsyncTask;
@@ -46,7 +46,7 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	public UtilAdapter(ListView listView, View header, View footer,
 			int itemLayout, Handler handler) {
 
-		this.datas = new ArrayList<E>();
+		this.datas = new UniqueList<E>();
 		this.listView = listView;
 		this.header = header;
 		this.footer = footer;
@@ -67,7 +67,7 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 				this.getHandler(), null != header, null != footer);
 		listView.setOnScrollListener(l);
 		preInitListView();
-		loadingData(cur_page, false);
+		loadingData(cur_page);
 	}
 
 	public void preInitListView() {
@@ -185,22 +185,23 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 			if (convertView == null) {
 				convertView = AppManager.getInstance().getInflater()
 						.inflate(item_layout, null);
-				Object viewHolder = initViewHolder(bean, convertView);
+				Object viewHolder = initViewHolder(bean, convertView, position);
 				convertView.setTag(viewHolder);
 			} else {
 				Object viewHolder = convertView.getTag();
-				initViewHolder(bean, convertView, viewHolder);
+				initViewHolder(bean, convertView, viewHolder, position);
 			}
 			return convertView;
 		}
 		return null;
 	}
 
-	protected abstract Object initViewHolder(E bean, View view, Object obj);
+	protected abstract Object initViewHolder(E bean, View view, Object obj,
+			int position);
 
-	protected Object initViewHolder(E bean, View view) {
+	protected Object initViewHolder(E bean, View view, int position) {
 
-		return initViewHolder(bean, view, null);
+		return initViewHolder(bean, view, null, position);
 	}
 
 	public abstract class UtilAsyncTask extends

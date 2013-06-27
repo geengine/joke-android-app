@@ -3,6 +3,7 @@ package com.wxk.jokeandroidapp.ui;
 import java.util.List;
 
 import com.wxk.jokeandroidapp.AppManager;
+import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.PagerBean;
@@ -12,14 +13,24 @@ import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
 import com.wxk.util.LogUtil;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
 public class DetailActivity extends BaseActivity {
+
+	private int jokeid = 0;
+	private boolean isReplying = false;
+	private EditText etxtReplyContent;
+	private Handler listViewHandler;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +51,11 @@ public class DetailActivity extends BaseActivity {
 		bean.setReplyCount(intent.getIntExtra("replys", 0));
 		bean.setGooodCount(intent.getIntExtra("goods", 0));
 		bean.setBadCount(intent.getIntExtra("bads", 0));
+		jokeid = bean.getId();
 		return bean;
 	}
 
-	private static class BaseOnClickListener implements OnClickListener {
+	private class BaseOnClickListener implements OnClickListener {
 
 		@Override
 		public void onClick(View v) {
@@ -51,22 +63,81 @@ public class DetailActivity extends BaseActivity {
 			case R.id.titlebar_app_icon:
 				AppManager.getInstance().finishActivity();
 				break;
+			case R.id.btn_submit:
+				doReply();
+				break;
 			}
 
 		}
 
 	}
 
+	private void doReply() {
+		if (!isReplying) {
+			isReplying = true;
+			String content = etxtReplyContent.getText().toString();
+			if ("".equals(content)) {
+				isReplying = false;
+				showToast(R.string.toast_reply_empty);
+				return;
+			}
+			(new DoReplyTask(jokeid, content)).execute();
+		} else {
+			showToast(R.string.toast_reply_exists);
+		}
+	}
+
+	private class DoReplyTask extends AsyncTask<Void, Void, Boolean> {
+
+		private int jokeid;
+		private String content;
+
+		public DoReplyTask(int jokeid, String content) {
+			this.jokeid = jokeid;
+			this.content = content;
+		}
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			ReplyDao dao = new ReplyDao();
+			return dao.doReply(jokeid, content);
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			super.onPostExecute(result);
+			showToast(result ? R.string.toast_reply_success
+					: R.string.toast_reply_failure);
+			isReplying = result;
+			if (result) {
+				// refresh list view
+				listViewHandler.sendEmptyMessage(Constant.REFURBISH);
+			}
+			pbLoad.setVisibility(View.GONE);
+		}
+
+		@Override
+		protected void onPreExecute() {
+			super.onPreExecute();
+			pbLoad.setVisibility(View.VISIBLE);
+		}
+
+	}
+
 	private void initBtnClick() {
 		BaseOnClickListener l = new BaseOnClickListener();
+		ImageButton imgbSubmitReply = (ImageButton) findViewById(R.id.btn_submit);
+		etxtReplyContent = (EditText) findViewById(R.id.etxt_reply);
 		imgbAppIcon.setOnClickListener(l);
+		imgbSubmitReply.setOnClickListener(l);
 	}
 
 	private void initJokeDetailView(JokeBean bean) {
 		View headerDetail = AppManager.getInstance().getInflater()
 				.inflate(R.layout.joke_detail, null);
-		View footer = AppManager.getInstance().getInflater()
-				.inflate(R.layout.list_view_footer, null);
+		// View footer =
+		// AppManager.getInstance().getInflater().inflate(R.layout.list_view_footer,
+		// null);
 		TextView txtContent = (TextView) headerDetail
 				.findViewById(R.id.txt_jokeContent);
 		ImageView imgvJokePic = (ImageView) headerDetail
@@ -82,10 +153,24 @@ public class DetailActivity extends BaseActivity {
 				// TODO loading image file from url
 			}
 		}
-
+		// operate button
+		Button btnGood = (Button) headerDetail.findViewById(R.id.btn_good);
+		Button btnBad = (Button) headerDetail.findViewById(R.id.btn_bad);
+		Button btnComment = (Button) headerDetail
+				.findViewById(R.id.btn_comment);
+		if (btnGood != null) {
+			btnGood.setText("" + bean.getGooodCount());
+		}
+		if (btnBad != null) {
+			btnBad.setText("" + bean.getBadCount());
+		}
+		if (btnComment != null) {
+			btnComment.setText("" + bean.getReplyCount());
+		}
+		// ListView
 		ListView listView = (ListView) findViewById(R.id.lv_detailList);
 		ReplysAdapter adapter = new ReplysAdapter(bean.getId(), listView,
-				headerDetail, footer, R.layout.reply_item) {
+				headerDetail, null/* footer */, R.layout.reply_item) {
 			class LoadingDataTask extends UtilAsyncTask {
 				private int jokeId;
 
@@ -139,5 +224,6 @@ public class DetailActivity extends BaseActivity {
 		};
 		listView.setAdapter(adapter);
 		adapter.initListView();
+		listViewHandler = adapter.getHandler();
 	}
 }

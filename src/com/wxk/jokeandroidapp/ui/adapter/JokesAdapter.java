@@ -8,6 +8,7 @@ import com.wxk.jokeandroidapp.ui.DetailActivity;
 import android.content.Intent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -54,7 +55,8 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 	}
 
 	@Override
-	protected Object initViewHolder(JokeBean bean, View view, Object obj) {
+	protected Object initViewHolder(JokeBean bean, View view, Object obj,
+			int position) {
 		ViewHolder viewHolder;
 		if (obj == null)
 			viewHolder = new ViewHolder();
@@ -78,6 +80,19 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 				// TODO loading image to url
 			}
 		}
+		// operate button
+		viewHolder.btnGood = (Button) view.findViewById(R.id.btn_good);
+		viewHolder.btnBad = (Button) view.findViewById(R.id.btn_bad);
+		viewHolder.btnComment = (Button) view.findViewById(R.id.btn_comment);
+		if (viewHolder.btnGood != null) {
+			viewHolder.btnGood.setText("" + bean.getGooodCount());
+		}
+		if (viewHolder.btnBad != null) {
+			viewHolder.btnBad.setText("" + bean.getBadCount());
+		}
+		if (viewHolder.btnComment != null) {
+			viewHolder.btnComment.setText("" + bean.getReplyCount());
+		}
 		return viewHolder;
 	}
 
@@ -85,8 +100,8 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		public TextView txtTitle;
 		public TextView txtContext;
 		public ImageView imgvJokePic;
-		// public Button btnGood;
-		// public Button btnBad;
-		// public Button btnComment;
+		public Button btnGood;
+		public Button btnBad;
+		public Button btnComment;
 	}
 }

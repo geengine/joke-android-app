@@ -22,7 +22,8 @@ public abstract class ReplysAdapter extends UtilAdapter<ReplyBean> {
 	}
 
 	@Override
-	protected Object initViewHolder(ReplyBean bean, View view, Object obj) {
+	protected Object initViewHolder(ReplyBean bean, View view, Object obj,
+			int position) {
 		ViewHolder viewHolder;
 		if (obj == null)
 			viewHolder = new ViewHolder();
@@ -37,12 +38,15 @@ public abstract class ReplysAdapter extends UtilAdapter<ReplyBean> {
 				.findViewById(R.id.txtv_reply_date);
 		if (viewHolder.txtvDate != null)
 			viewHolder.txtvDate.setText(bean.getActiveDate());
-
+		viewHolder.txtvFloor = (TextView) view.findViewById(R.id.txtv_floor);
+		if (viewHolder.txtvFloor != null)
+			viewHolder.txtvFloor.setText("#" + (position + 1));
 		return viewHolder;
 	}
 
 	private static class ViewHolder {
 		public TextView txtvDate;
 		public TextView txtvContext;
+		public TextView txtvFloor;
 	}
 }

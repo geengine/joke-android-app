@@ -52,7 +52,7 @@ public class ReplyDb extends BaseDb<ReplyBean> {
 	}
 
 	public List<ReplyBean> getList(int jokeId, int page, int size) {
-		return this.getList("j_id", new String[] { "" + jokeId },
+		return this.getList("j_id=?", new String[] { "" + jokeId },
 				"active_date DESC", page, size);
 	}
 

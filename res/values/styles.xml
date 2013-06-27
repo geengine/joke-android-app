@@ -19,12 +19,14 @@
     <style name="titlebar">
         <item name="android:background">@drawable/title_bg</item>
     </style>
+
     <style name="Spinner">
         <item name="android:indeterminate">true</item>
         <item name="android:indeterminateDrawable">@drawable/loadingbar</item>
         <item name="android:indeterminateDuration">2000</item>
         <item name="android:indeterminateOnly">true</item>
     </style>
+
     <style name="ListSpinner" parent="Spinner">
         <item name="android:layout_width">64dp</item>
         <item name="android:layout_height">64dp</item>
@@ -40,14 +42,16 @@
         <item name="android:textColor">@color/text_joke_title</item>
         <item name="android:background">@color/bg_default</item>
         <item name="android:padding">10dp</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
     </style>
 
     <style name="txt_joke_content">
         <item name="android:textColor">@color/text</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
         <item name="android:background">@color/bg_default</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:textSize">16sp</item>
     </style>
 
     <style name="base_titlebar_icon">
@@ -66,7 +70,7 @@
 
     <style name="textview">
         <item name="android:textColor">@color/text</item>
-        <item name="android:textSize">14sp</item>
+        <item name="android:textSize">15sp</item>
     </style>
 
     <style name="btn">
@@ -78,21 +82,21 @@
 
     <style name="edit_text">
         <item name="android:textColor">@color/text</item>
-        <item name="android:textCursorDrawable">@drawable/edit_text_cursor</item>
         <item name="android:textSize">15sp</item>
         <item name="android:padding">6dp</item>
         <item name="android:background">@drawable/edit_text_background</item>
     </style>
 
     <style name="joke_operate">
-        <item name="android:padding">10dp</item>
-        <item name="android:background">@color/bg_default</item>
+        <item name="android:padding">0dp</item>
+        <item name="android:background">@color/bg_operate</item>
     </style>
 
     <style name="joke_operate_btn">
-        <item name="android:background">@drawable/joke_operate_btn_background</item>
         <item name="android:padding">5dp</item>
-        <item name="android:textSize">15sp</item>
+        <item name="android:background">@null</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/txt_default</item>
         <item name="android:text">@string/def_num</item>
     </style>
 

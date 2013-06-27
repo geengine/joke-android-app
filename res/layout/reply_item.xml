@@ -1,22 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical" >
+    android:background="#ffffff"
+    android:orientation="vertical"
+    android:paddingBottom="5dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp" >
+
+    <TextView
+        android:id="@+id/txtv_floor"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:paddingLeft="2dp"
+        android:textColor="#7ec273"
+        android:textIsSelectable="false"
+        android:textSize="18sp" />
 
     <TextView
         android:id="@+id/txtv_reply_content"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_toLeftOf="@id/txtv_floor"
         android:textColor="#112200"
         android:textIsSelectable="false"
-        android:textSize="18sp" />
+        android:textSize="16sp" />
+
     <TextView
         android:id="@+id/txtv_reply_date"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="#112200"
+        android:layout_below="@id/txtv_reply_content"
+        android:textColor="#cccccc"
         android:textIsSelectable="false"
-        android:textSize="18sp" />
+        android:textSize="12sp" />
 
-</LinearLayout>
+</RelativeLayout>

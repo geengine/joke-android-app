@@ -24,7 +24,7 @@ public class BaseClient {
 
 	protected final String TAG = "HTTP";
 
-	protected final String BASE_URL = Constant.BASE_RUL;
+	protected final String BASE_URL = Constant.BASE_URL;
 
 	private final Boolean isCookie = false;
 

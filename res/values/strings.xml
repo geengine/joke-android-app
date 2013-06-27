@@ -11,5 +11,9 @@
     
     <!-- hint string -->
     <string name="hint_list_footer">下拉获取更多</string>
+    <string name="toast_reply_empty">评论不能为空！</string>
+    <string name="toast_reply_success">评论发表成功！</string>
+    <string name="toast_reply_failure">评论发表失败！</string>
+    <string name="toast_reply_exists">评论已经发表！</string>
 
 </resources>
