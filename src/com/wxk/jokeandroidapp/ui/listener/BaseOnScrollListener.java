@@ -49,9 +49,6 @@ public class BaseOnScrollListener implements OnScrollListener {
 			handler.sendEmptyMessage(Constant.REFURBISH);
 			LogUtil.i(TAG, "refurbish ...");
 		}
-		LogUtil.d(TAG, "scrollState = " + scrollState + " , firstItem = "
-				+ firstItem + " , lastItem = " + lastItem + " , count = "
-				+ adapter.getCount());
 	}
 
 	@Override
@@ -62,7 +59,7 @@ public class BaseOnScrollListener implements OnScrollListener {
 		lastItem = firstVisibleItem + visibleItemCount - (isFooter ? 1 : 0)
 				- (isHeader ? 1 : 0);
 
-		LogUtil.i(TAG, "firstItem=" + firstItem + " ,lastItem=" + lastItem);
+		// LogUtil.i(TAG, "firstItem=" + firstItem + " ,lastItem=" + lastItem);
 	}
 
 }

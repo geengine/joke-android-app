@@ -11,7 +11,7 @@ import com.wxk.jokeandroidapp.Constant;
 public class JokeClient extends BaseClient {
 	// http://www.52lxh.com/appinterface/getnewdatalist.aspx?current="+ current + "&pagesize="
 	// + pageSize;
-	final String JOKE_LIST = Constant.BASE_URL + "getnewdatalist.aspx";
+	final String JOKE_LIST = Constant.API_URL + "/getnewdatalist.aspx";
 
 	public ResponseData getJokes(int page, int pageSize) throws Exception {
 		ResponseData responseData = null;

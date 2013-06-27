@@ -17,14 +17,11 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.wxk.jokeandroidapp.Constant;
 import com.wxk.util.LogUtil;
 
 public class BaseClient {
 
 	protected final String TAG = "HTTP";
-
-	protected final String BASE_URL = Constant.BASE_URL;
 
 	private final Boolean isCookie = false;
 

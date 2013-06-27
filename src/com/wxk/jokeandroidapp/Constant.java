@@ -35,8 +35,8 @@ public final class Constant {
 	public static final int TOPIC_DATA_WEEK = 1;
 	public static final int TOPIC_DATA_MONTH = 2;
 
-	public final static String BASE_URL = "http://www.52lxh.com/appinterface/";
-	public final static String BASE_IMG_RUL = "http://192.168.1.16:9999/res/img";
+	public final static String BASE_URL = "http://www.52lxh.com";
+	public final static String API_URL = BASE_URL + "/appinterface";
 	public final static String SD_CARD_IMG_DIR = "com.cjiayi.hyy/img";
 	public final static String SD_CARD_CAMERA = "Camera";
 

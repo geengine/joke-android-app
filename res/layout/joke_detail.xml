@@ -16,9 +16,10 @@
     <ImageView
         android:id="@+id/imgv_jokeImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="220dp"
         android:layout_gravity="center_horizontal"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        android:scaleType="centerCrop" />
 
     <include layout="@layout/joke_operate" />
 

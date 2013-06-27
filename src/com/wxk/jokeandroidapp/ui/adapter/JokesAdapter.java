@@ -1,9 +1,11 @@
 package com.wxk.jokeandroidapp.ui.adapter;
 
 import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.DetailActivity;
+import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
 
 import android.content.Intent;
 import android.view.View;
@@ -46,7 +48,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 				intentDetail.putExtra("goods", bean.getGooodCount());
 				intentDetail.putExtra("bads", bean.getBadCount());
 				intentDetail.putExtra("date", bean.getActiveDate());
-
+				intentDetail.putExtra("imgurl", bean.getImgUrl());
 				intentDetail.setClass(AppContext.context, DetailActivity.class);
 				AppContext.context.startActivity(intentDetail);
 			}
@@ -66,18 +68,27 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		viewHolder.txtTitle = (TextView) view.findViewById(R.id.txt_jokeTitle);
 		if (viewHolder.txtTitle != null)
 			viewHolder.txtTitle.setText(bean.getTitle());
-		viewHolder.txtContext = (TextView) view
+		viewHolder.txtContent = (TextView) view
 				.findViewById(R.id.txt_jokeContent);
-		if (viewHolder.txtContext != null)
-			viewHolder.txtContext.setText(bean.getContent());
+		if (viewHolder.txtContent != null) {
+			if (bean.getContent() != null && !"".equals(bean.getContent())) {
+				viewHolder.txtContent.setVisibility(View.VISIBLE);
+				viewHolder.txtContent.setText(bean.getContent());
+			} else {
+				viewHolder.txtContent.setVisibility(View.GONE);
+			}
+		}
+
 		viewHolder.imgvJokePic = (ImageView) view
 				.findViewById(R.id.imgv_jokeImg);
 		if (viewHolder.imgvJokePic != null) {
-			if (bean.getImgUrl() == null || "".equals(bean.getImgUrl())) {
-				viewHolder.imgvJokePic.setVisibility(View.GONE);
-			} else {
+			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
+
 				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
-				// TODO loading image to url
+				(new ImageViewAsyncTask(viewHolder.imgvJokePic))
+						.execute(Constant.BASE_URL + bean.getImgUrl());
+			} else {
+				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
 		}
 		// operate button
@@ -98,7 +109,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 
 	private static class ViewHolder {
 		public TextView txtTitle;
-		public TextView txtContext;
+		public TextView txtContent;
 		public ImageView imgvJokePic;
 		public Button btnGood;
 		public Button btnBad;

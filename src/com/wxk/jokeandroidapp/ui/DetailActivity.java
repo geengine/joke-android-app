@@ -10,6 +10,7 @@ import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.dao.ReplyDao;
 import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
+import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
 import com.wxk.util.LogUtil;
 
 import android.content.Intent;
@@ -41,6 +42,17 @@ public class DetailActivity extends BaseActivity {
 		initBtnClick();
 	}
 
+	@Override
+	protected void onFlingLeft() {
+		super.onFlingLeft();
+	}
+
+	@Override
+	protected void onFlingRight() {
+		super.onFlingRight();
+
+	}
+
 	private JokeBean getDetailBean() {
 		JokeBean bean = new JokeBean();
 		Intent intent = getIntent();
@@ -51,6 +63,7 @@ public class DetailActivity extends BaseActivity {
 		bean.setReplyCount(intent.getIntExtra("replys", 0));
 		bean.setGooodCount(intent.getIntExtra("goods", 0));
 		bean.setBadCount(intent.getIntExtra("bads", 0));
+		bean.setImgUrl(intent.getStringExtra("imgurl"));
 		jokeid = bean.getId();
 		return bean;
 	}
@@ -143,14 +156,22 @@ public class DetailActivity extends BaseActivity {
 		ImageView imgvJokePic = (ImageView) headerDetail
 				.findViewById(R.id.imgv_jokeImg);
 		txtvPageTitle.setText(bean.getTitle());
-		if (txtContent != null)
-			txtContent.setText(bean.getContent());
+		if (txtContent != null) {
+			if (bean.getContent() != null && !"".equals(bean.getContent())) {
+				txtContent.setVisibility(View.VISIBLE);
+				txtContent.setText(bean.getContent());
+			} else {
+				txtContent.setVisibility(View.GONE);
+			}
+		}
+
 		if (imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
-				imgvJokePic.setVisibility(View.GONE);
-			} else {
 				imgvJokePic.setVisibility(View.VISIBLE);
-				// TODO loading image file from url
+				(new ImageViewAsyncTask(imgvJokePic)).execute(Constant.BASE_URL
+						+ bean.getImgUrl());
+			} else {
+				imgvJokePic.setVisibility(View.GONE);
 			}
 		}
 		// operate button

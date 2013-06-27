@@ -9,8 +9,8 @@ import org.apache.http.message.BasicNameValuePair;
 import com.wxk.jokeandroidapp.Constant;
 
 public class ReplyClient extends BaseClient {
-	final String REPLY_LIST = Constant.BASE_URL + "getnewreplylist.aspx";
-	final String ADD_REPLY = Constant.BASE_URL + "doreply.aspx";
+	final String REPLY_LIST = Constant.API_URL + "/getnewreplylist.aspx";
+	final String ADD_REPLY = Constant.API_URL + "/doreply.aspx";
 
 	public ResponseData getReplys(int jokeid, int page, int size)
 			throws Exception {
