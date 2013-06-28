@@ -10,7 +10,9 @@ import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.dao.ReplyDao;
 import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
+import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
+import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 import com.wxk.util.LogUtil;
 
 import android.content.Intent;
@@ -146,47 +148,52 @@ public class DetailActivity extends BaseActivity {
 	}
 
 	private void initJokeDetailView(JokeBean bean) {
+		ViewHolder viewHolder = new ViewHolder();
 		View headerDetail = AppManager.getInstance().getInflater()
 				.inflate(R.layout.joke_detail, null);
 		// View footer =
 		// AppManager.getInstance().getInflater().inflate(R.layout.list_view_footer,
 		// null);
-		TextView txtContent = (TextView) headerDetail
+		viewHolder.txtContent = (TextView) headerDetail
 				.findViewById(R.id.txt_jokeContent);
-		ImageView imgvJokePic = (ImageView) headerDetail
+		viewHolder.imgvJokePic = (ImageView) headerDetail
 				.findViewById(R.id.imgv_jokeImg);
 		txtvPageTitle.setText(bean.getTitle());
-		if (txtContent != null) {
+		if (viewHolder.txtContent != null) {
 			if (bean.getContent() != null && !"".equals(bean.getContent())) {
-				txtContent.setVisibility(View.VISIBLE);
-				txtContent.setText(bean.getContent());
+				viewHolder.txtContent.setVisibility(View.VISIBLE);
+				viewHolder.txtContent.setText(bean.getContent());
 			} else {
-				txtContent.setVisibility(View.GONE);
+				viewHolder.txtContent.setVisibility(View.GONE);
 			}
 		}
 
-		if (imgvJokePic != null) {
+		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
-				imgvJokePic.setVisibility(View.VISIBLE);
-				(new ImageViewAsyncTask(imgvJokePic)).execute(Constant.BASE_URL
-						+ bean.getImgUrl());
+				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
+				(new ImageViewAsyncTask(viewHolder.imgvJokePic))
+						.execute(Constant.BASE_URL + bean.getImgUrl());
 			} else {
-				imgvJokePic.setVisibility(View.GONE);
+				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
 		}
 		// operate button
-		Button btnGood = (Button) headerDetail.findViewById(R.id.btn_good);
-		Button btnBad = (Button) headerDetail.findViewById(R.id.btn_bad);
-		Button btnComment = (Button) headerDetail
+		viewHolder.btnGood = (Button) headerDetail.findViewById(R.id.btn_good);
+		viewHolder.btnBad = (Button) headerDetail.findViewById(R.id.btn_bad);
+		viewHolder.btnComment = (Button) headerDetail
 				.findViewById(R.id.btn_comment);
-		if (btnGood != null) {
-			btnGood.setText("" + bean.getGooodCount());
+		OperateClickListener ocl = new OperateClickListener(viewHolder, bean);
+		if (viewHolder.btnGood != null) {
+			viewHolder.btnGood.setText("" + bean.getGooodCount());
+			viewHolder.btnGood.setOnClickListener(ocl);
 		}
-		if (btnBad != null) {
-			btnBad.setText("" + bean.getBadCount());
+		if (viewHolder.btnBad != null) {
+			viewHolder.btnBad.setText("" + bean.getBadCount());
+			viewHolder.btnBad.setOnClickListener(ocl);
 		}
-		if (btnComment != null) {
-			btnComment.setText("" + bean.getReplyCount());
+		if (viewHolder.btnComment != null) {
+			viewHolder.btnComment.setText("" + bean.getReplyCount());
+			viewHolder.btnComment.setOnClickListener(ocl);
 		}
 		// ListView
 		ListView listView = (ListView) findViewById(R.id.lv_detailList);

@@ -31,8 +31,29 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return r > 0;
 	}
 
+	public boolean updateGood(int id, int good) {
+		ContentValues values = new ContentValues();
+
+		values.put("goods", good);
+		SQLiteDatabase db = getDb();
+		long r = db.update(TABLE, values, "id=?", new String[] { "" + id });
+		db.close();
+		return r > 0;
+	}
+
+	public boolean updateBad(int id, int bad) {
+		ContentValues values = new ContentValues();
+
+		values.put("bads", bad);
+		SQLiteDatabase db = getDb();
+		long r = db.update(TABLE, values, "id=?", new String[] { "" + id });
+		db.close();
+		return r > 0;
+	}
+
 	@Override
 	public List<JokeBean> getList(int page, int size) {
+
 		return super.getList(null, null, "id DESC", page, size);
 	}
 

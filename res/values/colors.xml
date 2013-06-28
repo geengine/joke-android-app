@@ -18,7 +18,7 @@
     <color name="refresh_bg_bottom">#cccccc</color>
     <color name="refresh_bg_start">#f0f0f0</color>
     <color name="refresh_bg_end">#cccccc</color>
-    <!-- TextView  -->
+    <!-- TextView -->
     <color name="txt_default">#323232</color>
     <color name="text_joke_title">#4b4b4b</color>
     <color name="text_joke_content">#5d5d5d</color>
@@ -26,6 +26,8 @@
     <color name="text_light">#AEAEAE</color>
     <color name="text_icon">#A8A8A8</color>
     <color name="text_recent">#3797C7</color>
+    <color name="txt_count_num">#808080</color>
+    <color name="txt_count_num_red">#bf101c</color>
     <!-- joke title bg -->
     <color name="joke_title_top">#fbf7f8</color>
     <color name="joke_title_bottom">#f0f0f0</color>

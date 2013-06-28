@@ -30,6 +30,10 @@ public class BaseActivity extends Activity {
 		toast.show();
 	}
 
+	protected void showToast(int resId) {
+		showToast(this.getString(resId));
+	}
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -41,10 +45,6 @@ public class BaseActivity extends Activity {
 	protected void onDestroy() {
 		super.onDestroy();
 		AppManager.getInstance().finishActivity(this);
-	}
-
-	protected void showToast(int resId) {
-		showToast(this.getString(resId));
 	}
 
 	protected void initTitleBar() {

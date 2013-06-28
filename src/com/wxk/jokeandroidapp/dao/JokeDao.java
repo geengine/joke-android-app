@@ -55,4 +55,40 @@ public class JokeDao extends BaseDao {
 		}
 		return list;
 	}
+
+	public boolean doUp(int jokeId, String flag) {
+		boolean retVal = false;
+		ResponseData responseData = null;
+		try {
+			if (flag.equals("add")) {
+				responseData = client.postSupport(jokeId, 1);
+			}
+			if (responseData != null)
+				retVal = responseData.getStatus();
+			if (retVal) {
+				db.updateGood(jokeId, Integer.parseInt(responseData.toString()));
+			}
+		} catch (Exception e) {
+			LogUtil.e(TAG, e.getMessage());
+		}
+		return retVal;
+	}
+
+	public boolean doDown(int jokeId, String flag) {
+		boolean retVal = false;
+		ResponseData responseData = null;
+		try {
+			if (flag.equals("add")) {
+				responseData = client.postSupport(jokeId, 2);
+			}
+			if (responseData != null)
+				retVal = responseData.getStatus();
+			if (retVal) {
+				db.updateBad(jokeId, Integer.parseInt(responseData.toString()));
+			}
+		} catch (Exception e) {
+			LogUtil.e(TAG, e.getMessage());
+		}
+		return retVal;
+	}
 }

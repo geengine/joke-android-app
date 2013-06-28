@@ -5,6 +5,7 @@ import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.DetailActivity;
+import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
 
 import android.content.Intent;
@@ -95,19 +96,23 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		viewHolder.btnGood = (Button) view.findViewById(R.id.btn_good);
 		viewHolder.btnBad = (Button) view.findViewById(R.id.btn_bad);
 		viewHolder.btnComment = (Button) view.findViewById(R.id.btn_comment);
+		OperateClickListener ocl = new OperateClickListener(viewHolder, bean);
 		if (viewHolder.btnGood != null) {
 			viewHolder.btnGood.setText("" + bean.getGooodCount());
+			viewHolder.btnGood.setOnClickListener(ocl);
 		}
 		if (viewHolder.btnBad != null) {
 			viewHolder.btnBad.setText("" + bean.getBadCount());
+			viewHolder.btnBad.setOnClickListener(ocl);
 		}
 		if (viewHolder.btnComment != null) {
 			viewHolder.btnComment.setText("" + bean.getReplyCount());
+			viewHolder.btnComment.setOnClickListener(ocl);
 		}
 		return viewHolder;
 	}
 
-	private static class ViewHolder {
+	public static class ViewHolder {
 		public TextView txtTitle;
 		public TextView txtContent;
 		public ImageView imgvJokePic;

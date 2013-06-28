@@ -8,12 +8,13 @@
     <string name="header_refresh_lastUpdate">2012 12 20 10:12:13</string>
     <string name="refresh_list_footer_text">下拉获取更多</string>
     <string name="no_reply">暂无评论</string>
-    
+
     <!-- hint string -->
     <string name="hint_list_footer">下拉获取更多</string>
     <string name="toast_reply_empty">评论不能为空！</string>
     <string name="toast_reply_success">评论发表成功！</string>
     <string name="toast_reply_failure">评论发表失败！</string>
     <string name="toast_reply_exists">评论已经发表！</string>
+    <string name="error_network">网络错误！</string>
 
 </resources>
