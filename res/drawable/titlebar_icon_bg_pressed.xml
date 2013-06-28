@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item>
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/titlebar_bg_top" />
+        </shape>
+    </item>
+    <item android:top="1dp">
+        <shape android:shape="rectangle" >
+            <solid android:color="@color/titlebar_icon_bg_pressed" />
+        </shape>
+    </item>
+    <item
+        android:bottom="1dp"
+        android:top="1dp">
+        <shape>
+            <gradient
+                android:angle="270"
+                android:endColor="@color/titlebar_icon_bg_pressed"
+                android:startColor="@color/titlebar_bg_end" />
+        </shape>
+    </item>
+
+</layer-list>
