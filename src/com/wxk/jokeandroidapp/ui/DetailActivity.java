@@ -2,6 +2,7 @@ package com.wxk.jokeandroidapp.ui;
 
 import java.util.List;
 
+import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
@@ -89,6 +90,10 @@ public class DetailActivity extends BaseActivity {
 	}
 
 	private void doReply() {
+		if (!AppContext.isNetworkConnected()) {
+			showToast(R.string.error_no_network);
+			return;
+		}
 		if (!isReplying) {
 			isReplying = true;
 			String content = etxtReplyContent.getText().toString();

@@ -50,7 +50,7 @@ public class OperateClickListener implements OnClickListener {
 	}
 
 	protected void showToast(String showText) {
-		Toast toast = Toast.makeText(context, showText, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(context, showText, Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 	}
@@ -63,6 +63,10 @@ public class OperateClickListener implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_good:
+			if (!AppContext.isNetworkConnected()) {
+				showToast(R.string.error_no_network);
+				return;
+			}
 			if (!isUping && !isUped) {
 				Drawable drawable = OperateClickListener.this.context
 						.getResources().getDrawable(R.drawable.point_up_red);
@@ -83,6 +87,10 @@ public class OperateClickListener implements OnClickListener {
 			break;
 
 		case R.id.btn_bad: // 踩
+			if (!AppContext.isNetworkConnected()) {
+				showToast(R.string.error_no_network);
+				return;
+			}
 			if (!isDowning && !isDowned) {
 				Drawable drawable = OperateClickListener.this.context
 						.getResources().getDrawable(R.drawable.point_down_red);
@@ -194,12 +202,12 @@ public class OperateClickListener implements OnClickListener {
 				// }
 				break;
 			case Constant.SERVER_ERROR:
-
+				showToast(R.string.error_network);
 				break;
 			default:
 				break;
 			}
-			showToast(R.string.error_network);
+
 			Drawable drawable = OperateClickListener.this.context
 					.getResources().getDrawable(R.drawable.point_up);
 			drawable.setBounds(0, 0, drawable.getMinimumWidth(),

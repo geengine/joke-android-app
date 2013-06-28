@@ -25,7 +25,7 @@ public class BaseActivity extends Activity {
 	protected GestureDetector gestureDetector;
 
 	protected void showToast(String showText) {
-		Toast toast = Toast.makeText(this, showText, Toast.LENGTH_LONG);
+		Toast toast = Toast.makeText(this, showText, Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		toast.show();
 	}
