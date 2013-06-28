@@ -51,6 +51,16 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return r > 0;
 	}
 
+	public boolean updateReplyPlusPlus(int id) {
+		ContentValues values = new ContentValues();
+
+		values.put("bads", "bads+1");
+		SQLiteDatabase db = getDb();
+		long r = db.update(TABLE, values, "id=?", new String[] { "" + id });
+		db.close();
+		return r > 0;
+	}
+
 	@Override
 	public List<JokeBean> getList(int page, int size) {
 

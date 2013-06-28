@@ -11,6 +11,7 @@ import org.xml.sax.XMLReader;
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.client.ReplyClient;
 import com.wxk.jokeandroidapp.client.ResponseData;
+import com.wxk.jokeandroidapp.db.JokeDb;
 import com.wxk.jokeandroidapp.db.ReplyDb;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.bean.ReplyBeanXMLContentHandler;
@@ -70,6 +71,10 @@ public class ReplyDao extends BaseDao {
 		try {
 			responseData = client.doReply(jokeid, content);
 			retVal = responseData.getStatus();
+			if (retVal) {
+				JokeDb jokeDb = new JokeDb();
+				jokeDb.updateReplyPlusPlus(jokeid);
+			}
 		} catch (Exception ex) {
 			LogUtil.e(TAG, ex.getMessage());
 		} finally {

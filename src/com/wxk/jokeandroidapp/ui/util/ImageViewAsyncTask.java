@@ -4,14 +4,17 @@ import java.io.File;
 
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.util.BitmapUtil;
+import com.wxk.util.BitmapUtil.WrapDrawable;
 import com.wxk.util.FileUtil;
+import com.wxk.util.LogUtil;
 import com.wxk.util.StringUtil;
 
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
 
@@ -22,20 +25,31 @@ public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected ImageView imgv;
 	protected String src = "";
 	protected File cacheFile;
+	protected boolean autoFill;
 
-	public ImageViewAsyncTask(ImageView imgv, String src, Context context) {
+	public ImageViewAsyncTask(ImageView imgv, String src, Context context,
+			boolean autoFill) {
 		this.imgv = imgv;
 		this.src = src;
 		this.context = context;
-		cacheDir = this.context.getCacheDir();
+		this.cacheDir = this.context.getCacheDir();
+		this.autoFill = autoFill;
+	}
+
+	public ImageViewAsyncTask(ImageView imgv, String src, boolean autoFill) {
+		this(imgv, src, AppContext.context, autoFill);
 	}
 
 	public ImageViewAsyncTask(ImageView imgv, String src) {
-		this(imgv, src, AppContext.context);
+		this(imgv, src, AppContext.context, false);
+	}
+
+	public ImageViewAsyncTask(ImageView imgv, boolean autoFill) {
+		this(imgv, null, AppContext.context, autoFill);
 	}
 
 	public ImageViewAsyncTask(ImageView imgv) {
-		this(imgv, null, AppContext.context);
+		this(imgv, null, AppContext.context, false);
 	}
 
 	@Override
@@ -52,9 +66,21 @@ public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
 		if (result) {
-			Drawable drawable = BitmapUtil.getImgDrawable(cacheFile);
-			if (drawable != null)
-				imgv.setImageDrawable(drawable);
+			WrapDrawable drawable = BitmapUtil.getImgDrawable(cacheFile);
+
+			if (drawable != null) {
+				if (autoFill) {
+					int w = DisplayUtil.getScreenWidth(context);// imgv.getWidth();
+					float bl = (float) drawable.height / (float) drawable.width;
+					ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(
+							w, (int) (w * bl));
+					imgv.setLayoutParams(params);
+					LogUtil.i(TAG, cacheFile.getPath() + ": width=" + w
+							+ ",height=" + w * bl + "," + bl);
+				}
+				imgv.setImageDrawable(drawable.drawable);
+			}
+
 		} else {
 			imgv.setVisibility(View.GONE);
 		}

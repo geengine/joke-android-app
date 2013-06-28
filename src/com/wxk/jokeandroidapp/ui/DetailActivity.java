@@ -34,6 +34,7 @@ public class DetailActivity extends BaseActivity {
 	private boolean isReplying = false;
 	private EditText etxtReplyContent;
 	private Handler listViewHandler;
+	private ViewHolder viewHolder;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -126,6 +127,9 @@ public class DetailActivity extends BaseActivity {
 			isReplying = result;
 			if (result) {
 				// refresh list view
+				viewHolder.btnComment.setText(""
+						+ (Integer.parseInt(viewHolder.btnComment.getText()
+								.toString()) + 1));
 				listViewHandler.sendEmptyMessage(Constant.REFURBISH);
 			}
 			pbLoad.setVisibility(View.GONE);
@@ -148,7 +152,7 @@ public class DetailActivity extends BaseActivity {
 	}
 
 	private void initJokeDetailView(JokeBean bean) {
-		ViewHolder viewHolder = new ViewHolder();
+		viewHolder = new ViewHolder();
 		View headerDetail = AppManager.getInstance().getInflater()
 				.inflate(R.layout.joke_detail, null);
 		// View footer =
@@ -171,7 +175,7 @@ public class DetailActivity extends BaseActivity {
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
 				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
-				(new ImageViewAsyncTask(viewHolder.imgvJokePic))
+				(new ImageViewAsyncTask(viewHolder.imgvJokePic, true))
 						.execute(Constant.BASE_URL + bean.getImgUrl());
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);

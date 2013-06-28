@@ -142,7 +142,8 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	public void bindDatas(List<E> data) {
 		if (data != null && data.size() > 0) {
 			if (isRefreshingData) {
-				boolean ret = this.datas.addAll(0, data);
+				this.datas.clear();
+				boolean ret = this.datas.addAll(data);
 				if (ret) {
 					this.notifyDataSetInvalidated();
 				}

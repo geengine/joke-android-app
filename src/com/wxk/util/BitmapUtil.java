@@ -49,12 +49,19 @@ public class BitmapUtil {
 		return opts;
 	}
 
-	public static Drawable getImgDrawable(File cacheFile) {
+	public static WrapDrawable getImgDrawable(File cacheFile) {
 		return getImgDrawable(cacheFile, 0, 0);
 	}
 
-	public static Drawable getImgDrawable(File cacheFile, int width, int height) {
-		Drawable drawable = null;
+	public static class WrapDrawable {
+		public Drawable drawable;
+		public int width;
+		public int height;
+	}
+
+	public static WrapDrawable getImgDrawable(File cacheFile, Integer width,
+			Integer height) {
+		WrapDrawable drawable = null;
 
 		if (cacheFile != null && cacheFile.exists()) {
 			InputStream inputStream = null;
@@ -70,8 +77,10 @@ public class BitmapUtil {
 					height = bm.getHeight();
 				Bitmap useThisBitmap = Bitmap.createScaledBitmap(bm, width,
 						height, true);
-
-				drawable = new BitmapDrawable(null, useThisBitmap);
+				drawable = new WrapDrawable();
+				drawable.width = width;
+				drawable.height = height;
+				drawable.drawable = new BitmapDrawable(null, useThisBitmap);
 
 			} catch (Exception e) {
 				LogUtil.e(TAG,

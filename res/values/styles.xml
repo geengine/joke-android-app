@@ -68,6 +68,10 @@
         <item name="android:paddingRight">7dp</item>
     </style>
 
+    <style name="btn_reply" parent="btn">
+        <item name="android:background">@drawable/btn_reply_background</item>
+    </style>
+
     <style name="edit_text">
         <item name="android:textColor">@color/text</item>
         <item name="android:textSize">15sp</item>
