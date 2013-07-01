@@ -145,12 +145,14 @@ public class DetailActivity extends BaseActivity {
 								.toString()) + 1));
 				listViewHandler.sendEmptyMessage(Constant.REFURBISH);
 			}
+			imgbRef.setVisibility(View.VISIBLE);
 			pbLoad.setVisibility(View.GONE);
 		}
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
+			imgbRef.setVisibility(View.GONE);
 			pbLoad.setVisibility(View.VISIBLE);
 		}
 
