@@ -10,7 +10,8 @@
     <string name="no_reply">暂无评论</string>
 
     <!-- hint string -->
-    <string name="hint_list_footer">下拉获取更多</string>
+    <string name="hint_list_footer">正在获取更多 ..</string>
+    <string name="hint_list_header">正在刷新数据 ..</string>
     <string name="toast_reply_empty">评论不能为空！</string>
     <string name="toast_reply_success">评论发表成功！</string>
     <string name="toast_reply_failure">评论发表失败！</string>

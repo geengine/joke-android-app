@@ -99,6 +99,18 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 		};
 	}
 
+	protected void showListHeader() {
+		if (null != header) {
+			header.setVisibility(View.VISIBLE);
+		}
+	}
+
+	protected void hideListHeader() {
+		if (null != header) {
+			header.setVisibility(View.GONE);
+		}
+	}
+
 	protected void hideListFooter() {
 		if (null != footer) {
 			footer.setVisibility(View.GONE);

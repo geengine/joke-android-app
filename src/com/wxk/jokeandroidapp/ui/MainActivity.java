@@ -34,8 +34,10 @@ public class MainActivity extends BaseActivity {
 		listView = (ListView) findViewById(R.id.list);
 		View footer = (View) AppManager.getInstance().getInflater()
 				.inflate(R.layout.list_view_footer, null);
-		final JokesAdapter adapter = new JokesAdapter(listView, null, footer,
-				R.layout.joke_list_item) {
+		// View header = (View) AppManager.getInstance().getInflater()
+		// .inflate(R.layout.list_view_header, null);
+		final JokesAdapter adapter = new JokesAdapter(listView,
+				null/* header */, footer, R.layout.joke_list_item) {
 			class LoadingDataTask extends UtilAsyncTask {
 				private JokeDao dao = new JokeDao();
 				private int pageSize = 5;
