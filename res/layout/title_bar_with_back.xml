@@ -25,13 +25,25 @@
         android:paddingLeft="5dp"
         android:text="@string/app_name" />
 
-    <ProgressBar
-        android:id="@+id/titlebar_progress"
-        style="@style/titlebar_icon"
-        android:layout_width="28dp"
-        android:layout_height="28dp"
+    <ImageButton
+        android:id="@+id/titlebar_ref"
+        style="@style/titlebar_app_icon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="5dp" />
+        android:layout_marginRight="5dp"
+        android:background="@null"
+        android:contentDescription="@null"
+        android:src="@drawable/spin" />
+
+    <ProgressBar
+        android:id="@+id/titlebar_progress"
+        android:layout_width="21dp"
+        android:layout_height="21dp"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginRight="13dp"
+        android:padding="0dp" />
 
 </RelativeLayout>

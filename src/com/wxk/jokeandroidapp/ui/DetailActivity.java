@@ -43,14 +43,15 @@ public class DetailActivity extends BaseActivity {
 	private EditText etxtReplyContent;
 	private Handler listViewHandler;
 	private ViewHolder viewHolder;
+	private ImageButton imgbRef;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.joke_detail_page);
 		initTitleBar();
-		initJokeDetailView(getDetailBean());
 		initBtnClick();
+		initJokeDetailView(getDetailBean());
 	}
 
 	@Override
@@ -159,6 +160,9 @@ public class DetailActivity extends BaseActivity {
 		BaseOnClickListener l = new BaseOnClickListener();
 		ImageButton imgbSubmitReply = (ImageButton) findViewById(R.id.btn_submit);
 		etxtReplyContent = (EditText) findViewById(R.id.etxt_reply);
+		imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref); // listener
+																			// adapter
+																			// ref
 		imgbAppIcon.setOnClickListener(l);
 		imgbSubmitReply.setOnClickListener(l);
 	}
@@ -249,7 +253,7 @@ public class DetailActivity extends BaseActivity {
 		}
 		// ListView
 		ListView listView = (ListView) findViewById(R.id.lv_detailList);
-		ReplysAdapter adapter = new ReplysAdapter(bean.getId(), listView,
+		final ReplysAdapter adapter = new ReplysAdapter(bean.getId(), listView,
 				headerDetail, null/* footer */, R.layout.reply_item) {
 			class LoadingDataTask extends UtilAsyncTask {
 				private int jokeId;
@@ -261,6 +265,7 @@ public class DetailActivity extends BaseActivity {
 				@Override
 				protected void onPreExecute() {
 					super.onPreExecute();
+					imgbRef.setVisibility(View.GONE);
 					pbLoad.setVisibility(View.VISIBLE);
 				}
 
@@ -286,6 +291,7 @@ public class DetailActivity extends BaseActivity {
 				@Override
 				protected void onPostExecute(PagerBean<ReplyBean> result) {
 					super.onPostExecute(result);
+					imgbRef.setVisibility(View.VISIBLE);
 					pbLoad.setVisibility(View.GONE);
 				}
 
@@ -311,5 +317,13 @@ public class DetailActivity extends BaseActivity {
 		listView.setAdapter(adapter);
 		adapter.initListView();
 		listViewHandler = adapter.getHandler();
+		imgbRef.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				adapter.refreshingData();
+			}
+
+		});
 	}
 }

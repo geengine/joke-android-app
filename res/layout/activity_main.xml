@@ -6,7 +6,9 @@
     android:orientation="vertical"
     tools:context=".MainActivity" >
 
-    <include layout="@layout/title_bar" android:id="@+id/titlebar" />
+    <include
+        android:id="@+id/titlebar"
+        layout="@layout/title_bar" />
 
     <ListView
         android:id="@+id/list"
@@ -16,9 +18,9 @@
         android:layout_margin="5dp"
         android:cacheColorHint="@null"
         android:divider="@color/bg_gray"
-        android:dividerHeight="8dp"
+        android:dividerHeight="5dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="true"
-        android:scrollbars="none" />
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

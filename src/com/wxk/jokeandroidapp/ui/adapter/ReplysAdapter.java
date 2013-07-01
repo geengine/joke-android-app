@@ -17,6 +17,15 @@ public abstract class ReplysAdapter extends UtilAdapter<ReplyBean> {
 		this.jokeId = jokeId;
 	}
 
+	@Override
+	public void initListView() {
+		// BaseOnScrollListener l = new BaseOnScrollListener(this,
+		// this.getHandler(), null != header, null != footer);
+		// listView.setOnScrollListener(l);
+		preInitListView();
+		loadingData(cur_page);
+	}
+
 	public int getJokeId() {
 		return jokeId;
 	}

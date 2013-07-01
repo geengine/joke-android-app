@@ -16,10 +16,12 @@
         android:layout_below="@id/titlebar"
         android:layout_marginBottom="50dp"
         android:cacheColorHint="@null"
-        android:divider="@color/bg_default"
-        android:dividerHeight="5dp"
+        android:divider="@color/bg_gray"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="true"
         android:padding="5dp"
-        android:scrollbars="none" >
+        android:scrollbars="vertical" >
     </ListView>
 
     <include layout="@layout/reply_add" />

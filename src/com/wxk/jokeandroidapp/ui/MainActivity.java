@@ -12,11 +12,14 @@ import com.wxk.util.LogUtil;
 
 import android.os.Bundle;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 public class MainActivity extends BaseActivity {
 
 	private ListView listView;
+	private ImageButton imgbRef;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -27,10 +30,11 @@ public class MainActivity extends BaseActivity {
 	}
 
 	private void initListView() {
+		imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref);
 		listView = (ListView) findViewById(R.id.list);
 		View footer = (View) AppManager.getInstance().getInflater()
 				.inflate(R.layout.list_view_footer, null);
-		JokesAdapter adapter = new JokesAdapter(listView, null, footer,
+		final JokesAdapter adapter = new JokesAdapter(listView, null, footer,
 				R.layout.joke_list_item) {
 			class LoadingDataTask extends UtilAsyncTask {
 				private JokeDao dao = new JokeDao();
@@ -40,6 +44,7 @@ public class MainActivity extends BaseActivity {
 				protected void onPreExecute() {
 					super.onPreExecute();
 					preLoadData();
+					imgbRef.setVisibility(View.GONE);
 					pbLoad.setVisibility(View.VISIBLE);
 				}
 
@@ -62,6 +67,7 @@ public class MainActivity extends BaseActivity {
 				protected void onPostExecute(PagerBean<JokeBean> result) {
 					super.onPostExecute(result);
 					LogUtil.i(TAG, "onPostExecute() " + result);
+					imgbRef.setVisibility(View.VISIBLE);
 					pbLoad.setVisibility(View.GONE);
 				}
 
@@ -90,5 +96,13 @@ public class MainActivity extends BaseActivity {
 		listView.setAdapter(adapter);
 
 		adapter.initListView();
+		imgbRef.setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View arg0) {
+				adapter.refreshingData();
+			}
+
+		});
 	}
 }
