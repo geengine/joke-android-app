@@ -88,7 +88,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 				.findViewById(R.id.imgv_jokeImg);
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
-
+				//viewHolder.imgvJokePic.setImageDrawable(null);
 				String url = Constant.BASE_URL + bean.getImgUrl();
 				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
 						viewHolder.imgHandler);
@@ -133,9 +133,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 			public void handleMessage(Message msg) {
 				super.handleMessage(msg);
 				switch (msg.what) {
-				case View.INVISIBLE:
-					imgvJokePic.setImageDrawable(null);
-					break;
+
 				case View.GONE:
 					imgvJokePic.setVisibility(View.GONE);
 					break;

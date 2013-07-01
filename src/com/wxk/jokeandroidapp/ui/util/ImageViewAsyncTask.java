@@ -70,7 +70,6 @@ public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPreExecute() {
 		super.onPreExecute();
-		handler.sendEmptyMessage(View.INVISIBLE);
 	}
 
 	@Override

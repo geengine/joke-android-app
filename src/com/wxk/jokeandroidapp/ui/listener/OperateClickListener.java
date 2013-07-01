@@ -5,6 +5,7 @@ import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.dao.JokeDao;
+import com.wxk.jokeandroidapp.ui.DetailActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 
 import android.annotation.SuppressLint;
@@ -119,7 +120,21 @@ public class OperateClickListener implements OnClickListener {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(intent);
 			break;
-
+		case R.id.btn_comment://评论
+			Intent intentDetail = new Intent();
+			intentDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+			intentDetail.putExtra("id", bean.getId());
+			intentDetail.putExtra("title", bean.getTitle());
+			intentDetail.putExtra("content", bean.getContent());
+			intentDetail.putExtra("replys", bean.getReplyCount());
+			intentDetail.putExtra("clicks", bean.getClickCount());
+			intentDetail.putExtra("goods", bean.getGooodCount());
+			intentDetail.putExtra("bads", bean.getBadCount());
+			intentDetail.putExtra("date", bean.getActiveDate());
+			intentDetail.putExtra("imgurl", bean.getImgUrl());
+			intentDetail.setClass(AppContext.context, DetailActivity.class);
+			AppContext.context.startActivity(intentDetail);
+			break;
 		}
 	}
 

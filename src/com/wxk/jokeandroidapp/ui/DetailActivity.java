@@ -245,7 +245,7 @@ public class DetailActivity extends BaseActivity {
 		}
 		if (viewHolder.btnComment != null) {
 			viewHolder.btnComment.setText("" + bean.getReplyCount());
-			viewHolder.btnComment.setOnClickListener(ocl);
+			// viewHolder.btnComment.setOnClickListener(ocl);
 		}
 		// ListView
 		ListView listView = (ListView) findViewById(R.id.lv_detailList);
