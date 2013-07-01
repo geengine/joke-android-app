@@ -33,11 +33,13 @@ public class MainActivity extends BaseActivity {
 		JokesAdapter adapter = new JokesAdapter(listView, null, footer,
 				R.layout.joke_list_item) {
 			class LoadingDataTask extends UtilAsyncTask {
+				private JokeDao dao = new JokeDao();
+				private int pageSize = 5;
 
 				@Override
 				protected void onPreExecute() {
 					super.onPreExecute();
-
+					preLoadData();
 					pbLoad.setVisibility(View.VISIBLE);
 				}
 
@@ -45,8 +47,7 @@ public class MainActivity extends BaseActivity {
 				protected PagerBean<JokeBean> doInBackground(Integer... arg0) {
 					int page = arg0[0];
 					boolean isDbCahce = arg0[1] == 0;
-					int pageSize = 5;
-					JokeDao dao = new JokeDao();
+
 					PagerBean<JokeBean> pager = new PagerBean<JokeBean>(page,
 							pageSize, Integer.MAX_VALUE);
 					List<JokeBean> result = dao.getJokes(page, pageSize,
@@ -74,6 +75,13 @@ public class MainActivity extends BaseActivity {
 					(new LoadingDataTask()).execute(page, isDbCache ? 0 : 1);
 				}
 				return isLoadingData;
+			}
+
+			@Override
+			public boolean preLoadData() {
+				JokeDao dao = new JokeDao();
+				bindDatas(dao.getJokesDbCache(1, 5));
+				return false;
 			}
 
 		};

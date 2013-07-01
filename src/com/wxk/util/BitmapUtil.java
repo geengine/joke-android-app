@@ -57,6 +57,12 @@ public class BitmapUtil {
 		public Drawable drawable;
 		public int width;
 		public int height;
+
+		@Override
+		public String toString() {
+			return "[" + width + "," + height + "]=>" + drawable;
+		}
+
 	}
 
 	public static WrapDrawable getImgDrawable(File cacheFile, Integer width,

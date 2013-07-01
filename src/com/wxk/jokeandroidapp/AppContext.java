@@ -7,11 +7,11 @@ import java.util.Hashtable;
 import java.util.Map;
 
 import com.wxk.jokeandroidapp.db.DbHelper;
+import com.wxk.util.BitmapUtil.WrapDrawable;
 import com.wxk.util.LogUtil;
 
 import android.app.Application;
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
@@ -25,7 +25,7 @@ public class AppContext extends Application {
 	public static Context context;
 	public static ConnectivityManager connectMg;
 
-	public static Map<String, SoftReference<Drawable>> imgCache = new HashMap<String, SoftReference<Drawable>>();
+	public static Map<String, SoftReference<WrapDrawable>> imgCache = new HashMap<String, SoftReference<WrapDrawable>>();
 
 	private static Hashtable<String, Long> memCacheFingerMark = new Hashtable<String, Long>();
 

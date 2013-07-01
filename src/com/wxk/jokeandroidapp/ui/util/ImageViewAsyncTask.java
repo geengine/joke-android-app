@@ -1,6 +1,7 @@
 package com.wxk.jokeandroidapp.ui.util;
 
 import java.io.File;
+import java.lang.ref.SoftReference;
 
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.util.BitmapUtil;
@@ -11,52 +12,38 @@ import com.wxk.util.StringUtil;
 
 import android.content.Context;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
-import android.view.ViewGroup;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 
 public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
-
 	final String TAG = "AsyncTask";
 	protected File cacheDir;
-
+	protected String cacheFileName;
 	protected Context context;
-	protected ImageView imgv;
 	protected String src = "";
 	protected File cacheFile;
-	protected boolean autoFill;
+	protected Handler handler;
 
-	public ImageViewAsyncTask(ImageView imgv, String src, Context context,
-			boolean autoFill) {
-		this.imgv = imgv;
-		this.src = src;
+	public ImageViewAsyncTask(Handler handler, Context context) {
+		this.handler = handler;
 		this.context = context;
 		this.cacheDir = this.context.getCacheDir();
-		this.autoFill = autoFill;
 	}
 
-	public ImageViewAsyncTask(ImageView imgv, String src, boolean autoFill) {
-		this(imgv, src, AppContext.context, autoFill);
-	}
-
-	public ImageViewAsyncTask(ImageView imgv, String src) {
-		this(imgv, src, AppContext.context, false);
-	}
-
-	public ImageViewAsyncTask(ImageView imgv, boolean autoFill) {
-		this(imgv, null, AppContext.context, autoFill);
-	}
-
-	public ImageViewAsyncTask(ImageView imgv) {
-		this(imgv, null, AppContext.context, false);
+	public ImageViewAsyncTask(Handler handler) {
+		this(handler, AppContext.context);
 	}
 
 	@Override
 	protected Boolean doInBackground(String... arg0) {
 		String url = arg0[0];
-		String cacheFileName = StringUtil.hashKeyForDisk(url);
+		cacheFileName = StringUtil.hashKeyForDisk(url);
+		if (showCacheDrawable(cacheFileName)) {
+			return true;
+		}
 		cacheFile = new File(cacheDir, cacheFileName);
+
 		if (!cacheFile.exists())
 			return FileUtil.downLoadFile(url, cacheFile);
 		return cacheFile.exists();
@@ -65,37 +52,75 @@ public class ImageViewAsyncTask extends AsyncTask<String, Integer, Boolean> {
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
-		if (result) {
-			WrapDrawable drawable = BitmapUtil.getImgDrawable(cacheFile);
+		if (result && cacheFile != null) {
 
-			if (drawable != null) {
-				if (autoFill) {
-					int w = DisplayUtil.getScreenWidth(context);// imgv.getWidth();
-					float bl = (float) drawable.height / (float) drawable.width;
-					ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(
-							w, (int) (w * bl));
-					imgv.setLayoutParams(params);
-					LogUtil.i(TAG, cacheFile.getPath() + ": width=" + w
-							+ ",height=" + w * bl + "," + bl);
-				}
-				imgv.setImageDrawable(drawable.drawable);
+			WrapDrawable drawable = BitmapUtil.getImgDrawable(cacheFile);
+			setImageViewDrawable(drawable);
+			// cache
+			if (cacheFile != null) {
+				AppContext.imgCache.put(cacheFile.getName(),
+						new SoftReference<WrapDrawable>(drawable));
 			}
 
-		} else {
-			imgv.setVisibility(View.GONE);
+		} else if (!result || cacheFile == null) {
+			handler.sendEmptyMessage(View.GONE);
 		}
 	}
 
 	@Override
 	protected void onPreExecute() {
-		// TODO Auto-generated method stub
 		super.onPreExecute();
+		handler.sendEmptyMessage(View.INVISIBLE);
 	}
 
 	@Override
 	protected void onProgressUpdate(Integer... values) {
-		// TODO Auto-generated method stub
 		super.onProgressUpdate(values);
+		LogUtil.i(TAG, cacheFile.getPath() + ": " + values[0]);
 	}
 
+	public boolean showCacheDrawableUrl(String url) {
+		String cacheFileName = StringUtil.hashKeyForDisk(url);
+		return showCacheDrawable(cacheFileName);
+	}
+
+	private boolean showCacheDrawable(String cacheFileName) {
+
+		// SoftReference cache
+		if (AppContext.imgCache.containsKey(cacheFileName)) {
+			SoftReference<WrapDrawable> softReference = AppContext.imgCache
+					.get(cacheFileName);
+
+			if (null != softReference && softReference.get() != null) {
+				WrapDrawable drawable = softReference.get();
+				LogUtil.d(TAG, "showCacheDrawable( " + cacheFileName + " )"
+						+ drawable);
+				setImageViewDrawable(drawable);
+				return true;
+			}
+		}
+		File temp = new File(cacheDir, cacheFileName);
+		if (temp.exists()) {
+			WrapDrawable drawable = BitmapUtil.getImgDrawable(temp);
+			setImageViewDrawable(drawable);
+			return true;
+		}
+
+		return false;
+	}
+
+	private void setImageViewDrawable(WrapDrawable drawable) {
+
+		if (drawable != null && drawable.drawable != null) {
+
+			LogUtil.d(TAG, "setImageViewDrawable( " + drawable + " )");
+			Message msg = new Message();
+			msg.what = View.VISIBLE;
+			msg.obj = drawable;
+			handler.sendMessage(msg);
+
+		} else {
+			handler.sendEmptyMessage(View.GONE);
+		}
+	}
 }

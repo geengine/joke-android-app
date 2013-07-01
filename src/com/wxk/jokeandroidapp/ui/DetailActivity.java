@@ -12,23 +12,30 @@ import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.dao.ReplyDao;
 import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
+import com.wxk.jokeandroidapp.ui.util.DisplayUtil;
 import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 import com.wxk.util.LogUtil;
+import com.wxk.util.BitmapUtil.WrapDrawable;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
+@SuppressLint("HandlerLeak")
 public class DetailActivity extends BaseActivity {
 
 	private int jokeid = 0;
@@ -179,9 +186,45 @@ public class DetailActivity extends BaseActivity {
 
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
-				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
-				(new ImageViewAsyncTask(viewHolder.imgvJokePic, true))
-						.execute(Constant.BASE_URL + bean.getImgUrl());
+				viewHolder.imgHandler = new Handler() {
+
+					@Override
+					public void handleMessage(Message msg) {
+						// TODO Auto-generated method stub
+						super.handleMessage(msg);
+						switch (msg.what) {
+						case View.INVISIBLE:
+							viewHolder.imgvJokePic.setImageDrawable(null);
+							break;
+						case View.GONE:
+							viewHolder.imgvJokePic.setVisibility(View.GONE);
+							break;
+						case View.VISIBLE:
+
+							WrapDrawable drawable = (WrapDrawable) msg.obj;
+							int w = DisplayUtil
+									.getScreenWidth(DetailActivity.this);// imgv.getWidth();
+							float bl = (float) drawable.height
+									/ (float) drawable.width;
+							ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(
+									w, (int) (w * bl));
+							viewHolder.imgvJokePic.setLayoutParams(params);
+							LogUtil.d(TAG, "VISIBLE: w=" + w + ",h=" + w * bl
+									+ "," + drawable);
+							viewHolder.imgvJokePic
+									.setImageDrawable(drawable.drawable);
+
+							viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
+							break;
+						}
+					}
+
+				};
+				String url = Constant.BASE_URL + bean.getImgUrl();
+				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
+						viewHolder.imgHandler);
+				if (!imgTask.showCacheDrawableUrl(url))
+					imgTask.execute(url);
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
@@ -256,6 +299,12 @@ public class DetailActivity extends BaseActivity {
 							isDbCache ? 0 : 1);
 				}
 				return isLoadingData;
+			}
+
+			@Override
+			public boolean preLoadData() {
+				// TODO Auto-generated method stub
+				return false;
 			}
 
 		};

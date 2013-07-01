@@ -7,8 +7,12 @@ import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.DetailActivity;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
+import com.wxk.util.BitmapUtil.WrapDrawable;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.os.Handler;
+import android.os.Message;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -85,9 +89,12 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
 
-				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
-				(new ImageViewAsyncTask(viewHolder.imgvJokePic))
-						.execute(Constant.BASE_URL + bean.getImgUrl());
+				String url = Constant.BASE_URL + bean.getImgUrl();
+				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
+						viewHolder.imgHandler);
+				if (!imgTask.showCacheDrawableUrl(url))
+					imgTask.execute(url);
+
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
@@ -112,6 +119,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		return viewHolder;
 	}
 
+	@SuppressLint("HandlerLeak")
 	public static class ViewHolder {
 		public TextView txtTitle;
 		public TextView txtContent;
@@ -119,5 +127,27 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		public Button btnGood;
 		public Button btnBad;
 		public Button btnComment;
+		public Handler imgHandler = new Handler() {
+
+			@Override
+			public void handleMessage(Message msg) {
+				super.handleMessage(msg);
+				switch (msg.what) {
+				case View.INVISIBLE:
+					imgvJokePic.setImageDrawable(null);
+					break;
+				case View.GONE:
+					imgvJokePic.setVisibility(View.GONE);
+					break;
+				case View.VISIBLE:
+					imgvJokePic.setVisibility(View.VISIBLE);
+					WrapDrawable drawable = (WrapDrawable) msg.obj;
+					if (drawable != null && drawable.drawable != null) {
+						imgvJokePic.setImageDrawable(drawable.drawable);
+					}
+					break;
+				}
+			}
+		};
 	}
 }

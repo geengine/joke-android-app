@@ -118,13 +118,17 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	 */
 	public abstract boolean loadingData(final int page, final boolean isDbCache);
 
+	public abstract boolean preLoadData();
+
 	public boolean loadingData(final int page) {
 		return loadingData(page, true);
 	}
 
 	public void refreshingData() {
-		isRefreshingData = true;
-		loadingData(1, false);
+		if (!isRefreshingData) {
+			isRefreshingData = true;
+			loadingData(1, false);
+		}
 	}
 
 	public void loadingMoreData() {
@@ -211,7 +215,7 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-
+			preLoadData();
 		}
 
 		@Override
@@ -226,6 +230,10 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 			}
 			isLoadingData = false;
 			super.onPostExecute(result);
+		}
+
+		protected void bindDatas(List<E> data) {
+			UtilAdapter.this.bindDatas(data);
 		}
 	}
 }

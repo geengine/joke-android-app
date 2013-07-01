@@ -102,6 +102,7 @@ public class JokeDb extends BaseDb<JokeBean> {
 		values.put("replys", e.getReplyCount());
 		values.put("goods", e.getGooodCount());
 		values.put("bads", e.getBadCount());
+		values.put("imgurl", e.getImgUrl());
 		values.put("active_date", e.getActiveDate());
 		return values;
 	}
@@ -121,6 +122,7 @@ public class JokeDb extends BaseDb<JokeBean> {
 				bean.setGooodCount(c.getInt(c.getColumnIndex("goods")));
 				bean.setBadCount(c.getInt(c.getColumnIndex("bads")));
 				bean.setActiveDate(c.getString(c.getColumnIndex("active_date")));
+				bean.setImgUrl(c.getString(c.getColumnIndex("imgurl")));
 				list.add(bean);
 			}
 		}

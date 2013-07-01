@@ -26,13 +26,18 @@ public class JokeDao extends BaseDao {
 		return getJokes(page, size, true);
 	}
 
-	public List<JokeBean> getJokes(int page, int pageSize, boolean isDbCache) {
+	public List<JokeBean> getJokesDbCache(int page, int pageSize) {
+		List<JokeBean> list = db.getList(page, pageSize);
+		return list;
+	}
+
+	public List<JokeBean> getJokes(int page, int pageSize, boolean isAutoCache) {
 		ResponseData responseData;
 		List<JokeBean> list = null;
 		String key = "getJokes_" + page + "_" + pageSize;
 		if (!AppContext.isNetworkConnected()// no network
-				|| (isDbCache && !this.isCacheDataFailure(key))) {
-			list = db.getList(page, pageSize);
+				|| (isAutoCache && !this.isCacheDataFailure(key))) {
+			list = getJokesDbCache(page, pageSize);
 			return list;
 		}
 		try {
