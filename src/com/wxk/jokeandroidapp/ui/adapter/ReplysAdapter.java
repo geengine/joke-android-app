@@ -34,20 +34,24 @@ public abstract class ReplysAdapter extends UtilAdapter<ReplyBean> {
 	protected Object initViewHolder(ReplyBean bean, View view, Object obj,
 			int position) {
 		ViewHolder viewHolder;
-		if (obj == null)
+		if (obj == null) {
 			viewHolder = new ViewHolder();
-		else
+			viewHolder.txtvContext = (TextView) view
+					.findViewById(R.id.txtv_reply_content);
+			viewHolder.txtvDate = (TextView) view
+					.findViewById(R.id.txtv_reply_date);
+			viewHolder.txtvFloor = (TextView) view
+					.findViewById(R.id.txtv_floor);
+		} else {
 			viewHolder = (ViewHolder) obj;
+		}
 
-		viewHolder.txtvContext = (TextView) view
-				.findViewById(R.id.txtv_reply_content);
 		if (viewHolder.txtvContext != null)
 			viewHolder.txtvContext.setText(bean.getContent());
-		viewHolder.txtvDate = (TextView) view
-				.findViewById(R.id.txtv_reply_date);
+
 		if (viewHolder.txtvDate != null)
 			viewHolder.txtvDate.setText(bean.getActiveDate());
-		viewHolder.txtvFloor = (TextView) view.findViewById(R.id.txtv_floor);
+
 		if (viewHolder.txtvFloor != null)
 			viewHolder.txtvFloor.setText("#" + (position + 1));
 		return viewHolder;

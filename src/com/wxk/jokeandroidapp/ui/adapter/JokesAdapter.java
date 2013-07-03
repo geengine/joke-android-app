@@ -65,16 +65,26 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 	protected Object initViewHolder(JokeBean bean, View view, Object obj,
 			int position) {
 		ViewHolder viewHolder;
-		if (obj == null)
+		if (obj == null) {
 			viewHolder = new ViewHolder();
-		else
+			viewHolder.txtTitle = (TextView) view
+					.findViewById(R.id.txt_jokeTitle);
+			viewHolder.txtContent = (TextView) view
+					.findViewById(R.id.txt_jokeContent);
+			viewHolder.imgvJokePic = (ImageView) view
+					.findViewById(R.id.imgv_jokeImg);
+			// operate button
+			viewHolder.btnGood = (Button) view.findViewById(R.id.btn_good);
+			viewHolder.btnBad = (Button) view.findViewById(R.id.btn_bad);
+			viewHolder.btnComment = (Button) view
+					.findViewById(R.id.btn_comment);
+		} else {
 			viewHolder = (ViewHolder) obj;
+		}
 
-		viewHolder.txtTitle = (TextView) view.findViewById(R.id.txt_jokeTitle);
 		if (viewHolder.txtTitle != null)
 			viewHolder.txtTitle.setText(bean.getTitle());
-		viewHolder.txtContent = (TextView) view
-				.findViewById(R.id.txt_jokeContent);
+
 		if (viewHolder.txtContent != null) {
 			if (bean.getContent() != null && !"".equals(bean.getContent())) {
 				viewHolder.txtContent.setVisibility(View.VISIBLE);
@@ -84,11 +94,9 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 			}
 		}
 
-		viewHolder.imgvJokePic = (ImageView) view
-				.findViewById(R.id.imgv_jokeImg);
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
-				//viewHolder.imgvJokePic.setImageDrawable(null);
+				// viewHolder.imgvJokePic.setImageDrawable(null);
 				String url = Constant.BASE_URL + bean.getImgUrl();
 				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
 						viewHolder.imgHandler);
@@ -99,10 +107,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
 		}
-		// operate button
-		viewHolder.btnGood = (Button) view.findViewById(R.id.btn_good);
-		viewHolder.btnBad = (Button) view.findViewById(R.id.btn_bad);
-		viewHolder.btnComment = (Button) view.findViewById(R.id.btn_comment);
+
 		OperateClickListener ocl = new OperateClickListener(viewHolder, bean);
 		if (viewHolder.btnGood != null) {
 			viewHolder.btnGood.setText("" + bean.getGooodCount());
