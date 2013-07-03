@@ -91,10 +91,8 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 					loadingMoreData();
 					break;
 				case Constant.REFURBISH:
-					// TODO when position is index one and this item is very
-					// height
-					// then refresh some time
-					// refreshingData();
+					
+					refreshingData();
 					break;
 				}
 			}

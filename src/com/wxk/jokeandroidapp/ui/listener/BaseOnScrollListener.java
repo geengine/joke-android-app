@@ -46,8 +46,11 @@ public class BaseOnScrollListener implements OnScrollListener {
 			LogUtil.i(TAG, "loading more ...");
 		}
 		if (scrollState == SCROLL_STATE_IDLE && firstItem == 0) {
-			handler.sendEmptyMessage(Constant.REFURBISH);
-			LogUtil.i(TAG, "refurbish ...");
+			// TODO when position is index one and this item is very
+			// height
+			// then refresh some time
+			// handler.sendEmptyMessage(Constant.REFURBISH);
+			// LogUtil.i(TAG, "refurbish ...");
 		}
 	}
 
