@@ -91,7 +91,7 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 					loadingMoreData();
 					break;
 				case Constant.REFURBISH:
-					
+
 					refreshingData();
 					break;
 				}
@@ -146,13 +146,15 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 
 	public void loadingMoreData() {
 
-		if (cur_page < total_pager) {
-			showListFooter();
-			cur_page++;
-			loadingData(cur_page, true);
-			LogUtil.d(TAG, "Loading page : " + cur_page);
-		} else {
-			LogUtil.d(TAG, "not loading more data !");
+		if (!this.isLoadingData) {
+			if (cur_page < total_pager) {
+				showListFooter();
+				cur_page++;
+				loadingData(cur_page, true);
+				LogUtil.d(TAG, "Loading page : " + cur_page);
+			} else {
+				LogUtil.d(TAG, "not loading more data !");
+			}
 		}
 	}
 

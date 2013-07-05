@@ -45,7 +45,8 @@ public class BitmapUtil {
 		opts.inPreferredConfig = Bitmap.Config.ARGB_8888; // setting color
 		opts.inPurgeable = true; // auto recycle
 		opts.inInputShareable = true; // if isPurgeable=false ignored this
-		// opts.inSampleSize = 2; // zoom size
+		// opts.inJustDecodeBounds = true;
+		opts.inSampleSize = 3; // zoom size
 		return opts;
 	}
 
@@ -68,7 +69,6 @@ public class BitmapUtil {
 	public static WrapDrawable getImgDrawable(File cacheFile, Integer width,
 			Integer height) {
 		WrapDrawable drawable = null;
-
 		if (cacheFile != null && cacheFile.exists()) {
 			InputStream inputStream = null;
 			Bitmap bm = null;
@@ -99,9 +99,9 @@ public class BitmapUtil {
 					} catch (IOException e) {
 					}
 				}
-				if (bm != null) {
-					bm.recycle();
-				}
+				// if (bm != null) {
+				// bm.recycle();
+				// }
 			}
 		}
 		return drawable;

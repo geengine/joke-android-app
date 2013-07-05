@@ -20,6 +20,8 @@ import com.wxk.util.BitmapUtil.WrapDrawable;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -328,4 +330,24 @@ public class DetailActivity extends BaseActivity {
 
 		});
 	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		// clear bitmap source
+		if (viewHolder != null && viewHolder.imgvJokePic != null) {
+			if (viewHolder.imgvJokePic.getDrawable() != null) {
+				Bitmap bitmap = ((BitmapDrawable) viewHolder.imgvJokePic
+						.getDrawable()).getBitmap();
+				viewHolder.imgvJokePic.setImageDrawable(null);
+				if (!bitmap.isRecycled()) {
+					if (bitmap != null) {
+						bitmap.recycle();
+						bitmap = null;
+					}
+				}
+			}
+		}
+	}
+
 }

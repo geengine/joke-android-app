@@ -11,6 +11,8 @@ import com.wxk.util.BitmapUtil.WrapDrawable;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Handler;
 import android.os.Message;
 import android.view.View;
@@ -95,6 +97,7 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 		}
 
 		if (viewHolder.imgvJokePic != null) {
+
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
 				// viewHolder.imgvJokePic.setImageDrawable(null);
 				String url = Constant.BASE_URL + bean.getImgUrl();
@@ -145,6 +148,25 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 				case View.VISIBLE:
 					imgvJokePic.setVisibility(View.VISIBLE);
 					WrapDrawable drawable = (WrapDrawable) msg.obj;
+					Bitmap newBitmap = null;
+					if (drawable != null && drawable.drawable != null) {
+						newBitmap = ((BitmapDrawable) drawable.drawable)
+								.getBitmap();
+					}
+					if (imgvJokePic.getDrawable() != null) {
+						Bitmap oldbitmap = ((BitmapDrawable) imgvJokePic
+								.getDrawable()).getBitmap();
+						imgvJokePic.setImageDrawable(null);
+						if (oldbitmap != newBitmap) {
+							if (!oldbitmap.isRecycled()) {
+								if (oldbitmap != null) {
+									oldbitmap.recycle();
+									oldbitmap = null;
+								}
+							}
+						}
+					}
+
 					if (drawable != null && drawable.drawable != null) {
 						imgvJokePic.setImageDrawable(drawable.drawable);
 					}
