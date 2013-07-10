@@ -81,8 +81,8 @@ public class BitmapUtil {
 					width = bm.getWidth();
 				if (height == 0)
 					height = bm.getHeight();
-				Bitmap useThisBitmap = Bitmap.createScaledBitmap(bm, width,
-						height, true);
+				Bitmap useThisBitmap = bm;// Bitmap.createScaledBitmap(bm,
+											// width,height, true);
 				drawable = new WrapDrawable();
 				drawable.width = width;
 				drawable.height = height;
