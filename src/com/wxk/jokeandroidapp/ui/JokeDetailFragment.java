@@ -19,6 +19,7 @@ import com.wxk.util.GsonUtils;
 import com.wxk.util.LogUtil;
 import com.wxk.util.BitmapUtil.WrapDrawable;
 
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -84,7 +85,7 @@ public class JokeDetailFragment extends Fragment {
 		public void onClick(View v) {
 			switch (v.getId()) {
 			case R.id.titlebar_app_icon:
-				AppManager.getInstance().finishActivity();
+				backMainActivity();
 				break;
 			case R.id.btn_submit:
 				doReply();
@@ -93,6 +94,14 @@ public class JokeDetailFragment extends Fragment {
 
 		}
 
+		void backMainActivity() {
+			// AppManager.getInstance().finishActivity();
+			// Intent intent = new Intent(AppManager.getInstance()
+			// .currentActivity(), MainActivity.class);
+			// AppManager.getInstance().currentActivity().startActivity(intent);
+			// AppManager.getInstance().currentActivity().finish();
+			JokeDetailFragment.this.getActivity().finish();
+		}
 	}
 
 	private void doReply() {
@@ -167,6 +176,7 @@ public class JokeDetailFragment extends Fragment {
 					.findViewById(R.id.titlebar_text);
 			imgbAppIcon = (ImageButton) titleBar
 					.findViewById(R.id.titlebar_app_icon);
+			imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref); // listener
 		}
 
 	}
@@ -177,9 +187,7 @@ public class JokeDetailFragment extends Fragment {
 		ImageButton imgbSubmitReply = (ImageButton) v
 				.findViewById(R.id.btn_submit);
 		etxtReplyContent = (EditText) v.findViewById(R.id.etxt_reply);
-		imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref); // listener
-																			// adapter
-																			// ref
+
 		imgbAppIcon.setOnClickListener(l);
 		imgbSubmitReply.setOnClickListener(l);
 	}
@@ -223,9 +231,7 @@ public class JokeDetailFragment extends Fragment {
 						case View.VISIBLE:
 
 							WrapDrawable drawable = (WrapDrawable) msg.obj;
-							int w = DisplayUtil
-									.getScreenWidth(JokeDetailFragment.this
-											.getActivity());// imgv.getWidth();
+							int w = DisplayUtil.getScreenWidth();// imgv.getWidth();
 							float bl = (float) drawable.height
 									/ (float) drawable.width;
 							ViewGroup.LayoutParams params = new LinearLayout.LayoutParams(
@@ -363,12 +369,22 @@ public class JokeDetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View v = inflater.inflate(R.layout.joke_detail_page, container,
-				false);
+		final View v = inflater.inflate(R.layout.joke_detail_fragment,
+				container, false);
 		initTitleBar(v);
 		initBtnClick(v);
 		initJokeDetailView(v, jokeBean);
 		return v;
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+	}
+
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
 	}
 
 }

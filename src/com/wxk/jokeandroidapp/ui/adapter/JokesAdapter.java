@@ -45,18 +45,19 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 					return;
 
 				JokeBean bean = datas.get(position);
-				Intent intentDetail = new Intent();
+				final Intent intentDetail = new Intent(AppContext.context,
+						DetailActivity.class);
 				intentDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-				intentDetail.putExtra("id", bean.getId());
-				intentDetail.putExtra("title", bean.getTitle());
-				intentDetail.putExtra("content", bean.getContent());
-				intentDetail.putExtra("replys", bean.getReplyCount());
-				intentDetail.putExtra("clicks", bean.getClickCount());
-				intentDetail.putExtra("goods", bean.getGooodCount());
-				intentDetail.putExtra("bads", bean.getBadCount());
-				intentDetail.putExtra("date", bean.getActiveDate());
-				intentDetail.putExtra("imgurl", bean.getImgUrl());
-				intentDetail.setClass(AppContext.context, DetailActivity.class);
+				intentDetail.putExtra(DetailActivity.EXTRA_JOKE, position);
+				// intentDetail.putExtra("id", bean.getId());
+				// intentDetail.putExtra("title", bean.getTitle());
+				// intentDetail.putExtra("content", bean.getContent());
+				// intentDetail.putExtra("replys", bean.getReplyCount());
+				// intentDetail.putExtra("clicks", bean.getClickCount());
+				// intentDetail.putExtra("goods", bean.getGooodCount());
+				// intentDetail.putExtra("bads", bean.getBadCount());
+				// intentDetail.putExtra("date", bean.getActiveDate());
+				// intentDetail.putExtra("imgurl", bean.getImgUrl());
 				AppContext.context.startActivity(intentDetail);
 			}
 

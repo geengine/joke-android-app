@@ -13,7 +13,7 @@ import com.wxk.util.UniqueList;
 public class JokeDb extends BaseDb<JokeBean> {
 
 	final String TABLE = "t_joke";
-
+	
 	@Override
 	public String getTableName() {
 		return TABLE;
