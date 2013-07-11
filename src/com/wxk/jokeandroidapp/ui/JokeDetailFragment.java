@@ -14,12 +14,12 @@ import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.jokeandroidapp.ui.util.DisplayUtil;
-import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
+import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
+import com.wxk.jokeandroidapp.ui.util.ImageWorker;
 import com.wxk.util.GsonUtils;
 import com.wxk.util.LogUtil;
 import com.wxk.util.BitmapUtil.WrapDrawable;
 
-import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -45,7 +45,6 @@ public class JokeDetailFragment extends Fragment {
 	protected TextView txtvPageTitle;
 	protected ImageButton imgbAppIcon;
 	protected ViewGroup titleBar;
-	private int jokeid = 0;
 	private JokeBean jokeBean;
 	private boolean isReplying = false;
 	private EditText etxtReplyContent;
@@ -54,8 +53,11 @@ public class JokeDetailFragment extends Fragment {
 	private ImageButton imgbRef;
 	private final static String BEAN_JSON_DATA_EXTRA = "bean_data_extra";
 	protected final String TAG = "JokeDetailFragment";
+	private ImageFetcher mImageFetcher;
+	private String imgUrl;
 
 	public JokeDetailFragment() {
+
 	}
 
 	protected void showToast(String showText) {
@@ -117,7 +119,7 @@ public class JokeDetailFragment extends Fragment {
 				showToast(R.string.toast_reply_empty);
 				return;
 			}
-			(new DoReplyTask(jokeid, content)).execute();
+			(new DoReplyTask(jokeBean.getId(), content)).execute();
 		} else {
 			showToast(R.string.toast_reply_exists);
 		}
@@ -248,11 +250,13 @@ public class JokeDetailFragment extends Fragment {
 					}
 
 				};
-				String url = Constant.BASE_URL + bean.getImgUrl();
-				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
-						viewHolder.imgHandler);
-				if (!imgTask.showCacheDrawableUrl(url))
-					imgTask.execute(url);
+				imgUrl = Constant.BASE_URL + bean.getImgUrl();
+
+				// mImageFetcher.loadImage(imgUrl, viewHolder.imgvJokePic);
+				// ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
+				// viewHolder.imgHandler);
+				// if (!imgTask.showCacheDrawableUrl(url))
+				// imgTask.execute(url);
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
 			}
@@ -353,8 +357,14 @@ public class JokeDetailFragment extends Fragment {
 
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onActivityCreated(savedInstanceState);
+		if (DetailActivity.class.isInstance(getActivity())) {
+			mImageFetcher = ((DetailActivity) getActivity()).getImageFetcher();
+			if (viewHolder != null && viewHolder.imgvJokePic != null
+					&& imgUrl != null && imgUrl != "" && imgUrl.length() > 5) {
+				mImageFetcher.loadImage(imgUrl, viewHolder.imgvJokePic);
+			}
+		}
 	}
 
 	@Override
@@ -380,11 +390,9 @@ public class JokeDetailFragment extends Fragment {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		if (viewHolder != null && viewHolder.imgvJokePic != null) {
+			ImageWorker.cancelWork(viewHolder.imgvJokePic);
+			viewHolder.imgvJokePic.setImageDrawable(null);
+		}
 	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-	}
-
 }

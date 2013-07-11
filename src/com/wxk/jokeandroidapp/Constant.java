@@ -37,7 +37,7 @@ public final class Constant {
 
 	public final static String BASE_URL = "http://www.52lxh.com";
 	public final static String API_URL = BASE_URL + "/appinterface";
-	public final static String SD_CARD_IMG_DIR = "com.cjiayi.hyy/img";
+	public static final String IMAGE_CACHE_DIR = "img";
 	public final static String SD_CARD_CAMERA = "Camera";
 
 	public static final int IMAGE_REQUEST_CODE = 1;

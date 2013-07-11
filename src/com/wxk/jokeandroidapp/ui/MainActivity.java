@@ -3,11 +3,14 @@ package com.wxk.jokeandroidapp.ui;
 import java.util.List;
 
 import com.wxk.jokeandroidapp.AppManager;
+import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.dao.JokeDao;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter;
+import com.wxk.jokeandroidapp.ui.util.ImageCache.ImageCacheParams;
+import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 import com.wxk.util.LogUtil;
 
 import android.os.Bundle;
@@ -18,6 +21,8 @@ import android.widget.ListView;
 
 public class MainActivity extends BaseActivity {
 
+	private ImageFetcher mImageFetcher;
+
 	private ListView listView;
 	private ImageButton imgbRef;
 
@@ -25,8 +30,25 @@ public class MainActivity extends BaseActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setImageFatcher();
 		initTitleBar();
 		initListView();
+	}
+
+	private void setImageFatcher() {
+		ImageCacheParams cacheParams = new ImageCacheParams(this,
+				Constant.IMAGE_CACHE_DIR);
+
+		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of
+													// app memory
+
+		// The ImageFetcher takes care of loading images into our ImageView
+		// children asynchronously
+		mImageFetcher = new ImageFetcher(this, 200);
+		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+		mImageFetcher.addImageCache(this.getSupportFragmentManager(),
+				cacheParams);
+
 	}
 
 	private void initListView() {
@@ -36,8 +58,10 @@ public class MainActivity extends BaseActivity {
 				.inflate(R.layout.list_view_footer, null);
 		// View header = (View) AppManager.getInstance().getInflater()
 		// .inflate(R.layout.list_view_header, null);
+
 		final JokesAdapter adapter = new JokesAdapter(listView,
-				null/* header */, footer, R.layout.joke_list_item) {
+				null/* header */, footer, R.layout.joke_list_item,
+				mImageFetcher) {
 			class LoadingDataTask extends UtilAsyncTask {
 				private JokeDao dao = new JokeDao();
 				private int pageSize = 5;
@@ -106,5 +130,25 @@ public class MainActivity extends BaseActivity {
 			}
 
 		});
+	}
+
+	@Override
+	public void onResume() {
+		super.onResume();
+		mImageFetcher.setExitTasksEarly(false);
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		mImageFetcher.setPauseWork(false);
+		mImageFetcher.setExitTasksEarly(true);
+		mImageFetcher.flushCache();
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		mImageFetcher.closeCache();
 	}
 }

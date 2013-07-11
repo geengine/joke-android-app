@@ -3,8 +3,8 @@ package com.wxk.jokeandroidapp.ui;
 import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.R;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -16,7 +16,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class BaseActivity extends Activity {
+public class BaseActivity extends FragmentActivity {
 	protected final String TAG = "activity";
 	protected ProgressBar pbLoad;
 	protected TextView txtvPageTitle;

@@ -6,7 +6,7 @@ import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.DetailActivity;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
-import com.wxk.jokeandroidapp.ui.util.ImageViewAsyncTask;
+import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 import com.wxk.util.BitmapUtil.WrapDrawable;
 
 import android.annotation.SuppressLint;
@@ -25,9 +25,12 @@ import android.widget.AdapterView.OnItemClickListener;
 
 public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 
+	private ImageFetcher mImageFetcher;
+
 	public JokesAdapter(ListView listView, View header, View footer,
-			int itemLayout) {
+			int itemLayout, ImageFetcher imageFetcher) {
 		super(listView, header, footer, itemLayout);
+		this.mImageFetcher = imageFetcher;
 	}
 
 	@Override
@@ -102,10 +105,13 @@ public abstract class JokesAdapter extends UtilAdapter<JokeBean> {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
 				// viewHolder.imgvJokePic.setImageDrawable(null);
 				String url = Constant.BASE_URL + bean.getImgUrl();
-				ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
-						viewHolder.imgHandler);
-				if (!imgTask.showCacheDrawableUrl(url))
-					imgTask.execute(url);
+				viewHolder.imgvJokePic.setVisibility(View.VISIBLE);
+				mImageFetcher.loadImage(url, viewHolder.imgvJokePic);
+				/*
+				 * ImageViewAsyncTask imgTask = new ImageViewAsyncTask(
+				 * viewHolder.imgHandler); if
+				 * (!imgTask.showCacheDrawableUrl(url)) imgTask.execute(url);
+				 */
 
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
