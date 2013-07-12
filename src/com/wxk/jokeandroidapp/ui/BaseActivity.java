@@ -1,5 +1,6 @@
 package com.wxk.jokeandroidapp.ui;
 
+import com.baidu.mobstat.StatService;
 import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.R;
 
@@ -45,6 +46,18 @@ public class BaseActivity extends FragmentActivity {
 	protected void onDestroy() {
 		super.onDestroy();
 		AppManager.getInstance().finishActivity(this);
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		StatService.onPause(this);
+	}
+
+	@Override
+	protected void onResume() {
+		super.onResume();
+		StatService.onResume(this);
 	}
 
 	protected void initTitleBar() {

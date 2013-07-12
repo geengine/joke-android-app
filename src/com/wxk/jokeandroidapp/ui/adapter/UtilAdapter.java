@@ -67,7 +67,7 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 				this.getHandler(), null != header, null != footer);
 		listView.setOnScrollListener(l);
 		preInitListView();
-		loadingData(cur_page);
+		refreshingData();
 	}
 
 	public void preInitListView() {

@@ -12,7 +12,6 @@ import com.wxk.util.GsonUtils;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -20,7 +19,7 @@ import android.util.DisplayMetrics;
 import android.view.View;
 import android.view.View.OnClickListener;
 
-public class DetailActivity extends FragmentActivity implements OnClickListener {
+public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	private ViewPager mPager;
 	private JokePagerAdapter mAdapter;
