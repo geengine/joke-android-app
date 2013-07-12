@@ -17,9 +17,7 @@
         android:id="@+id/imgv_jokeImg"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_gravity="center_horizontal"
-        android:contentDescription="@null"
-        android:scaleType="centerCrop" />
+        android:contentDescription="@null" />
 
     <include layout="@layout/joke_operate" />
 

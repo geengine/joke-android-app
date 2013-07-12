@@ -244,6 +244,8 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 				hideListFooter();
 			}
 			isLoadingData = false;
+			if (isRefreshingData)
+				isRefreshingData = false;
 			super.onPostExecute(result);
 		}
 

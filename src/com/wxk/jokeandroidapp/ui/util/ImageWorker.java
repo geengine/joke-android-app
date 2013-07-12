@@ -338,14 +338,6 @@ public abstract class ImageWorker {
 					// which will recycle automagically
 					drawable = new RecyclingBitmapDrawable(mResources, bitmap);
 				}
-				if (mFullImageShow && getAttachedImageView() != null) {
-					int w = DisplayUtil.getScreenWidth();// imgv.getWidth();
-					float bl = (float) bitmap.getHeight()
-							/ (float) bitmap.getHeight();
-					ViewGroup.LayoutParams vlp = new LinearLayout.LayoutParams(
-							w, (int) (w * bl));
-					// getAttachedImageView().setLayoutParams(vlp);
-				}
 				if (mImageCache != null) {
 					mImageCache.addBitmapToCache(dataString, drawable);
 				}
@@ -432,6 +424,7 @@ public abstract class ImageWorker {
 	 * @param imageView
 	 * @param drawable
 	 */
+	@SuppressWarnings("deprecation")
 	private void setImageDrawable(ImageView imageView, Drawable drawable) {
 		if (mFadeInBitmap) {
 

@@ -25,7 +25,7 @@ public class DetailActivity extends FragmentActivity implements OnClickListener 
 	private ViewPager mPager;
 	private JokePagerAdapter mAdapter;
 	private ImageFetcher mImageFetcher;
-	public static final String EXTRA_JOKE = "extra_joke";
+	public static final String EXTRA_JOKE_ID = "extra_joke_id";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,14 +37,14 @@ public class DetailActivity extends FragmentActivity implements OnClickListener 
 		final int height = displayMetrics.heightPixels;
 		final int width = displayMetrics.widthPixels;
 
-		final int longest = (height > width ? height : width) / 2;
+		final int longest = (height > width ? height : width);// / 2;
 
 		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(
 				this, Constant.IMAGE_CACHE_DIR);
 		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of
 													// app memory
 		//
-		mImageFetcher = new ImageFetcher(this, width, height);
+		mImageFetcher = new ImageFetcher(this, longest);
 		mImageFetcher.addImageCache(getSupportFragmentManager(), cacheParams);
 		mImageFetcher.setImageFadeIn(false);
 		mImageFetcher.setFullImageShow(true);
@@ -54,11 +54,18 @@ public class DetailActivity extends FragmentActivity implements OnClickListener 
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(2);
 
-		final int extraCurrentItem = getIntent().getIntExtra(EXTRA_JOKE, -1);
+		// final int extraCurrentItem = getIntent().getIntExtra(EXTRA_JOKE, -1);
+		final int extraCurrentItem = (int) db
+				.getCount(
+						"id>?",
+						new String[] { ""
+								+ getIntent().getIntExtra(EXTRA_JOKE_ID, -1) });
 		if (extraCurrentItem != -1) {
 			mPager.setCurrentItem(extraCurrentItem);
 		}
 	}
+
+	private JokeDb db = new JokeDb();
 
 	private class JokePagerAdapter extends FragmentStatePagerAdapter {
 		public JokePagerAdapter(FragmentManager fm) {
@@ -67,7 +74,6 @@ public class DetailActivity extends FragmentActivity implements OnClickListener 
 		}
 
 		private final int mSize;
-		private JokeDb db = new JokeDb();
 
 		@Override
 		public int getCount() {

@@ -20,7 +20,6 @@ import com.wxk.jokeandroidapp.BuildConfig;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
 import android.util.Log;
 
 /**
