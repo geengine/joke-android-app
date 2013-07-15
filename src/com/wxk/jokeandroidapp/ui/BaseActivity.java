@@ -2,7 +2,10 @@ package com.wxk.jokeandroidapp.ui;
 
 import com.baidu.mobstat.StatService;
 import com.wxk.jokeandroidapp.AppManager;
+import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
+import com.wxk.jokeandroidapp.ui.util.ImageCache.ImageCacheParams;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
@@ -24,6 +27,7 @@ public class BaseActivity extends FragmentActivity {
 	protected ImageButton imgbAppIcon;
 	protected ViewGroup titleBar;
 	protected GestureDetector gestureDetector;
+	protected ImageFetcher mImageFetcher;
 
 	protected void showToast(String showText) {
 		Toast toast = Toast.makeText(this, showText, Toast.LENGTH_SHORT);
@@ -40,6 +44,18 @@ public class BaseActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		gestureDetector = new GestureDetector(this, onGestureListener);
 		AppManager.getInstance().addActivity(this);
+		ImageCacheParams cacheParams = new ImageCacheParams(this,
+				Constant.IMAGE_CACHE_DIR);
+
+		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of
+													// app memory
+
+		// The ImageFetcher takes care of loading images into our ImageView
+		// children asynchronously
+		mImageFetcher = new ImageFetcher(this, 400, 200);
+		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
+		mImageFetcher.addImageCache(this.getSupportFragmentManager(),
+				cacheParams);
 	}
 
 	@Override

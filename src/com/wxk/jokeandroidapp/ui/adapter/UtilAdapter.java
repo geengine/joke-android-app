@@ -140,7 +140,8 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 	public void refreshingData() {
 		if (!isRefreshingData) {
 			isRefreshingData = true;
-			loadingData(1, false);
+			cur_page = 1;
+			loadingData(cur_page, false);
 		}
 	}
 

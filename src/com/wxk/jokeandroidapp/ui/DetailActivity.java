@@ -23,7 +23,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	private ViewPager mPager;
 	private JokePagerAdapter mAdapter;
-	private ImageFetcher mImageFetcher;
 	public static final String EXTRA_JOKE_ID = "extra_joke_id";
 
 	@Override
