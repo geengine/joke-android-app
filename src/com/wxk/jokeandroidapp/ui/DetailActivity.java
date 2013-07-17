@@ -35,14 +35,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		final int height = displayMetrics.heightPixels;
 		final int width = displayMetrics.widthPixels;
 
-		final int longest = (height > width ? height : width);// / 2;
+		// final int longest = (height > width ? height : width);// / 2;
 
 		ImageCache.ImageCacheParams cacheParams = new ImageCache.ImageCacheParams(
 				this, Constant.IMAGE_CACHE_DIR);
 		cacheParams.setMemCacheSizePercent(0.25f); // Set memory cache to 25% of
 													// app memory
 		//
-		mImageFetcher = new ImageFetcher(this, longest);
+		mImageFetcher = new ImageFetcher(this, width, height);
 		mImageFetcher.addImageCache(getSupportFragmentManager(), cacheParams);
 		mImageFetcher.setImageFadeIn(false);
 		mImageFetcher.setFullImageShow(true);

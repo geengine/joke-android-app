@@ -35,6 +35,8 @@ import java.lang.ref.WeakReference;
 
 import com.wxk.jokeandroidapp.BuildConfig;
 
+//import com.wxk.util.LogUtil;
+
 /**
  * This class wraps up completing some arbitrary long running work when loading
  * a bitmap to an ImageView. It handles things like using a memory and disk
@@ -448,9 +450,13 @@ public abstract class ImageWorker {
 			WrapBitmapDrawable wbd = (WrapBitmapDrawable) drawable;
 			if (mFullImageShow) {
 				int w = DisplayUtil.getScreenWidth();// imgv.getWidth();
-				float bl = (float) wbd.getHeight() / (float) wbd.getHeight();
+				float ih = wbd.getHeight();
+				float iw = wbd.getWidth();
+				float bl = ih / iw;
 				ViewGroup.LayoutParams vlp = new LinearLayout.LayoutParams(w,
 						(int) (w * bl));
+				// LogUtil.i(TAG, "w=" + w + ",h=" + (w * bl) + ",iw=" + iw
+				// + ",ih=" + ih + ",bl=" + bl);
 				imageView.setLayoutParams(vlp);
 			}
 		}

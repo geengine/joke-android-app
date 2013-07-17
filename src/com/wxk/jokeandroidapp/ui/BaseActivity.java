@@ -52,7 +52,7 @@ public class BaseActivity extends FragmentActivity {
 
 		// The ImageFetcher takes care of loading images into our ImageView
 		// children asynchronously
-		mImageFetcher = new ImageFetcher(this, 400, 200);
+		mImageFetcher = new ImageFetcher(this, 800, 400);
 		mImageFetcher.setLoadingImage(R.drawable.empty_photo);
 		mImageFetcher.addImageCache(this.getSupportFragmentManager(),
 				cacheParams);
