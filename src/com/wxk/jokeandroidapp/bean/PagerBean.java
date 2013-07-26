@@ -74,6 +74,6 @@ public class PagerBean<E> {
 		return "page: " + this.getIndex() + "  size: " + this.getSize()
 				+ "  totalPage: " + this.getTotalPage() + "  totalSize: "
 				+ this.getTotalSize() + "  result.size(): "
-				+ this.getResult().size();
+				+ (result != null ? this.getResult().size() : 0);
 	}
 }

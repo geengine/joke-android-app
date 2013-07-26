@@ -29,9 +29,7 @@ public abstract class BaseDb<E> {
 		this(AppContext.context);
 	}
 
-	public String getTableName() {
-		return null;
-	}
+	public abstract String getTableName();
 
 	public DbHelper getDbHelper() {
 		return dbHelper;
@@ -127,7 +125,29 @@ public abstract class BaseDb<E> {
 			return null;
 	}
 
-	public abstract E getOne(String id);
+	public List<E> getList(int page, int size) {
+		return getList(null, null, null, page, size);
+	}
+
+	public List<E> getList(String where, String[] whereArgs, String orderBy,
+			int page, int size) {
+		List<E> list = null;
+		SQLiteDatabase db = getDb();
+		Cursor cursor = db.query(getTableName(), null, where, whereArgs, null,
+				null, orderBy, ((page - 1) * size) + "," + size);
+
+		list = getEntity(cursor);
+
+		cursor.close();
+		db.close();
+
+		LogUtil.d(TAG, "WHERE { " + where + "," + StringUtil.toStr(whereArgs)
+				+ " } ");
+		LogUtil.d(TAG, "ORDERBY { " + orderBy + " } ");
+		return list;
+	}
+
+	public abstract E getOne(long id);
 
 	abstract ContentValues getContentValues(E e);
 

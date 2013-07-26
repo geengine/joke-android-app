@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/bg_gray"
+    android:orientation="vertical" >
+
+    <include
+        android:id="@id/titlebar"
+        layout="@layout/title_bar_with_back" />
+
+    <ListView
+        android:id="@+id/lv_detailList"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/titlebar"
+        android:layout_marginBottom="50dp"
+        android:cacheColorHint="@null"
+        android:divider="@color/bg_gray"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="true"
+        android:padding="5dp"
+        android:scrollbars="vertical" >
+    </ListView>
+
+    <include layout="@layout/reply_add" />
+
+</RelativeLayout>

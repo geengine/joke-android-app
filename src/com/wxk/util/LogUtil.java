@@ -19,7 +19,7 @@ public final class LogUtil {
 	}
 
 	public static void w(String TAG, String msg) {
-		if (isLogW)
+		if (isLogW && msg != null)
 			Log.w(TAG, msg);
 	}
 

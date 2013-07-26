@@ -2,9 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="5dp"
-    android:orientation="vertical"
-    android:background="@drawable/joke_list_item_bg" >
+    android:background="@drawable/joke_list_item_bg"
+    android:orientation="vertical" >
 
     <TextView
         android:id="@+id/txt_jokeTitle"
@@ -15,21 +14,20 @@
         android:textIsSelectable="false" />
 
     <TextView
-        android:id="@+id/joke_content"
+        android:id="@+id/txt_jokeContent"
         style="@style/txt_joke_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="@string/app_name"
         android:textIsSelectable="false" />
 
-    <ImageView
-        android:id="@+id/img_jokeImg"
+    <com.wxk.jokeandroidapp.ui.RecyclingImageView
+        android:id="@+id/imgv_jokeImg"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="200dp"
         android:layout_gravity="center_horizontal"
-        android:layout_marginBottom="5dp"
-        android:layout_marginTop="5dp"
-        android:contentDescription="@null" />
+        android:contentDescription="@null"
+        android:scaleType="centerCrop" />
 
     <include layout="@layout/joke_operate" />
 
