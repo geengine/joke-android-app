@@ -9,23 +9,18 @@ import com.wxk.jokeandroidapp.ui.util.ImageCache.ImageCacheParams;
 
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+//import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MotionEvent;
-import android.view.ViewGroup;
 import android.view.GestureDetector.OnGestureListener;
-import android.widget.ImageButton;
-import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 public class BaseActivity extends FragmentActivity {
 	protected final String TAG = "activity";
-	protected ProgressBar pbLoad;
-	protected TextView txtvPageTitle;
-	protected ImageButton imgbAppIcon;
-	protected ViewGroup titleBar;
 	protected GestureDetector gestureDetector;
 	protected ImageFetcher mImageFetcher;
 
@@ -37,6 +32,13 @@ public class BaseActivity extends FragmentActivity {
 
 	protected void showToast(int resId) {
 		showToast(this.getString(resId));
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
 	}
 
 	@Override
@@ -74,19 +76,6 @@ public class BaseActivity extends FragmentActivity {
 	protected void onResume() {
 		super.onResume();
 		StatService.onResume(this);
-	}
-
-	protected void initTitleBar() {
-		titleBar = (ViewGroup) findViewById(R.id.titlebar);
-		if (titleBar != null) {
-			pbLoad = (ProgressBar) titleBar
-					.findViewById(R.id.titlebar_progress);
-			txtvPageTitle = (TextView) titleBar
-					.findViewById(R.id.titlebar_text);
-			imgbAppIcon = (ImageButton) titleBar
-					.findViewById(R.id.titlebar_app_icon);
-		}
-
 	}
 
 	protected void onFlingLeft() {

@@ -52,14 +52,14 @@ public abstract class UtilAdapter<E> extends BaseAdapter {
 		this.footer = footer;
 		this.item_layout = itemLayout;
 		this.handler = handler;
-
-		if (null != header) {
-			this.listView.addHeaderView(this.header);
+		if (null != this.listView) {
+			if (null != header) {
+				this.listView.addHeaderView(this.header);
+			}
+			if (null != footer) {
+				this.listView.addFooterView(this.footer);
+			}
 		}
-		if (null != footer) {
-			this.listView.addFooterView(this.footer);
-		}
-
 	}
 
 	public void initListView() {

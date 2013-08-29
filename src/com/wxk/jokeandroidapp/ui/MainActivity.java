@@ -1,113 +1,170 @@
 package com.wxk.jokeandroidapp.ui;
 
-import java.util.List;
-
-import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.R;
-import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.bean.PagerBean;
-import com.wxk.jokeandroidapp.dao.JokeDao;
-import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter;
-import com.wxk.util.LogUtil;
 
+import android.annotation.TargetApi;
+import android.app.Fragment;
+import android.app.FragmentManager;
+import android.content.res.Configuration;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.NavUtils;
+import android.support.v4.view.GravityCompat;
+import android.support.v4.widget.DrawerLayout;
+import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.View.OnClickListener;
-import android.widget.ImageButton;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.TextView;
 
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MainActivity extends BaseActivity {
 
-	private ListView listView;
-	private ImageButton imgbRef;
+	private String[] mPlanetTitles;
+	private DrawerLayout mDrawerLayout;
+	private ListView mDrawerList;
+	private ActionBarDrawerToggle mDrawerToggle;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		initTitleBar();
-		initListView();
+
+		mPlanetTitles = getResources().getStringArray(R.array.drawer_items);
+		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
+		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
+				GravityCompat.START);
+		mDrawerList = (ListView) findViewById(R.id.left_drawer);
+
+		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
+				R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
+
+		//
+		getActionBar().setDisplayHomeAsUpEnabled(true);
+		getActionBar().setHomeButtonEnabled(true);
+		//
+
+		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
+		mDrawerLayout, /* DrawerLayout object */
+		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.string.drawer_open, /* "open drawer" description for accessibility */
+		R.string.drawer_close /* "close drawer" description for accessibility */
+		) {
+			public void onDrawerClosed(View view) {
+				// getActionBar().setTitle(mTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
+
+			public void onDrawerOpened(View drawerView) {
+				// getActionBar().setTitle(mDrawerTitle);
+				invalidateOptionsMenu(); // creates call to
+											// onPrepareOptionsMenu()
+			}
+		};
+		mDrawerLayout.setDrawerListener(mDrawerToggle);
+
+		if (savedInstanceState == null) {
+			selectItem(0);
+		}
+
 	}
 
-	private void initListView() {
-		imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref);
-		listView = (ListView) findViewById(R.id.list);
-		View footer = (View) AppManager.getInstance().getInflater()
-				.inflate(R.layout.list_view_footer, null);
-		// View header = (View) AppManager.getInstance().getInflater()
-		// .inflate(R.layout.list_view_header, null);
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
 
-		final JokesAdapter adapter = new JokesAdapter(listView,
-				null/* header */, footer, R.layout.joke_list_item,
-				mImageFetcher) {
-			class LoadingDataTask extends UtilAsyncTask {
-				private JokeDao dao = new JokeDao();
-				private int pageSize = 5;
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
 
-				@Override
-				protected void onPreExecute() {
-					super.onPreExecute();
-					preLoadData();
-					imgbRef.setVisibility(View.GONE);
-					pbLoad.setVisibility(View.VISIBLE);
-				}
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
 
-				@Override
-				protected PagerBean<JokeBean> doInBackground(Integer... arg0) {
-					int page = arg0[0];
-					boolean isDbCahce = arg0[1] == 0;
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
 
-					PagerBean<JokeBean> pager = new PagerBean<JokeBean>(page,
-							pageSize, Integer.MAX_VALUE);
-					List<JokeBean> result = dao.getJokes(page, pageSize,
-							isDbCahce);
-					pager.setResult(result);
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
 
-					LogUtil.i(TAG, "doInBackground() page=" + page);
-					return pager;
-				}
+	private void selectItem(int position) {
+		// update the main content by replacing fragments
+		Fragment fragment = new PlanetFragment();
+		Bundle args = new Bundle();
+		args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+		fragment.setArguments(args);
 
-				@Override
-				protected void onPostExecute(PagerBean<JokeBean> result) {
-					super.onPostExecute(result);
-					LogUtil.i(TAG, "onPostExecute() " + result);
-					imgbRef.setVisibility(View.VISIBLE);
-					pbLoad.setVisibility(View.GONE);
-				}
+		FragmentManager fragmentManager = getFragmentManager();
+		fragmentManager.beginTransaction()
+				.replace(R.id.content_frame, fragment).commit();
 
-			}
+		// update selected item and title, then close the drawer
+		mDrawerList.setItemChecked(position, true);
+		setTitle(mPlanetTitles[position]);
+		mDrawerLayout.closeDrawer(mDrawerList);
+	}
 
-			@Override
-			public boolean loadingData(int page, boolean isDbCache) {
-				if (!isLoadingData) {
-					isLoadingData = true;
-					LogUtil.i("adapter", "Loading data page " + page);
-					(new LoadingDataTask()).execute(page, isDbCache ? 0 : 1);
-				}
-				return isLoadingData;
-			}
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu; this adds items to the action bar if it is present.
+		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
+		return true;
+	}
 
-			@Override
-			public boolean preLoadData() {
-				JokeDao dao = new JokeDao();
-				bindDatas(dao.getJokesDbCache(1, 5));
-				return false;
-			}
+	public static class PlanetFragment extends Fragment {
+		public static final String ARG_PLANET_NUMBER = "planet_number";
 
-		};
+		public PlanetFragment() {
+			// Empty constructor required for fragment subclasses
+		}
 
-		// set adapter
-		listView.setAdapter(adapter);
+		@Override
+		public View onCreateView(LayoutInflater inflater, ViewGroup container,
+				Bundle savedInstanceState) {
+			View rootView = inflater.inflate(R.layout.fragment_planet,
+					container, false);
+			int i = getArguments().getInt(ARG_PLANET_NUMBER);
+			String planet = getResources().getStringArray(R.array.drawer_items)[i];
 
-		adapter.initListView();
-		imgbRef.setOnClickListener(new OnClickListener() {
+			((TextView) rootView.findViewById(R.id.text)).setText(planet);
+			getActivity().setTitle(planet);
+			return rootView;
+		}
+	}
 
-			@Override
-			public void onClick(View arg0) {
-				adapter.refreshingData();
-			}
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		if (mDrawerToggle.onOptionsItemSelected(item)) {
+			return true;
+		}
+		switch (item.getItemId()) {
 
-		});
+		case R.id.action_refresh:
+			// refresh data list
+			item.setEnabled(true);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 
 	@Override

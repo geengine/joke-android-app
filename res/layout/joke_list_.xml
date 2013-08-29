@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -6,19 +5,15 @@
     android:orientation="vertical" >
 
     <ListView
-        android:id="@+id/lv_detailList"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:id="@+id/list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_margin="5dp"
         android:cacheColorHint="@null"
         android:divider="@color/bg_gray"
-        android:dividerHeight="1dp"
+        android:dividerHeight="5dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="true"
-        android:padding="5dp"
-        android:scrollbars="vertical" >
-    </ListView>
-
-    <include layout="@layout/reply_add" />
+        android:scrollbars="vertical" />
 
 </RelativeLayout>

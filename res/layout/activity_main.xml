@@ -1,26 +1,23 @@
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<android.support.v4.widget.DrawerLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/drawer_layout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray"
-    android:orientation="vertical"
-    tools:context=".MainActivity" >
+    android:background="@color/navigation_drawer_bg" >
 
-    <include
-        android:id="@+id/titlebar"
-        layout="@layout/title_bar" />
+    <FrameLayout
+        android:id="@+id/content_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/page_bg" />
 
     <ListView
-        android:id="@+id/list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/titlebar"
-        android:layout_margin="5dp"
-        android:cacheColorHint="@null"
-        android:divider="@color/bg_gray"
-        android:dividerHeight="5dp"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="true"
-        android:scrollbars="vertical" />
+        android:id="@+id/left_drawer"
+        android:layout_width="160dp"
+        android:layout_height="match_parent"
+        android:layout_gravity="start"
+        android:background="#111"
+        android:choiceMode="singleChoice"
+        android:divider="@android:color/transparent"
+        android:dividerHeight="0dp" />
 
-</RelativeLayout>
+</android.support.v4.widget.DrawerLayout>

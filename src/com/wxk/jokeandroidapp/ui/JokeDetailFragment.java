@@ -32,21 +32,15 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 public class JokeDetailFragment extends Fragment {
-	protected ProgressBar pbLoad;
-	protected TextView txtvPageTitle;
-	protected ImageButton imgbAppIcon;
-	protected ViewGroup titleBar;
 	private JokeBean jokeBean;
 	private boolean isReplying = false;
 	private EditText etxtReplyContent;
 	private Handler listViewHandler;
 	private ViewHolder viewHolder;
-	private ImageButton imgbRef;
 	private final static String BEAN_JSON_DATA_EXTRA = "bean_data_extra";
 	protected final String TAG = "JokeDetailFragment";
 	private ImageFetcher mImageFetcher;
@@ -82,23 +76,11 @@ public class JokeDetailFragment extends Fragment {
 		@Override
 		public void onClick(View v) {
 			switch (v.getId()) {
-			case R.id.titlebar_app_icon:
-				backMainActivity();
-				break;
 			case R.id.btn_submit:
 				doReply();
 				break;
 			}
 
-		}
-
-		void backMainActivity() {
-			// AppManager.getInstance().finishActivity();
-			// Intent intent = new Intent(AppManager.getInstance()
-			// .currentActivity(), MainActivity.class);
-			// AppManager.getInstance().currentActivity().startActivity(intent);
-			// AppManager.getInstance().currentActivity().finish();
-			JokeDetailFragment.this.getActivity().finish();
 		}
 	}
 
@@ -151,30 +133,11 @@ public class JokeDetailFragment extends Fragment {
 								.toString()) + 1));
 				listViewHandler.sendEmptyMessage(Constant.REFURBISH);
 			}
-			imgbRef.setVisibility(View.VISIBLE);
-
-			pbLoad.setVisibility(View.GONE);
 		}
 
 		@Override
 		protected void onPreExecute() {
 			super.onPreExecute();
-			imgbRef.setVisibility(View.GONE);
-			pbLoad.setVisibility(View.VISIBLE);
-		}
-
-	}
-
-	private void initTitleBar(View v) {
-		titleBar = (ViewGroup) v.findViewById(R.id.titlebar);
-		if (titleBar != null) {
-			pbLoad = (ProgressBar) titleBar
-					.findViewById(R.id.titlebar_progress);
-			txtvPageTitle = (TextView) titleBar
-					.findViewById(R.id.titlebar_text);
-			imgbAppIcon = (ImageButton) titleBar
-					.findViewById(R.id.titlebar_app_icon);
-			imgbRef = (ImageButton) titleBar.findViewById(R.id.titlebar_ref); // listener
 		}
 
 	}
@@ -186,7 +149,6 @@ public class JokeDetailFragment extends Fragment {
 				.findViewById(R.id.btn_submit);
 		etxtReplyContent = (EditText) v.findViewById(R.id.etxt_reply);
 
-		imgbAppIcon.setOnClickListener(l);
 		imgbSubmitReply.setOnClickListener(l);
 	}
 
@@ -201,7 +163,6 @@ public class JokeDetailFragment extends Fragment {
 				.findViewById(R.id.txt_jokeContent);
 		viewHolder.imgvJokePic = (ImageView) headerDetail
 				.findViewById(R.id.imgv_jokeImg);
-		txtvPageTitle.setText(bean.getTitle());
 		if (viewHolder.txtContent != null) {
 			if (bean.getContent() != null && !"".equals(bean.getContent())) {
 				viewHolder.txtContent.setVisibility(View.VISIBLE);
@@ -252,8 +213,6 @@ public class JokeDetailFragment extends Fragment {
 				@Override
 				protected void onPreExecute() {
 					super.onPreExecute();
-					imgbRef.setVisibility(View.GONE);
-					pbLoad.setVisibility(View.VISIBLE);
 				}
 
 				@Override
@@ -278,8 +237,6 @@ public class JokeDetailFragment extends Fragment {
 				@Override
 				protected void onPostExecute(PagerBean<ReplyBean> result) {
 					super.onPostExecute(result);
-					imgbRef.setVisibility(View.VISIBLE);
-					pbLoad.setVisibility(View.GONE);
 				}
 
 			}
@@ -304,14 +261,6 @@ public class JokeDetailFragment extends Fragment {
 		listView.setAdapter(adapter);
 		adapter.initListView();
 		listViewHandler = adapter.getHandler();
-		imgbRef.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				adapter.refreshingData();
-			}
-
-		});
 	}
 
 	@Override
@@ -340,7 +289,6 @@ public class JokeDetailFragment extends Fragment {
 			Bundle savedInstanceState) {
 		final View v = inflater.inflate(R.layout.joke_detail_fragment,
 				container, false);
-		initTitleBar(v);
 		initBtnClick(v);
 		initJokeDetailView(v, jokeBean);
 		return v;

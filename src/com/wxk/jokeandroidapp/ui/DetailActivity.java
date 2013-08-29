@@ -10,12 +10,18 @@ import com.wxk.jokeandroidapp.ui.util.ImageCache;
 import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 import com.wxk.util.GsonUtils;
 
+import android.annotation.TargetApi;
+import android.app.ActionBar;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
+import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 
@@ -25,6 +31,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	private JokePagerAdapter mAdapter;
 	public static final String EXTRA_JOKE_ID = "extra_joke_id";
 
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -51,16 +58,50 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(mAdapter);
 		mPager.setOffscreenPageLimit(2);
+		mPager.setOnPageChangeListener(new OnPageChangeListener() {
 
+			@Override
+			public void onPageScrollStateChanged(int arg0) {
+
+			}
+
+			@Override
+			public void onPageScrolled(int arg0, float arg1, int arg2) {
+
+			}
+
+			@Override
+			public void onPageSelected(int position) {
+				JokeBean bean = null;
+				List<JokeBean> list = db.getList(position + 1, 1);
+				bean = list.get(0);
+				DetailActivity.this.setTitle(bean.getTitle());
+			}
+		});
 		// final int extraCurrentItem = getIntent().getIntExtra(EXTRA_JOKE, -1);
-		final int extraCurrentItem = (int) db
-				.getCount(
-						"id>?",
-						new String[] { ""
-								+ getIntent().getIntExtra(EXTRA_JOKE_ID, -1) });
+		final int jokeId = getIntent().getIntExtra(EXTRA_JOKE_ID, -1);
+		final int extraCurrentItem = (int) db.getCount("id>?",
+				new String[] { "" + jokeId });
 		if (extraCurrentItem != -1) {
 			mPager.setCurrentItem(extraCurrentItem);
+			JokeBean bean = db.getOne(jokeId);
+			setTitle(bean.getTitle());
 		}
+
+		final ActionBar actionBar = getActionBar();
+		// Hide title text and set home as up
+		// actionBar.setDisplayShowTitleEnabled(false);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			NavUtils.navigateUpFromSameTask(this);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	private JokeDb db = new JokeDb();
@@ -95,6 +136,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	public ImageFetcher getImageFetcher() {
 		return mImageFetcher;
+	}
+
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+	public void setTitle(String title) {
+		final ActionBar bar = getActionBar();
+		bar.setTitle(title);
 	}
 
 	@Override
