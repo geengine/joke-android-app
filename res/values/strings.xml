@@ -20,8 +20,10 @@
     <string name="error_network">网络错误！</string>
     <string name="action_refresh">刷新</string>
     <string name="action_compose"></string>
+    <string name="action_about">关于</string>
     <string name="drawer_open"></string>
     <string name="drawer_close"></string>
+    <string name="no_data">嘿嘿，这里好空旷哦，都可以&#8230;你懂的哦!</string>
 
     <string-array name="drawer_items">
         <item>成人笑话</item>

@@ -8,7 +8,6 @@ import javax.xml.parsers.SAXParserFactory;
 import org.xml.sax.InputSource;
 import org.xml.sax.XMLReader;
 
-import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.JokeBeanXMLContentHandler;
 import com.wxk.jokeandroidapp.client.JokeClient;
@@ -22,8 +21,8 @@ public class JokeDao extends BaseDao {
 	JokeClient client = new JokeClient();
 	JokeDb db = new JokeDb();
 
-	public List<JokeBean> getJokes(int page, int size) {
-		return getJokes(page, size, true);
+	public List<JokeBean> getJokes(int page, int size,int topicID) {
+		return getJokes(page, size,topicID, true);
 	}
 
 	public List<JokeBean> getJokesDbCache(int page, int pageSize) {
@@ -31,17 +30,17 @@ public class JokeDao extends BaseDao {
 		return list;
 	}
 
-	public List<JokeBean> getJokes(int page, int pageSize, boolean isAutoCache) {
+	public List<JokeBean> getJokes(int page, int pageSize,int topicID, boolean isAutoCache) {
 		ResponseData responseData;
 		List<JokeBean> list = null;
 		String key = "getJokes_" + page + "_" + pageSize;
-		if (!AppContext.isNetworkConnected()// no network
-				|| (isAutoCache && !this.isCacheDataFailure(key))) {
-			list = getJokesDbCache(page, pageSize);
-			return list;
-		}
+//		if (!AppContext.isNetworkConnected()// no network
+//				|| (isAutoCache && !this.isCacheDataFailure(key))) {
+//			list = getJokesDbCache(page, pageSize);
+//			return list;
+//		}
 		try {
-			responseData = client.getJokes(page, pageSize);
+			responseData = client.getJokes(page, pageSize,topicID);
 			if (responseData.getStatus()) {
 				list = new UniqueList<JokeBean>();
 				SAXParserFactory factory = SAXParserFactory.newInstance();

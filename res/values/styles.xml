@@ -5,7 +5,9 @@
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/titlebar_bg</item>
+        <item name="android:background">@color/action_bar_bg</item>
+        <item name="android:popupBackground">@color/action_bar_bg</item>
+        <item name="android:dropDownSelector">@color/action_bar_sel_bg</item>
     </style>
 
     <!-- Application theme. -->
@@ -41,10 +43,8 @@
 
     <style name="txt_joke_content">
         <item name="android:textColor">@color/text</item>
-        <item name="android:paddingLeft">10dp</item>
-        <item name="android:paddingRight">10dp</item>
-        <item name="android:paddingBottom">10dp</item>
-        <item name="android:background">@color/bg_default</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:background">@drawable/joke_content_bg</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -86,7 +86,8 @@
     </style>
 
     <style name="joke_operate">
-        <item name="android:padding">0dp</item>
+        <item name="android:paddingLeft">8dp</item>
+        <item name="android:paddingRight">5dp</item>
         <item name="android:background">@color/bg_operate</item>
     </style>
 

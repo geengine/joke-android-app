@@ -4,7 +4,7 @@ import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.ui.DetailActivity;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 

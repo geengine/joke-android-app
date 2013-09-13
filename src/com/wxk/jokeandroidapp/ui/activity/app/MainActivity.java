@@ -1,24 +1,31 @@
-package com.wxk.jokeandroidapp.ui;
+package com.wxk.jokeandroidapp.ui.activity.app;
 
 import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.db.Topics;
+import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
+import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter;
+import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter.DrawerItemData;
+import com.wxk.jokeandroidapp.ui.fragment.app.JokeListFragment;
+import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 
 import android.annotation.TargetApi;
 import android.app.Fragment;
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
-import android.view.LayoutInflater;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,20 +36,73 @@ public class MainActivity extends BaseActivity {
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
+	private BaseAdapter mDrawerAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		mPlanetTitles = getResources().getStringArray(R.array.drawer_items);
+		mPlanetTitles = Topics.getInstance().getTopicKeys();
+		initDrawerNav(savedInstanceState);
+	}
+
+	public ImageFetcher getImageFetcher() {
+		return mImageFetcher;
+	}
+
+	private DrawerAdapter getDeawerAdapter() {
+
+		DrawerAdapter adapter = new DrawerAdapter(this,
+				R.layout.drawer_list_item) {
+
+			@Override
+			protected Object initViewHolder(DrawerItemData bean, View view,
+					Object viewHolder, int position) {
+				// TODO Auto-generated method stub
+				ViewHolder newHolder;
+				if (viewHolder == null) {
+					newHolder = new ViewHolder();
+					newHolder.text = (TextView) view
+							.findViewById(android.R.id.text1);
+				} else {
+					newHolder = (ViewHolder) viewHolder;
+				}
+				if (newHolder.text != null) {
+					newHolder.text.setText(bean.getTitle());
+				}
+				if (position == mSelectedPosition) {
+					newHolder.text.setSelected(true);
+					newHolder.text.setBackgroundColor(MainActivity.this
+							.getResources().getColor(
+									R.color.navigation_drawer_item_sel_bg));
+				} else {
+					newHolder.text.setSelected(false);
+					newHolder.text.setBackgroundColor(MainActivity.this
+							.getResources().getColor(
+									R.color.navigation_drawer_item_bg));
+				}
+				return newHolder;
+			}
+
+			class ViewHolder {
+				public TextView text;
+			}
+		};
+		for (String item : mPlanetTitles) {
+			adapter.addItem(new DrawerItemData(item, false));
+		}
+		return adapter;
+	}
+
+	private void initDrawerNav(Bundle savedInstanceState) {
+
 		mDrawerLayout = (DrawerLayout) findViewById(R.id.drawer_layout);
 		mDrawerLayout.setDrawerShadow(R.drawable.drawer_shadow,
 				GravityCompat.START);
 		mDrawerList = (ListView) findViewById(R.id.left_drawer);
-
-		mDrawerList.setAdapter(new ArrayAdapter<String>(this,
-				R.layout.drawer_list_item, mPlanetTitles));
+		mDrawerAdapter = getDeawerAdapter();
+		mDrawerList.setAdapter(mDrawerAdapter);
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		//
@@ -73,14 +133,17 @@ public class MainActivity extends BaseActivity {
 		if (savedInstanceState == null) {
 			selectItem(0);
 		}
+	}
 
+	protected FragmentTransaction openFragmentTransaction() {
+		FragmentManager fragmentManager = getFragmentManager();
+		return fragmentManager.beginTransaction();
 	}
 
 	@Override
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
-		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		menu.findItem(R.id.action_refresh).setVisible(!drawerOpen);
+		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -108,9 +171,10 @@ public class MainActivity extends BaseActivity {
 
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
-		Fragment fragment = new PlanetFragment();
+		Log.i(TAG, "selectItem: " + position);
+		Fragment fragment = new JokeListFragment();
 		Bundle args = new Bundle();
-		args.putInt(PlanetFragment.ARG_PLANET_NUMBER, position);
+		args.putInt(JokeListFragment.ARG_PLANET_NUMBER, position);
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getFragmentManager();
@@ -118,7 +182,9 @@ public class MainActivity extends BaseActivity {
 				.replace(R.id.content_frame, fragment).commit();
 
 		// update selected item and title, then close the drawer
+		((DrawerAdapter) mDrawerAdapter).setSelectedPosition(position);
 		mDrawerList.setItemChecked(position, true);
+
 		setTitle(mPlanetTitles[position]);
 		mDrawerLayout.closeDrawer(mDrawerList);
 	}
@@ -127,28 +193,26 @@ public class MainActivity extends BaseActivity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
+
+		MenuItem menuItem = menu.findItem(R.id.action_about);
+
+		MenuItemCompat.setOnActionExpandListener(menuItem,
+				new OnActionExpandListener() {
+
+					@Override
+					public boolean onMenuItemActionCollapse(MenuItem arg0) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+					@Override
+					public boolean onMenuItemActionExpand(MenuItem arg0) {
+						// TODO Auto-generated method stub
+						return false;
+					}
+
+				});
 		return true;
-	}
-
-	public static class PlanetFragment extends Fragment {
-		public static final String ARG_PLANET_NUMBER = "planet_number";
-
-		public PlanetFragment() {
-			// Empty constructor required for fragment subclasses
-		}
-
-		@Override
-		public View onCreateView(LayoutInflater inflater, ViewGroup container,
-				Bundle savedInstanceState) {
-			View rootView = inflater.inflate(R.layout.fragment_planet,
-					container, false);
-			int i = getArguments().getInt(ARG_PLANET_NUMBER);
-			String planet = getResources().getStringArray(R.array.drawer_items)[i];
-
-			((TextView) rootView.findViewById(R.id.text)).setText(planet);
-			getActivity().setTitle(planet);
-			return rootView;
-		}
 	}
 
 	@Override
@@ -158,10 +222,6 @@ public class MainActivity extends BaseActivity {
 		}
 		switch (item.getItemId()) {
 
-		case R.id.action_refresh:
-			// refresh data list
-			item.setEnabled(true);
-			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

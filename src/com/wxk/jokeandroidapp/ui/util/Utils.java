@@ -16,8 +16,8 @@
 
 package com.wxk.jokeandroidapp.ui.util;
 
-import com.wxk.jokeandroidapp.ui.DetailActivity;
-import com.wxk.jokeandroidapp.ui.MainActivity;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
+import com.wxk.jokeandroidapp.ui.activity.app.MainActivity;
 
 import android.annotation.TargetApi;
 import android.os.Build;

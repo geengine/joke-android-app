@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp.ui;
+package com.wxk.jokeandroidapp.ui.fragment.app;
 
 import java.util.List;
 
@@ -10,6 +10,7 @@ import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.dao.ReplyDao;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
@@ -287,7 +288,7 @@ public class JokeDetailFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		final View v = inflater.inflate(R.layout.joke_detail_fragment,
+		final View v = inflater.inflate(R.layout.fragment_joke_detail,
 				container, false);
 		initBtnClick(v);
 		initJokeDetailView(v, jokeBean);

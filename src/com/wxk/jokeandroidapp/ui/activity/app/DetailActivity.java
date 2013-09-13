@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp.ui;
+package com.wxk.jokeandroidapp.ui.activity.app;
 
 import java.util.List;
 
@@ -6,6 +6,8 @@ import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.db.JokeDb;
+import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
+import com.wxk.jokeandroidapp.ui.fragment.app.JokeDetailFragment;
 import com.wxk.jokeandroidapp.ui.util.ImageCache;
 import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 import com.wxk.util.GsonUtils;

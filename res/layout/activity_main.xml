@@ -12,12 +12,14 @@
 
     <ListView
         android:id="@+id/left_drawer"
-        android:layout_width="160dp"
+        android:layout_width="240dp"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:background="#111"
+        android:background="@color/navigation_drawer_bg"
         android:choiceMode="singleChoice"
-        android:divider="@android:color/transparent"
-        android:dividerHeight="0dp" />
+        android:divider="#d9d9d9"
+        android:dividerHeight="1dp"
+        android:footerDividersEnabled="true"
+        android:headerDividersEnabled="true" />
 
 </android.support.v4.widget.DrawerLayout>

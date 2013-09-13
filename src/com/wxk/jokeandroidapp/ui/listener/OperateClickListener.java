@@ -5,7 +5,7 @@ import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.dao.JokeDao;
-import com.wxk.jokeandroidapp.ui.DetailActivity;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 
 import android.annotation.SuppressLint;

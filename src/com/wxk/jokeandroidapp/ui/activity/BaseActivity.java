@@ -1,4 +1,4 @@
-package com.wxk.jokeandroidapp.ui;
+package com.wxk.jokeandroidapp.ui.activity;
 
 import com.baidu.mobstat.StatService;
 import com.wxk.jokeandroidapp.AppManager;

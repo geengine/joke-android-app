@@ -21,7 +21,7 @@ import com.wxk.util.LogUtil;
 
 public class BaseClient {
 
-	protected final String TAG = "HTTP";
+	protected static final String TAG = "52lxh:HTTP_Client";
 
 	private final Boolean isCookie = false;
 
@@ -69,6 +69,7 @@ public class BaseClient {
 					uriString += strParams;
 				}
 			}
+			LogUtil.i(TAG, "HTTP GET: " + uriString);
 			HttpGet httpGet = new HttpGet(uriString);
 			// set cookieStore
 			if (getCookieStore() != null) {
@@ -85,16 +86,6 @@ public class BaseClient {
 		} finally {
 			httpClient.getConnectionManager().shutdown();
 		}
-
-		if (result.getStatus()) {
-			LogUtil.i(TAG, "HTTP GET: " + uriString);
-			LogUtil.i(TAG, result.toString());
-		} else {
-			LogUtil.w(TAG, "HTTP GET: " + uriString);
-			LogUtil.w(TAG, "HTTP CODE: " + result.getHttpcode());
-			LogUtil.w(TAG, result.toString());
-		}
-
 		return result;
 	}
 
@@ -129,6 +120,7 @@ public class BaseClient {
 			}
 		}
 		try {
+			LogUtil.i(TAG, "HTTP PUT: " + uriString);
 			// get http response object
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			// update cookieStore
@@ -143,14 +135,10 @@ public class BaseClient {
 		}
 		// http request successful
 		if (responseData.getStatus()) {
-			LogUtil.i(TAG, "HTTP PUT: " + uriString);
 			LogUtil.i(TAG, "PUT DATA: " + logParams(params));
-			LogUtil.i(TAG, responseData.toString());
 		} else {
-			LogUtil.w(TAG, "HTTP PUT: " + uriString);
 			LogUtil.w(TAG, "PUT DATA: " + logParams(params));
 			LogUtil.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
-			LogUtil.w(TAG, responseData.toString());
 		}
 		return responseData;
 	}
@@ -231,6 +219,7 @@ public class BaseClient {
 			}
 		}
 		try {
+			LogUtil.i(TAG, "HTTP POST: " + uriString);
 			// get http response object
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			// update cookieStore
@@ -245,14 +234,10 @@ public class BaseClient {
 		}
 		// http request successful
 		if (responseData.getStatus()) {
-			LogUtil.i(TAG, "HTTP POST: " + uriString);
 			LogUtil.i(TAG, "POST DATA: " + logParams(params));
-			LogUtil.i(TAG, responseData.toString());
 		} else {
-			LogUtil.w(TAG, "HTTP POST: " + uriString);
 			LogUtil.w(TAG, "POST DATA: " + logParams(params));
 			LogUtil.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
-			LogUtil.w(TAG, responseData.toString());
 		}
 		return responseData;
 	}

@@ -5,10 +5,13 @@
     <color name="titlebar_bg_end">#65a435</color>
     <color name="titlebar_bg_top">#7fb654</color>
     <color name="titlebar_bg_bottom">#4f8f1d</color>
-    <color name="action_bar_bg">#75a800</color>
-    <color name="titlebar_bg">#669900</color>
-    <color name="navigation_drawer_bg">#6da000</color>
-    <color name="navigation_drawer_item_title_bg">#669900</color>
+    <color name="action_bar_bg">#7caf00</color>
+    <color name="action_bar_sel_bg">#669900</color>
+    <color name="action_bar_text">#808080</color>
+    <color name="titlebar_bg">#7caf00</color>
+    <color name="navigation_drawer_bg">#f0f0f0</color>
+    <color name="navigation_drawer_item_bg">#ffffff</color>
+    <color name="navigation_drawer_item_sel_bg">#e2f0b6</color>
     <color name="page_bg">#ffffff</color>
     <color name="titlebar_txt_color">#f0f0f0</color>
     <color name="titlebar_icon_bg_default">#6ea841</color>
