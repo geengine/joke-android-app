@@ -7,6 +7,7 @@ import com.androidquery.AQuery;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
+import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.util.UniqueList;
 
 import android.app.Activity;
@@ -21,7 +22,7 @@ import android.widget.TextView;
 
 public class JokeListAdapter extends BaseAdapter {
 
-	private static class ViewHolder {
+	public static class ViewHolder {
 		public TextView txtTitle;
 		public TextView txtContent;
 		public ImageView imgvJokePic;
@@ -53,7 +54,7 @@ public class JokeListAdapter extends BaseAdapter {
 
 	@Override
 	public long getItemId(int i) {
-		return i;
+		return getItem(i).getId();
 	}
 
 	@Override
@@ -100,6 +101,19 @@ public class JokeListAdapter extends BaseAdapter {
 			holder.imgvJokePic.setVisibility(View.VISIBLE);
 		} else {
 			holder.imgvJokePic.setVisibility(View.GONE);
+		}
+		OperateClickListener ocl = new OperateClickListener(holder, item);
+		if (holder.btnGood != null) {
+			holder.btnGood.setText("" + item.getGooodCount());
+			holder.btnGood.setOnClickListener(ocl);
+		}
+		if (holder.btnBad != null) {
+			holder.btnBad.setText("" + item.getBadCount());
+			holder.btnBad.setOnClickListener(ocl);
+		}
+		if (holder.btnComment != null) {
+			holder.btnComment.setText("" + item.getReplyCount());
+			holder.btnComment.setOnClickListener(ocl);
 		}
 		return converView;
 	}

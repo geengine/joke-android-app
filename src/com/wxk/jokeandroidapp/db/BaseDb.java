@@ -6,17 +6,16 @@ import java.util.List;
 
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.bean.PagerBean;
-import com.wxk.util.LogUtil;
-import com.wxk.util.StringUtil;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public abstract class BaseDb<E> {
 
-	protected static final String TAG = "Db";
+	protected static final String TAG = "52lxh:sqlite";
 	private Context context;
 	private DbHelper dbHelper;
 
@@ -48,7 +47,8 @@ public abstract class BaseDb<E> {
 		long r = db.insert(getTableName(), null, getContentValues(e));
 
 		db.close();
-
+		Log.d(TAG, String.format("::add(%s) => %s", e.getClass().getName(),
+				(r > 0)));
 		return r > 0;
 	};
 
@@ -56,12 +56,14 @@ public abstract class BaseDb<E> {
 
 	public boolean addAll(Collection<E> collection) {
 		if (null != collection) {
-
+			boolean isAdd = false;
 			Iterator<E> iterator = collection.iterator();
 			while (iterator.hasNext()) {
-				this.add(iterator.next());
+				if (this.add(iterator.next())) {
+					isAdd = true;
+				}
 			}
-			return true;
+			return isAdd;
 		}
 		return false;
 
@@ -93,7 +95,6 @@ public abstract class BaseDb<E> {
 
 		cursor.close();
 		db.close();
-		LogUtil.d(TAG, "ROW COUNT { " + getTableName() + " } : " + count);
 		return count;
 	};
 
@@ -116,9 +117,6 @@ public abstract class BaseDb<E> {
 		cursor.close();
 		db.close();
 
-		LogUtil.d(TAG, "WHERE { " + where + "," + StringUtil.toStr(whereArgs)
-				+ " } ");
-		LogUtil.d(TAG, "ORDERBY { " + orderBy + " } ");
 		if (pager.getTotalSize() > 0)
 			return pager;
 		else
@@ -141,9 +139,6 @@ public abstract class BaseDb<E> {
 		cursor.close();
 		db.close();
 
-		LogUtil.d(TAG, "WHERE { " + where + "," + StringUtil.toStr(whereArgs)
-				+ " } ");
-		LogUtil.d(TAG, "ORDERBY { " + orderBy + " } ");
 		return list;
 	}
 

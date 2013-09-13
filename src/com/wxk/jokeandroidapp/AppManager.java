@@ -3,7 +3,6 @@ package com.wxk.jokeandroidapp;
 import java.util.Stack;
 
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.view.LayoutInflater;
 
@@ -108,9 +107,6 @@ public class AppManager {
 	public void appExit(Context context) {
 		try {
 			finishAllActivity();
-			ActivityManager activityMgr = (ActivityManager) context
-					.getSystemService(Context.ACTIVITY_SERVICE);
-			activityMgr.killBackgroundProcesses(context.getPackageName());
 			System.exit(0);
 		} catch (Exception e) {
 		}

@@ -11,7 +11,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DbHelper extends SQLiteOpenHelper {
 
-	private static final int VERSION = 1; // database version
+	private static final int VERSION = 2; // database version
 	private static final String DB_NAME = "52_jokes_db"; // database name
 
 	public DbHelper(Context context, String name, CursorFactory factory,
@@ -32,6 +32,10 @@ public class DbHelper extends SQLiteOpenHelper {
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 		// update database version
+		if (oldVersion == 1 && newVersion == VERSION) {
+			db.execSQL("ALERT TABLE t_joke ADD COLUMN topic INTEGER DEFAULT 0");
+		}
+
 	}
 
 	@Override
@@ -47,7 +51,7 @@ public class DbHelper extends SQLiteOpenHelper {
 	 */
 	public void createDataTables(SQLiteDatabase db) {
 		// jokes
-		db.execSQL("CREATE TABLE IF NOT EXISTS t_joke (id INTEGER PRIMARY KEY,title VARCHAR,content TEXT,imgurl VARCHAR,replys INTEGER,clicks INTEGER,goods INTEGER,bads INTEGER,active_date VARCHAR)");
+		db.execSQL("CREATE TABLE IF NOT EXISTS t_joke (id INTEGER PRIMARY KEY,title VARCHAR,content TEXT,imgurl VARCHAR,replys INTEGER,clicks INTEGER,goods INTEGER,bads INTEGER,active_date VARCHAR,topic INTEGER DEFAULT 0)");
 		// reply/comment
 		db.execSQL("CREATE TABLE IF NOT EXISTS t_reply (id,INTEGER PRIMAYR KEY,j_id INTEGER,content VARCHAR,active_date VARCHAR)");
 	}

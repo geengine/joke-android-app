@@ -4,32 +4,31 @@
     android:layout_height="47dp"
     android:layout_alignParentBottom="true"
     android:layout_gravity="bottom"
-    
-    android:paddingTop="6dp"
+    android:background="@drawable/reply_add_bg"
     android:paddingBottom="4dp"
-    android:background="@drawable/reply_add_bg" >
+    android:paddingTop="6dp" >
 
     <ImageButton
         android:id="@+id/btn_submit"
         style="@style/btn_reply"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
+        android:layout_marginRight="5dp"
         android:contentDescription="@null"
-        android:src="@drawable/icon_save" />
+        android:src="@drawable/icon_send" />
 
     <EditText
         android:id="@+id/etxt_reply"
         style="@style/edit_text"
-        android:inputType="text"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginLeft="5dp"
         android:layout_centerVertical="true"
+        android:layout_marginLeft="5dp"
         android:layout_toLeftOf="@id/btn_submit"
         android:hint="@string/hint_replay_text"
+        android:inputType="text"
         android:maxLength="500"
         android:maxLines="3"
         android:scrollHorizontally="true" />

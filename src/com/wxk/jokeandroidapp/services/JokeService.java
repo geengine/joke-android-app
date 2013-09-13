@@ -1,24 +1,19 @@
 package com.wxk.jokeandroidapp.services;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.List;
 
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 
-import com.google.gson.reflect.TypeToken;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.core.JokeBeanHandler;
 import com.wxk.jokeandroidapp.client.JokeClient;
 import com.wxk.jokeandroidapp.client.ResponseData;
-import com.wxk.util.GsonUtils;
+import com.wxk.jokeandroidapp.db.JokeDb;
 
 import android.app.IntentService;
 import android.content.Context;
@@ -39,10 +34,15 @@ public class JokeService extends IntentService {
 	public static final String ARG_JOKE_SIZE = "52lxh:joke_size";
 
 	private static final String TAG = "52lxh:JokeService";
+	private static JokeDb db;
+	static {
+		db = new JokeDb();
+	}
 
 	public JokeService() {
 		super("JokeService");
 		Log.d(TAG, "::JokeService()");
+
 	}
 
 	@Override
@@ -61,10 +61,10 @@ public class JokeService extends IntentService {
 			int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
 			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, 10);
 
-			ArrayList<JokeBean> jokeItems = new ArrayList<JokeBean>();
+			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
 			/* Send any cached feed first */
-			ArrayList<JokeBean> cachedItems = loadJokeFromCache(this,
-					jokeTopic, jokePage);
+			List<JokeBean> cachedItems = loadJokeFromCache(this, jokeTopic,
+					jokePage);
 			if (cachedItems != null) {
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
 				refreshIntent.putExtra(EXTRA_CACHED, true);
@@ -77,42 +77,16 @@ public class JokeService extends IntentService {
 				refreshIntent.putExtra(EXTRA_CACHED, false);
 				refreshIntent.putExtra(EXTRA_APPEND, isAppend);
 				sendBroadcast(refreshIntent);
-			} else {
-				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
-				refreshIntent.putExtra(EXTRA_SERVER_ERROR, true);
-				refreshIntent.putExtra(EXTRA_APPEND, isAppend);
-				sendBroadcast(refreshIntent);
 			}
 		}
 	}
 
-	public static ArrayList<JokeBean> loadJokeFromCache(final Context context,
+	public static List<JokeBean> loadJokeFromCache(final Context context,
 			final int topicId, final int page) {
-		File cacheFile = new File(context.getCacheDir(), "cached_" + topicId
-				+ "_p_" + page + "_joke.json");
-		try {
-			if (cacheFile == null || !cacheFile.exists() || !cacheFile.isFile()) {
-				return null;
-			} else {
-				final ArrayList<JokeBean> jokeItems = new ArrayList<JokeBean>();
-				final FileInputStream fileIn = new FileInputStream(cacheFile);
-				final InputStreamReader isr = new InputStreamReader(fileIn);
-				TypeToken<ArrayList<JokeBean>> token = new TypeToken<ArrayList<JokeBean>>() {
-				};
-				ArrayList<JokeBean> list = GsonUtils.fromJson(isr,
-						token.getType());
-				if (list != null) {
-					jokeItems.addAll(list);
-				}
-				return jokeItems;
-			}
-		} catch (Exception e) {
-			Log.e(TAG, "" + e.getMessage());
-		}
-		return null;
+		return db.getList(page, 10, topicId);
 	}
 
-	public boolean updataFeedFromServer(final ArrayList<JokeBean> jokeItems,
+	public boolean updataFeedFromServer(final List<JokeBean> jokeItems,
 			final int page, final int topicId, final int size) {
 		Log.d(TAG, "::updataFeedFromServer()");
 		try {
@@ -129,21 +103,13 @@ public class JokeService extends IntentService {
 
 				jokeItems.addAll(handler.getJokeItems());
 
-				/* Now write the joke to cache */
-				File cacheFile = new File(getCacheDir(), "cached_" + topicId
-						+ "_p_" + page + "_joke.json");
-				if (cacheFile.exists() && cacheFile.isFile()) {
-					cacheFile.delete();
+				/* Set topic id */
+				for (JokeBean item : jokeItems) {
+					item.setTopic(topicId);
 				}
-				cacheFile.createNewFile();
 
-				FileOutputStream cacheOutStream = new FileOutputStream(
-						cacheFile);
-				OutputStreamWriter streamWriter = new OutputStreamWriter(
-						cacheOutStream);
-				streamWriter.write(GsonUtils.toJson(jokeItems));
-				streamWriter.close();
-				return true;
+				/* Now write the joke to cache */
+				return db.addAll(jokeItems);
 			}
 		} catch (Exception e) {
 			Log.e(TAG, "" + e.getMessage());

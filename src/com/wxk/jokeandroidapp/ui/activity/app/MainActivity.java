@@ -6,16 +6,13 @@ import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
 import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter;
 import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter.DrawerItemData;
 import com.wxk.jokeandroidapp.ui.fragment.app.JokeListFragment;
-import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
 
-import android.annotation.TargetApi;
-import android.app.Fragment;
-import android.app.FragmentManager;
-import android.app.FragmentTransaction;
 import android.content.res.Configuration;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
@@ -29,7 +26,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 
-@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class MainActivity extends BaseActivity {
 
 	private String[] mPlanetTitles;
@@ -45,10 +41,6 @@ public class MainActivity extends BaseActivity {
 
 		mPlanetTitles = Topics.getInstance().getTopicKeys();
 		initDrawerNav(savedInstanceState);
-	}
-
-	public ImageFetcher getImageFetcher() {
-		return mImageFetcher;
 	}
 
 	private DrawerAdapter getDeawerAdapter() {
@@ -112,20 +104,20 @@ public class MainActivity extends BaseActivity {
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */
 		mDrawerLayout, /* DrawerLayout object */
-		R.drawable.ic_drawer, /* nav drawer image to replace 'Up' caret */
+		R.drawable.action_drawer, /* nav drawer image to replace 'Up' caret */
 		R.string.drawer_open, /* "open drawer" description for accessibility */
 		R.string.drawer_close /* "close drawer" description for accessibility */
 		) {
 			public void onDrawerClosed(View view) {
 				// getActionBar().setTitle(mTitle);
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				supportInvalidateOptionsMenu(); // creates call to
+				// onPrepareOptionsMenu()
 			}
 
 			public void onDrawerOpened(View drawerView) {
 				// getActionBar().setTitle(mDrawerTitle);
-				invalidateOptionsMenu(); // creates call to
-											// onPrepareOptionsMenu()
+				supportInvalidateOptionsMenu(); // creates call to
+				// onPrepareOptionsMenu()
 			}
 		};
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
@@ -136,7 +128,7 @@ public class MainActivity extends BaseActivity {
 	}
 
 	protected FragmentTransaction openFragmentTransaction() {
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		return fragmentManager.beginTransaction();
 	}
 
@@ -144,6 +136,7 @@ public class MainActivity extends BaseActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		//MenuItem homeMenu = menu.getItem(android.R.id.home);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -177,7 +170,7 @@ public class MainActivity extends BaseActivity {
 		args.putInt(JokeListFragment.ARG_PLANET_NUMBER, position);
 		fragment.setArguments(args);
 
-		FragmentManager fragmentManager = getFragmentManager();
+		FragmentManager fragmentManager = getSupportFragmentManager();
 		fragmentManager.beginTransaction()
 				.replace(R.id.content_frame, fragment).commit();
 
@@ -230,20 +223,15 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		mImageFetcher.setExitTasksEarly(false);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		mImageFetcher.setPauseWork(false);
-		mImageFetcher.setExitTasksEarly(true);
-		mImageFetcher.flushCache();
 	}
 
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
-		mImageFetcher.closeCache();
 	}
 }

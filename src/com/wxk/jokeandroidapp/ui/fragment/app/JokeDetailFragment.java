@@ -2,6 +2,7 @@ package com.wxk.jokeandroidapp.ui.fragment.app;
 
 import java.util.List;
 
+import com.androidquery.AQuery;
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.Constant;
@@ -11,11 +12,9 @@ import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.dao.ReplyDao;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
+import com.wxk.jokeandroidapp.ui.adapter.JokeListAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
-import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
-import com.wxk.jokeandroidapp.ui.util.ImageFetcher;
-import com.wxk.jokeandroidapp.ui.util.ImageWorker;
 import com.wxk.util.GsonUtils;
 import com.wxk.util.LogUtil;
 
@@ -44,7 +43,6 @@ public class JokeDetailFragment extends Fragment {
 	private ViewHolder viewHolder;
 	private final static String BEAN_JSON_DATA_EXTRA = "bean_data_extra";
 	protected final String TAG = "JokeDetailFragment";
-	private ImageFetcher mImageFetcher;
 	private String imgUrl;
 
 	public JokeDetailFragment() {
@@ -268,10 +266,15 @@ public class JokeDetailFragment extends Fragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
 		if (DetailActivity.class.isInstance(getActivity())) {
-			mImageFetcher = ((DetailActivity) getActivity()).getImageFetcher();
+			// mImageFetcher = ((DetailActivity)
+			// getActivity()).getImageFetcher();
 			if (viewHolder != null && viewHolder.imgvJokePic != null
 					&& imgUrl != null && imgUrl != "" && imgUrl.length() > 5) {
-				mImageFetcher.loadImage(imgUrl, viewHolder.imgvJokePic);
+				AQuery aq = new AQuery(getActivity());
+				aq = aq.id(viewHolder.imgvJokePic).image(imgUrl, true, true,
+						800, 0);
+
+				// mImageFetcher.loadImage(imgUrl, viewHolder.imgvJokePic);
 			}
 		}
 	}
@@ -299,7 +302,6 @@ public class JokeDetailFragment extends Fragment {
 	public void onDestroy() {
 		super.onDestroy();
 		if (viewHolder != null && viewHolder.imgvJokePic != null) {
-			ImageWorker.cancelWork(viewHolder.imgvJokePic);
 			viewHolder.imgvJokePic.setImageDrawable(null);
 		}
 	}

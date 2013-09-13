@@ -1,7 +1,7 @@
 package com.wxk.jokeandroidapp.ui.loader;
 
-import android.content.AsyncTaskLoader;
 import android.content.Context;
+import android.content.AsyncTaskLoader;
 
 public abstract class AsyncLoader<D> extends AsyncTaskLoader<D> {
 	private D data;

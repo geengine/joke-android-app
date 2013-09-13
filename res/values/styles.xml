@@ -1,11 +1,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="android:Theme.Holo">
+    <style name="AppBaseTheme" parent="@android:style/Theme.Holo">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
     </style>
 
     <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
-        <item name="android:background">@color/action_bar_bg</item>
+        <item name="android:background">@drawable/action_bar_bg</item>
         <item name="android:popupBackground">@color/action_bar_bg</item>
         <item name="android:dropDownSelector">@color/action_bar_sel_bg</item>
     </style>
@@ -36,7 +36,7 @@
 
     <style name="txt_joke_title">
         <item name="android:textColor">@color/text_joke_title</item>
-        <item name="android:background">@color/bg_default</item>
+        <item name="android:background">@color/page_bg</item>
         <item name="android:padding">10dp</item>
         <item name="android:textSize">18sp</item>
     </style>
@@ -44,7 +44,7 @@
     <style name="txt_joke_content">
         <item name="android:textColor">@color/text</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@drawable/joke_content_bg</item>
+        <item name="android:background">@color/page_bg</item>
         <item name="android:textSize">16sp</item>
     </style>
 

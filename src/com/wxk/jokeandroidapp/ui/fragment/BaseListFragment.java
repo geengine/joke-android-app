@@ -1,7 +1,5 @@
 package com.wxk.jokeandroidapp.ui.fragment;
 
-import android.app.ListFragment;
-
-public class BaseListFragment extends ListFragment {
+public class BaseListFragment extends android.support.v4.app.ListFragment {
 
 }

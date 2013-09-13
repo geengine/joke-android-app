@@ -11,6 +11,7 @@ public class JokeBean {
 	private int replyCount;
 	private int gooodCount;
 	private int badCount;
+	private int topic;
 
 	public int getId() {
 		return id;
@@ -84,6 +85,14 @@ public class JokeBean {
 		this.badCount = badCount;
 	}
 
+	public int getTopic() {
+		return topic;
+	}
+
+	public void setTopic(int topic) {
+		this.topic = topic;
+	}
+
 	@Override
 	public boolean equals(Object o) {
 		JokeBean b = (JokeBean) o;
@@ -97,10 +106,8 @@ public class JokeBean {
 			return true;
 
 		return this.getId() == b.getId()
-				&& this.getTitle().equals(b.getTitle())
-				&& this.getContent().equals(b.getContent())
 				&& this.getReplyCount() == b.getReplyCount()
-				&& this.getClickCount() == b.getClickCount()
+				// && this.getClickCount() == b.getClickCount()
 				&& this.getGooodCount() == b.getGooodCount()
 				&& this.getBadCount() == b.getBadCount();
 	}

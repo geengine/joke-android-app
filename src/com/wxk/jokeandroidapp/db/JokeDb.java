@@ -13,7 +13,7 @@ import com.wxk.util.UniqueList;
 public class JokeDb extends BaseDb<JokeBean> {
 
 	final String TABLE = "t_joke";
-	
+
 	@Override
 	public String getTableName() {
 		return TABLE;
@@ -23,11 +23,11 @@ public class JokeDb extends BaseDb<JokeBean> {
 	public boolean update(JokeBean e) {
 		SQLiteDatabase db = getDb();
 		ContentValues values = getContentValues(e);
-		LogUtil.d(TAG, "UPDATE " + TABLE + " SET " + values.toString());
+		LogUtil.i(TAG, "UPDATE " + TABLE + " SET " + values.toString());
 		long r = db.update(TABLE, values, "id=?",
 				new String[] { e.getId() + "" });
 		db.close();
-		LogUtil.d(TAG, "RESULT: " + (r > 0));
+		LogUtil.i(TAG, "RESULT: " + (r > 0));
 		return r > 0;
 	}
 
@@ -67,6 +67,11 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return super.getList(null, null, "id DESC", page, size);
 	}
 
+	public List<JokeBean> getList(int page, int size, int topic) {
+		return super.getList("topic=?", new String[] { "" + topic }, "id DESC",
+				page, size);
+	}
+
 	@Override
 	public boolean contains(JokeBean e) {
 		if (null != e) {
@@ -83,11 +88,9 @@ public class JokeDb extends BaseDb<JokeBean> {
 
 	@Override
 	public JokeBean getOne(long id) {
-		SQLiteDatabase db = getDb();
-		Cursor cursor = db.query(TABLE, null, "id=?", new String[] { "" + id },
-				null, null, null);
-		List<JokeBean> list = getEntity(cursor);
-		db.close();
+		List<JokeBean> list = super.getList("id=?", new String[] { "" + id },
+				"id DESC", 1, 5);
+
 		return null != list && list.size() > 0 ? list.get(0) : null;
 	}
 
@@ -104,6 +107,8 @@ public class JokeDb extends BaseDb<JokeBean> {
 		values.put("bads", e.getBadCount());
 		values.put("imgurl", e.getImgUrl());
 		values.put("active_date", e.getActiveDate());
+		if (e.getTopic() > 0)
+			values.put("topic", e.getTopic());
 		return values;
 	}
 

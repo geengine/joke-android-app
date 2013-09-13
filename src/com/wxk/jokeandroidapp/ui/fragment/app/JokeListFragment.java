@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
+import android.widget.ListView;
 import android.widget.Toast;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
@@ -19,9 +20,11 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 
+import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.db.Topics;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.activity.app.MainActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokeListAdapter;
 import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
@@ -88,7 +91,7 @@ public class JokeListFragment extends BaseListFragment implements
 	public void onCreate(Bundle savedInstanceState) {
 		Log.i(TAG, "::onCreate()");
 		super.onCreate(savedInstanceState);
-
+		// setRetainInstance(true);
 		final Bundle args = getArguments();
 		if (args != null) {
 			final int i = args.getInt(ARG_PLANET_NUMBER);
@@ -177,6 +180,18 @@ public class JokeListFragment extends BaseListFragment implements
 		((JokeListAdapter) mAdapter).fillWithItems(mJokeItems);
 		mAdapter.notifyDataSetChanged();
 		setListAdapter(mAdapter);
+	}
+
+	@Override
+	public void onListItemClick(ListView l, View v, int position, long id) {
+		Log.i(TAG, String.format("position=%s, id=%s", position, id));
+		Intent intentDetail = new Intent();
+		intentDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		intentDetail.putExtra(DetailActivity.EXTRA_JOKE_ID,
+				mAdapter.getItemId(position));
+
+		intentDetail.setClass(AppContext.context, DetailActivity.class);
+		AppContext.context.startActivity(intentDetail);
 	}
 
 	@Override
