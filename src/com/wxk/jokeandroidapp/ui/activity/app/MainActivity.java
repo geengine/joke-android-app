@@ -2,11 +2,13 @@ package com.wxk.jokeandroidapp.ui.activity.app;
 
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.db.Topics;
+import com.wxk.jokeandroidapp.services.JokeService;
 import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
 import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter;
 import com.wxk.jokeandroidapp.ui.adapter.DrawerAdapter.DrawerItemData;
 import com.wxk.jokeandroidapp.ui.fragment.app.JokeListFragment;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.ActionBarDrawerToggle;
@@ -33,6 +35,7 @@ public class MainActivity extends BaseActivity {
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private BaseAdapter mDrawerAdapter;
+	private int mTopic;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -136,7 +139,7 @@ public class MainActivity extends BaseActivity {
 	public boolean onPrepareOptionsMenu(Menu menu) {
 
 		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		//MenuItem homeMenu = menu.getItem(android.R.id.home);
+		// MenuItem homeMenu = menu.getItem(android.R.id.home);
 		return super.onPrepareOptionsMenu(menu);
 	}
 
@@ -165,9 +168,10 @@ public class MainActivity extends BaseActivity {
 	private void selectItem(int position) {
 		// update the main content by replacing fragments
 		Log.i(TAG, "selectItem: " + position);
+		mTopic = Topics.getInstance().getTopicID(position);
 		Fragment fragment = new JokeListFragment();
 		Bundle args = new Bundle();
-		args.putInt(JokeListFragment.ARG_PLANET_NUMBER, position);
+		args.putInt(JokeListFragment.ARG_JOKE_TOPIC, mTopic);
 		fragment.setArguments(args);
 
 		FragmentManager fragmentManager = getSupportFragmentManager();
@@ -176,6 +180,7 @@ public class MainActivity extends BaseActivity {
 
 		// update selected item and title, then close the drawer
 		((DrawerAdapter) mDrawerAdapter).setSelectedPosition(position);
+
 		mDrawerList.setItemChecked(position, true);
 
 		setTitle(mPlanetTitles[position]);
@@ -185,6 +190,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
+		super.mOptionsMenu = menu;
 		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
 
 		MenuItem menuItem = menu.findItem(R.id.action_about);
@@ -210,11 +216,26 @@ public class MainActivity extends BaseActivity {
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
+
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
+
 		switch (item.getItemId()) {
 
+		case R.id.action_refresh:
+			Log.i(TAG, "onOptionsItemSelected::action_refresh");
+			setRefreshActionButtonState(true);
+			final Intent startService = new Intent(this, JokeService.class);
+			startService.putExtra(JokeService.ARG_JOKE_TOPIC, mTopic);
+			startService.putExtra(JokeService.ARG_JOKE_PAGE, 1);
+			startService.putExtra(JokeService.EXTRA_APPEND, false);
+			startService.putExtra(JokeService.EXTRA_REFRESH, true);
+			startService.setAction(JokeService.GET_JOKE_DATA_INTENT);
+
+			startService(startService);
+
+			return true;
 		default:
 			return super.onOptionsItemSelected(item);
 		}

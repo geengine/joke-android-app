@@ -20,7 +20,7 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class JokeListAdapter extends BaseAdapter {
+public class JokeAdapter extends BaseAdapter {
 
 	public static class ViewHolder {
 		public TextView txtTitle;
@@ -36,7 +36,7 @@ public class JokeListAdapter extends BaseAdapter {
 	private ArrayList<JokeBean> mItems;
 	private Activity mContext;
 
-	public JokeListAdapter(final Activity context) {
+	public JokeAdapter(final Activity context) {
 		super();
 		mContext = context;
 		mItems = new UniqueList<JokeBean>();

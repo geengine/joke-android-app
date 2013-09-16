@@ -23,10 +23,9 @@ import android.content.Loader;
 import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.db.Topics;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.activity.app.MainActivity;
-import com.wxk.jokeandroidapp.ui.adapter.JokeListAdapter;
+import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter;
 import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
 import com.wxk.jokeandroidapp.ui.loader.JokeLoader;
 import com.wxk.jokeandroidapp.services.JokeService;
@@ -34,7 +33,7 @@ import com.wxk.util.LogUtil;
 
 public class JokeListFragment extends BaseListFragment implements
 		OnScrollListener, LoaderManager.LoaderCallbacks<List<JokeBean>> {
-	public static final String ARG_PLANET_NUMBER = "planet_number";
+	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	private static final String TAG = "52lxh:JokeListFragment";
 	private BaseAdapter mAdapter;
 	private List<JokeBean> mJokeItems;
@@ -49,6 +48,7 @@ public class JokeListFragment extends BaseListFragment implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.i(TAG, "::onReceive()");
+			((MainActivity) getActivity()).setRefreshActionButtonState(false);
 			if (isDetached() || isRemoving()) {
 				return;
 			}
@@ -72,14 +72,14 @@ public class JokeListFragment extends BaseListFragment implements
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 
-					((JokeListAdapter) mAdapter).appendWithItems(mJokeItems);
+					((JokeAdapter) mAdapter).appendWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					mIsAppend = !isAppend;
 				} else {
-					mAdapter = new JokeListAdapter(getActivity());
+					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
-					((JokeListAdapter) mAdapter).fillWithItems(mJokeItems);
+					((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					setListAdapter(mAdapter);
 				}
@@ -94,8 +94,7 @@ public class JokeListFragment extends BaseListFragment implements
 		// setRetainInstance(true);
 		final Bundle args = getArguments();
 		if (args != null) {
-			final int i = args.getInt(ARG_PLANET_NUMBER);
-			mTopic = Topics.getInstance().getTopicID(i);
+			mTopic = args.getInt(ARG_JOKE_TOPIC);
 		}
 	}
 
@@ -120,7 +119,7 @@ public class JokeListFragment extends BaseListFragment implements
 		IntentFilter refreshFilter = new IntentFilter(
 				JokeService.REFRESH_JOKE_UI_INTENT);
 		getActivity().registerReceiver(mJokeListReceiver, refreshFilter);
-
+		((MainActivity) getActivity()).setRefreshActionButtonState(true);
 		startService();
 	}
 
@@ -176,8 +175,8 @@ public class JokeListFragment extends BaseListFragment implements
 		Log.i(TAG, "::onLoadFinished()");
 		mJokeItems = new ArrayList<JokeBean>();
 		mJokeItems.addAll(items);
-		mAdapter = new JokeListAdapter(this.getActivity());
-		((JokeListAdapter) mAdapter).fillWithItems(mJokeItems);
+		mAdapter = new JokeAdapter(this.getActivity());
+		((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
 		mAdapter.notifyDataSetChanged();
 		setListAdapter(mAdapter);
 	}

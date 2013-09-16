@@ -2,7 +2,7 @@ package com.wxk.jokeandroidapp.bean;
 
 public class JokeBean {
 
-	private int id;
+	private long id;
 	private String title;
 	private String imgUrl;
 	private String content;
@@ -13,11 +13,11 @@ public class JokeBean {
 	private int badCount;
 	private int topic;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 

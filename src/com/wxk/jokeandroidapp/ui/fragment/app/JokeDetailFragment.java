@@ -1,49 +1,146 @@
 package com.wxk.jokeandroidapp.ui.fragment.app;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.androidquery.AQuery;
-import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.bean.PagerBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
-import com.wxk.jokeandroidapp.dao.ReplyDao;
+import com.wxk.jokeandroidapp.services.ReplyService;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
-import com.wxk.jokeandroidapp.ui.adapter.JokeListAdapter.ViewHolder;
-import com.wxk.jokeandroidapp.ui.adapter.ReplysAdapter;
+import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter.ViewHolder;
+import com.wxk.jokeandroidapp.ui.adapter.ReplyAdapter;
+import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
 import com.wxk.util.GsonUtils;
-import com.wxk.util.LogUtil;
 
-import android.os.AsyncTask;
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.os.Handler;
-import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.View.OnClickListener;
+import android.widget.BaseAdapter;
 import android.widget.Button;
-import android.widget.EditText;
-import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class JokeDetailFragment extends Fragment {
-	private JokeBean jokeBean;
-	private boolean isReplying = false;
-	private EditText etxtReplyContent;
-	private Handler listViewHandler;
+public class JokeDetailFragment extends BaseListFragment {
+	private JokeBean mJokeBean;
+
 	private ViewHolder viewHolder;
-	private final static String BEAN_JSON_DATA_EXTRA = "bean_data_extra";
-	protected final String TAG = "JokeDetailFragment";
-	private String imgUrl;
+	private final static String EXTRA_JOKE_JSON = "52lxh:extra_joke_json_data";
+	private static final String TAG = "52lxh:JokeDetailFragment";
+	private JokeReplyReceiver mReplyListReceiver;
+	private BaseAdapter mAdapter;
+	private List<ReplyBean> mReplyItems;
+	private int mPage = 1;
+	private boolean mIsAppend;
+
+	private class JokeReplyReceiver extends BroadcastReceiver {
+		private static final String TAG = "52lxh:JokeReplyReceiver";
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Log.i(TAG, "::onReceive()");
+			((DetailActivity) getActivity()).setRefreshActionButtonState(false);
+			if (isDetached() || isRemoving()) {
+				return;
+			}
+			final boolean isAppend = intent.getBooleanExtra(
+					ReplyService.EXTRA_APPEND, false);
+			final boolean isCached = intent.getBooleanExtra(
+					ReplyService.EXTRA_CACHED, false);
+			final boolean isRefresh = intent.getBooleanExtra(
+					ReplyService.EXTRA_REFRESH, false);
+			final boolean isError = intent.getBooleanExtra(
+					ReplyService.EXTRA_ERROR, false);
+			final long jokeId = intent
+					.getLongExtra(ReplyService.ARG_JOKE_ID, 0);
+			final int countAdd = intent.getIntExtra(
+					ReplyService.ARG_REPLY_COUNT_ADD, 0);
+			if (isError) {
+				Toast.makeText(getActivity(), "No network connection.",
+						Toast.LENGTH_SHORT).show();
+			}
+			if (isCached) {
+				Log.i(TAG, "cached");
+			}
+			if (isRefresh) {
+				Log.i(TAG, "refresh");
+			}
+			List<ReplyBean> fetched = ReplyService.loadReplyFromCache(
+					getActivity(), jokeId, mPage, 50);
+			try {
+				if (fetched != null
+						&& JokeDetailFragment.this.getListView() != null) {
+					Log.i(TAG, "Fetched items:" + fetched.size());
+					if (isAppend && mAdapter != null) {
+						mReplyItems = new ArrayList<ReplyBean>();
+						mReplyItems.addAll(fetched);
+						((ReplyAdapter) mAdapter).appendWithItems(mReplyItems);
+						mAdapter.notifyDataSetChanged();
+						mIsAppend = !isAppend;
+					} else {
+						mAdapter = new ReplyAdapter(getActivity());
+						mReplyItems = new ArrayList<ReplyBean>();
+						mReplyItems.addAll(fetched);
+						((ReplyAdapter) mAdapter).fillWithItems(mReplyItems);
+						if (JokeDetailFragment.this.getListView()
+								.getHeaderViewsCount() == 0) {
+							JokeDetailFragment.this
+									.getListView()
+									.addHeaderView(getJokeDetailView(mJokeBean));
+						}
+						setListAdapter(mAdapter);
+						// mAdapter.notifyDataSetChanged();
+					}
+					if (viewHolder != null) {
+						viewHolder.btnComment.setText(""
+								+ (mJokeBean.getReplyCount() + countAdd));
+					}
+				}
+			} catch (Exception e) {
+				Log.e(TAG, "::onReceive() error= " + e.getMessage());
+				e.printStackTrace();
+			}
+		}
+
+	}
+
+	@Override
+	public void onStart() {
+		Log.i(TAG, "::onStart()");
+		super.onStart();
+		if (mReplyListReceiver == null) {
+			mReplyListReceiver = new JokeReplyReceiver();
+		}
+		IntentFilter refreshFilter = new IntentFilter(
+				ReplyService.REFRESH_REPLY_UI_INTENT + mJokeBean.getId());
+		getActivity().registerReceiver(mReplyListReceiver, refreshFilter);
+		((DetailActivity) getActivity()).setRefreshActionButtonState(true);
+		getListView().addHeaderView(getJokeDetailView(mJokeBean));
+		startService();
+	}
+
+	private void startService() {
+		final Intent startService = new Intent(getActivity(),
+				ReplyService.class);
+		startService.putExtra(ReplyService.ARG_JOKE_ID, mJokeBean.getId());
+		startService.putExtra(ReplyService.ARG_PAGE, mPage);
+		startService.putExtra(ReplyService.EXTRA_APPEND, mIsAppend);
+		startService.setAction(ReplyService.GET_REPLY_DATA_INTENT);
+
+		getActivity().startService(startService);
+	}
 
 	public JokeDetailFragment() {
 
@@ -64,94 +161,70 @@ public class JokeDetailFragment extends Fragment {
 		final JokeDetailFragment f = new JokeDetailFragment();
 
 		final Bundle args = new Bundle();
-		args.putString(BEAN_JSON_DATA_EXTRA, bean_json);
+		args.putString(EXTRA_JOKE_JSON, bean_json);
 		f.setArguments(args);
 
 		return f;
 	}
 
-	private class BaseOnClickListener implements OnClickListener {
+	@Override
+	public void onActivityCreated(Bundle savedInstanceState) {
+		Log.i(TAG, "::onActivityCreated()");
+		super.onActivityCreated(savedInstanceState);
+		if (DetailActivity.class.isInstance(getActivity())) {
 
-		@Override
-		public void onClick(View v) {
-			switch (v.getId()) {
-			case R.id.btn_submit:
-				doReply();
-				break;
+		}
+	}
+
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "::onCreate()");
+		super.onCreate(savedInstanceState);
+		String bean_json = getArguments() != null ? getArguments().getString(
+				EXTRA_JOKE_JSON) : null;
+		if (bean_json != null)
+			mJokeBean = GsonUtils.fromJson(bean_json, JokeBean.class);
+	}
+
+	@Override
+	public View onCreateView(LayoutInflater inflater, ViewGroup container,
+			Bundle savedInstanceState) {
+		final View v = inflater.inflate(R.layout.fragment_joke_detail,
+				container, false);
+		Log.i(TAG, "::onCreateView()");
+		return v;
+	}
+
+	@Override
+	public void onPause() {
+		super.onPause();
+		Log.i(TAG, "::onPause()");
+	}
+
+	@Override
+	public void onStop() {
+		Log.i(TAG, "::onStop()");
+		super.onStop();
+		try {
+			if (mReplyListReceiver != null) {
+				getActivity().unregisterReceiver(mReplyListReceiver);
 			}
-
+		} catch (IllegalArgumentException e) {
+			e.printStackTrace();
 		}
 	}
 
-	private void doReply() {
-		if (!AppContext.isNetworkConnected()) {
-			showToast(R.string.error_no_network);
-			return;
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		if (viewHolder != null && viewHolder.imgvJokePic != null) {
+			viewHolder.imgvJokePic.setImageDrawable(null);
 		}
-		if (!isReplying) {
-			isReplying = true;
-			String content = etxtReplyContent.getText().toString();
-			if ("".equals(content)) {
-				isReplying = false;
-				showToast(R.string.toast_reply_empty);
-				return;
-			}
-			(new DoReplyTask(jokeBean.getId(), content)).execute();
-		} else {
-			showToast(R.string.toast_reply_exists);
-		}
-
 	}
 
-	private class DoReplyTask extends AsyncTask<Void, Void, Boolean> {
+	/* ######################################## */
 
-		private int jokeid;
-		private String content;
-
-		public DoReplyTask(int jokeid, String content) {
-			this.jokeid = jokeid;
-			this.content = content;
-		}
-
-		@Override
-		protected Boolean doInBackground(Void... params) {
-			ReplyDao dao = new ReplyDao();
-			return dao.doReply(jokeid, content);
-		}
-
-		@Override
-		protected void onPostExecute(Boolean result) {
-			super.onPostExecute(result);
-			showToast(result ? R.string.toast_reply_success
-					: R.string.toast_reply_failure);
-			isReplying = result;
-			if (result) {
-				// refresh list view
-				viewHolder.btnComment.setText(""
-						+ (Integer.parseInt(viewHolder.btnComment.getText()
-								.toString()) + 1));
-				listViewHandler.sendEmptyMessage(Constant.REFURBISH);
-			}
-		}
-
-		@Override
-		protected void onPreExecute() {
-			super.onPreExecute();
-		}
-
-	}
-
-	private void initBtnClick(View v) {
-
-		BaseOnClickListener l = new BaseOnClickListener();
-		ImageButton imgbSubmitReply = (ImageButton) v
-				.findViewById(R.id.btn_submit);
-		etxtReplyContent = (EditText) v.findViewById(R.id.etxt_reply);
-
-		imgbSubmitReply.setOnClickListener(l);
-	}
-
-	private void initJokeDetailView(View v, JokeBean bean) {
+	private View getJokeDetailView(JokeBean bean) {
 		viewHolder = new ViewHolder();
 		View headerDetail = AppManager.getInstance().getInflater()
 				.inflate(R.layout.joke_detail, null);
@@ -174,7 +247,10 @@ public class JokeDetailFragment extends Fragment {
 		if (viewHolder.imgvJokePic != null) {
 			if (bean.getImgUrl() != null && !"".equals(bean.getImgUrl())) {
 
-				imgUrl = Constant.BASE_URL + bean.getImgUrl();
+				AQuery aq = new AQuery(getActivity());
+				aq = aq.id(viewHolder.imgvJokePic).image(
+						Constant.BASE_URL + bean.getImgUrl(), true, true, 600,
+						0);
 
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
@@ -198,111 +274,9 @@ public class JokeDetailFragment extends Fragment {
 			viewHolder.btnComment.setText("" + bean.getReplyCount());
 			// viewHolder.btnComment.setOnClickListener(ocl);
 		}
-		// ListView
-		ListView listView = (ListView) v.findViewById(R.id.lv_detailList);
-		final ReplysAdapter adapter = new ReplysAdapter(bean.getId(), listView,
-				headerDetail, null/* footer */, R.layout.reply_item) {
-			class LoadingDataTask extends UtilAsyncTask {
-				private int jokeId;
-
-				public LoadingDataTask(int jokeId) {
-					this.jokeId = jokeId;
-				}
-
-				@Override
-				protected void onPreExecute() {
-					super.onPreExecute();
-				}
-
-				@Override
-				protected PagerBean<ReplyBean> doInBackground(Integer... arg0) {
-					int page = arg0[0];
-					int size = 20;
-					boolean isDbCache = arg0[1] == 0;
-					ReplyDao dao = new ReplyDao();
-					List<ReplyBean> result = dao.getReplys(jokeId, page, size,
-							isDbCache);
-					PagerBean<ReplyBean> pager = new PagerBean<ReplyBean>();
-					// TODO no page data
-					pager.setIndex(1);
-					pager.setTotalPage(1);
-					pager.setTotalSize(size);
-					pager.setResult(result);
-
-					LogUtil.i(TAG, "doInBackground() page=" + page);
-					return pager;
-				}
-
-				@Override
-				protected void onPostExecute(PagerBean<ReplyBean> result) {
-					super.onPostExecute(result);
-				}
-
-			}
-
-			@Override
-			public boolean loadingData(int page, boolean isDbCache) {
-				if (!isLoadingData) {
-					isLoadingData = true;
-					(new LoadingDataTask(getJokeId())).execute(page,
-							isDbCache ? 0 : 1);
-				}
-				return isLoadingData;
-			}
-
-			@Override
-			public boolean preLoadData() {
-				// TODO Auto-generated method stub
-				return false;
-			}
-
-		};
-		listView.setAdapter(adapter);
-		adapter.initListView();
-		listViewHandler = adapter.getHandler();
-	}
-
-	@Override
-	public void onActivityCreated(Bundle savedInstanceState) {
-		super.onActivityCreated(savedInstanceState);
-		if (DetailActivity.class.isInstance(getActivity())) {
-			// mImageFetcher = ((DetailActivity)
-			// getActivity()).getImageFetcher();
-			if (viewHolder != null && viewHolder.imgvJokePic != null
-					&& imgUrl != null && imgUrl != "" && imgUrl.length() > 5) {
-				AQuery aq = new AQuery(getActivity());
-				aq = aq.id(viewHolder.imgvJokePic).image(imgUrl, true, true,
-						800, 0);
-
-				// mImageFetcher.loadImage(imgUrl, viewHolder.imgvJokePic);
-			}
-		}
-	}
-
-	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		super.onCreate(savedInstanceState);
-		String bean_json = getArguments() != null ? getArguments().getString(
-				BEAN_JSON_DATA_EXTRA) : null;
-		if (bean_json != null)
-			jokeBean = GsonUtils.fromJson(bean_json, JokeBean.class);
-	}
-
-	@Override
-	public View onCreateView(LayoutInflater inflater, ViewGroup container,
-			Bundle savedInstanceState) {
-		final View v = inflater.inflate(R.layout.fragment_joke_detail,
-				container, false);
-		initBtnClick(v);
-		initJokeDetailView(v, jokeBean);
-		return v;
-	}
-
-	@Override
-	public void onDestroy() {
-		super.onDestroy();
-		if (viewHolder != null && viewHolder.imgvJokePic != null) {
-			viewHolder.imgvJokePic.setImageDrawable(null);
-		}
+		// set header view
+		Log.i(TAG, "=>::getJokeDetailView()");
+		headerDetail.setVisibility(View.VISIBLE);
+		return headerDetail;
 	}
 }

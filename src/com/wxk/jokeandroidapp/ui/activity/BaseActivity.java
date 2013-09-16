@@ -11,6 +11,7 @@ import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.GestureDetector.OnGestureListener;
 import android.widget.Toast;
@@ -18,6 +19,7 @@ import android.widget.Toast;
 public class BaseActivity extends FragmentActivity {
 	protected final String TAG = "activity";
 	protected GestureDetector gestureDetector;
+	protected Menu mOptionsMenu;
 
 	protected void showToast(String showText) {
 		Toast toast = Toast.makeText(this, showText, Toast.LENGTH_SHORT);
@@ -31,9 +33,38 @@ public class BaseActivity extends FragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
+		this.mOptionsMenu = menu;
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_actions, menu);
 		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.action_refresh:
+
+			break;
+
+		default:
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
+
+	public void setRefreshActionButtonState(final boolean refreshing) {
+		if (mOptionsMenu != null) {
+			final MenuItem refreshItem = mOptionsMenu
+					.findItem(R.id.action_refresh);
+			if (refreshItem != null) {
+				if (refreshing) {
+					refreshItem
+							.setActionView(R.layout.actionbar_indeterminate_progress);
+				} else {
+					refreshItem.setActionView(null);
+				}
+			}
+		}
 	}
 
 	@Override

@@ -2,24 +2,24 @@ package com.wxk.jokeandroidapp.bean;
 
 public class ReplyBean {
 
-	private int id;
-	private int jokeID;
+	private long id;
+	private long jokeID;
 	private String content;
 	private String activeDate;
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
-	public int getJokeID() {
+	public long getJokeID() {
 		return jokeID;
 	}
 
-	public void setJokeID(int jokeID) {
+	public void setJokeID(long jokeID) {
 		this.jokeID = jokeID;
 	}
 

@@ -27,7 +27,7 @@ public class JokeClient extends BaseClient {
 		return responseData;
 	}
 
-	public ResponseData postSupport(int jokeId, int supportType)
+	public ResponseData postSupport(long jokeId, int supportType)
 			throws Exception {
 		ResponseData responseData = null;
 		List<NameValuePair> params = new ArrayList<NameValuePair>();

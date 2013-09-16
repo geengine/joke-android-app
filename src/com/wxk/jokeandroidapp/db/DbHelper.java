@@ -13,6 +13,14 @@ public class DbHelper extends SQLiteOpenHelper {
 
 	private static final int VERSION = 2; // database version
 	private static final String DB_NAME = "52_jokes_db"; // database name
+	private static DbHelper uniqeInstance;
+
+	public static DbHelper newInstance(Context context) {
+		if (uniqeInstance == null) {
+			uniqeInstance = new DbHelper(context);
+		}
+		return uniqeInstance;
+	}
 
 	public DbHelper(Context context, String name, CursorFactory factory,
 			int version) {

@@ -4,9 +4,9 @@ import com.wxk.jokeandroidapp.AppContext;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.dao.JokeDao;
+import com.wxk.jokeandroidapp.client.JokeClient;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
-import com.wxk.jokeandroidapp.ui.adapter.JokeListAdapter.ViewHolder;
+import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter.ViewHolder;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -140,8 +140,15 @@ public class OperateClickListener implements OnClickListener {
 				@Override
 				public void run() {
 					super.run();
-					JokeDao dao = new JokeDao();
-					Boolean retVal = dao.doUp(bean.getId(), flag);
+					JokeClient dao = new JokeClient();
+					Boolean retVal = null;
+					try {
+						retVal = dao.postSupport(bean.getId(),
+								flag.equals("add") ? 1 : 0).getStatus();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if (retVal) {
 						Message msg = new Message();
 						msg.what = Constant.SERVER_SUCCESSFUL;
@@ -167,8 +174,15 @@ public class OperateClickListener implements OnClickListener {
 				@Override
 				public void run() {
 					super.run();
-					JokeDao dao = new JokeDao();
-					Boolean retVal = dao.doDown(bean.getId(), flag);
+					JokeClient dao = new JokeClient();
+					Boolean retVal = null;
+					try {
+						retVal = dao.postSupport(bean.getId(),
+								flag.equals("add") ? 2 : 0).getStatus();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if (retVal) {
 						Message msg = new Message();
 						msg.what = Constant.SERVER_SUCCESSFUL;

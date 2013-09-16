@@ -31,7 +31,7 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return r > 0;
 	}
 
-	public boolean updateGood(int id, int good) {
+	public boolean updateGood(long id, int good) {
 		ContentValues values = new ContentValues();
 
 		values.put("goods", good);
@@ -41,7 +41,7 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return r > 0;
 	}
 
-	public boolean updateBad(int id, int bad) {
+	public boolean updateBad(long id, int bad) {
 		ContentValues values = new ContentValues();
 
 		values.put("bads", bad);
@@ -51,7 +51,7 @@ public class JokeDb extends BaseDb<JokeBean> {
 		return r > 0;
 	}
 
-	public boolean updateReplyPlusPlus(int id) {
+	public boolean updateReplyPlusPlus(long id) {
 		ContentValues values = new ContentValues();
 
 		values.put("bads", "bads+1");

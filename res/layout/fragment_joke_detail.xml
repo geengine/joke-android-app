@@ -2,11 +2,10 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/bg_gray"
-    android:orientation="vertical" >
+    android:background="@color/bg_gray" >
 
     <ListView
-        android:id="@+id/lv_detailList"
+        android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="50dp"
@@ -19,6 +18,15 @@
         android:scrollbars="vertical" >
     </ListView>
 
-    <include layout="@layout/reply_add" />
+    <!--
+         <TextView
+        android:id="@id/android:empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@android:id/list"
+        android:background="#ffffff"
+        android:gravity="bottom"
+        android:text="@string/no_data" />
+    -->
 
 </RelativeLayout>
