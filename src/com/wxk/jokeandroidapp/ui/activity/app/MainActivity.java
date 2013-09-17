@@ -32,6 +32,7 @@ import android.widget.TextView;
 public class MainActivity extends BaseActivity {
 
 	private static final String TAG = "52lxh:MainActivity";
+	private static final String STATE_DRAWER_SELECTION = "52lxh:drawer_selection";
 	private String[] mPlanetTitles;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
@@ -39,6 +40,7 @@ public class MainActivity extends BaseActivity {
 	private BaseAdapter mDrawerAdapter;
 	private int mTopic;
 	private int oldDrawerSelection = -1;
+	private int nowDrawerSelection = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,7 +132,7 @@ public class MainActivity extends BaseActivity {
 		mDrawerLayout.setDrawerListener(mDrawerToggle);
 
 		if (savedInstanceState == null) {
-			selectItem(0);
+			selectItem(nowDrawerSelection);
 		}
 	}
 
@@ -257,7 +259,16 @@ public class MainActivity extends BaseActivity {
 	@Override
 	protected void onRestoreInstanceState(Bundle savedInstanceState) {
 		Log.i(TAG, "::onRestoreInstanceState()");
+		oldDrawerSelection = savedInstanceState.getInt(STATE_DRAWER_SELECTION);
 		super.onRestoreInstanceState(savedInstanceState);
+	}
+
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		Log.i(TAG, "::onSaveInstanceState()");
+		if (oldDrawerSelection > 0)
+			outState.putInt(STATE_DRAWER_SELECTION, oldDrawerSelection);
+		super.onSaveInstanceState(outState);
 	}
 
 	@Override

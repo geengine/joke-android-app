@@ -2,7 +2,7 @@ package com.wxk.jokeandroidapp.ui.activity;
 
 import com.baidu.mobstat.StatService;
 import com.wxk.jokeandroidapp.R;
-import com.wxk.jokeandroidapp.ui.AppManager;
+import com.wxk.jokeandroidapp.ui.UiManager;
 import com.wxk.jokeandroidapp.ui.activity.app.AboutActivity;
 
 import android.content.Intent;
@@ -67,13 +67,13 @@ public class BaseActivity extends FragmentActivity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		gestureDetector = new GestureDetector(this, onGestureListener);
-		AppManager.getInstance().addActivity(this);
+		UiManager.getInstance().addActivity(this);
 	}
 
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		AppManager.getInstance().finishActivity(this);
+		UiManager.getInstance().finishActivity(this);
 	}
 
 	@Override

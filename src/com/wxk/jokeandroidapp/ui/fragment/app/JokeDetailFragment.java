@@ -9,7 +9,7 @@ import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.services.ReplyService;
-import com.wxk.jokeandroidapp.ui.AppManager;
+import com.wxk.jokeandroidapp.ui.UiManager;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.adapter.ReplyAdapter;
@@ -226,7 +226,7 @@ public class JokeDetailFragment extends BaseListFragment {
 
 	private View getJokeDetailView(JokeBean bean) {
 		viewHolder = new ViewHolder();
-		View headerDetail = AppManager.getInstance().getInflater()
+		View headerDetail = UiManager.getInstance().getInflater()
 				.inflate(R.layout.part_joke_detail, null);
 		// View footer =
 		// AppManager.getInstance().getInflater().inflate(R.layout.list_view_footer,
@@ -250,7 +250,7 @@ public class JokeDetailFragment extends BaseListFragment {
 				AQuery aq = new AQuery(getActivity());
 				aq = aq.id(viewHolder.imgvJokePic).image(
 						Constant.BASE_URL + bean.getImgUrl(), true, true, 0, 0,
-						null, 0, 1.0f);
+						null,0,AQuery.RATIO_PRESERVE);
 
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);

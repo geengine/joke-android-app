@@ -36,7 +36,7 @@
 
     <style name="txt_joke_title">
         <item name="android:textColor">@color/text_joke_title</item>
-        <item name="android:background">@color/page_bg</item>
+        <!-- <item name="android:background">@color/page_bg</item> -->
         <item name="android:padding">10dp</item>
         <item name="android:textSize">18sp</item>
     </style>
@@ -44,7 +44,7 @@
     <style name="txt_joke_content">
         <item name="android:textColor">@color/text</item>
         <item name="android:padding">10dp</item>
-        <item name="android:background">@color/page_bg</item>
+        <item name="android:background">@drawable/joke_content_bg</item>
         <item name="android:textSize">16sp</item>
     </style>
 
@@ -88,7 +88,7 @@
     <style name="joke_operate">
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">5dp</item>
-        <item name="android:background">@color/bg_operate</item>
+        <item name="android:background">@drawable/joke_operate_bg</item>
     </style>
 
     <style name="joke_operate_btn">
