@@ -7,11 +7,11 @@
         android:showAsAction="always"
         android:title="@string/action_refresh"/>
 
-    <group android:id="@+id/actionItem" >
+
         <item
             android:id="@+id/action_about"
             android:showAsAction="collapseActionView"
             android:title="@string/action_about"/>
-    </group>
+
 
 </menu>
