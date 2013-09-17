@@ -54,9 +54,13 @@ public class BaseActivity extends FragmentActivity {
 					.findItem(R.id.action_refresh);
 			if (refreshItem != null) {
 				if (refreshing) {
+					Log.i(TAG,
+							"::setRefreshActionButtonState() => Action refresh...");
 					refreshItem
 							.setActionView(R.layout.actionbar_indeterminate_progress);
 				} else {
+					Log.i(TAG,
+							"::setRefreshActionButtonState() => Action unrefresh");
 					refreshItem.setActionView(null);
 				}
 			}

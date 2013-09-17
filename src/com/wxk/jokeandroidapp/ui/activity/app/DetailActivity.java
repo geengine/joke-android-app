@@ -8,6 +8,7 @@ import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.client.ReplyClient;
 import com.wxk.jokeandroidapp.db.JokeDb;
 import com.wxk.jokeandroidapp.services.ReplyService;
+import com.wxk.jokeandroidapp.ui.UiManager;
 import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
 import com.wxk.jokeandroidapp.ui.fragment.app.JokeDetailFragment;
 import com.wxk.util.GsonUtils;
@@ -19,7 +20,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
-import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.view.Menu;
@@ -100,7 +100,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
+			// NavUtils.navigateUpFromSameTask(this);
+			UiManager.getInstance().finishActivity();
 			return true;
 		case R.id.action_refresh:
 			setRefreshActionButtonState(true);

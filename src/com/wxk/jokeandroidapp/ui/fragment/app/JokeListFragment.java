@@ -48,7 +48,7 @@ public class JokeListFragment extends BaseListFragment implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.i(TAG, "::onReceive()");
-			((MainActivity) getActivity()).setRefreshActionButtonState(false);
+
 			if (isDetached() || isRemoving()) {
 				return;
 			}
@@ -73,11 +73,15 @@ public class JokeListFragment extends BaseListFragment implements
 				Toast.makeText(getActivity(),
 						getString(R.string.toast_no_refresh_data),
 						Toast.LENGTH_SHORT).show();
+				// set actionBar refresh
+				((MainActivity) getActivity())
+						.setRefreshActionButtonState(false);
 			}
 			if (isCached) {
 				Log.i(TAG, "cached");
 			}
 			if (fetched != null) {
+
 				if (isAppend && mAdapter != null) {
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
@@ -85,14 +89,19 @@ public class JokeListFragment extends BaseListFragment implements
 					((JokeAdapter) mAdapter).appendWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					mIsAppend = !isAppend;
-				} else if ((isRefresh && isNewData) || mAdapter == null) {
+				} else if ((isRefresh && isNewData) || mAdapter == null
+						|| mAdapter.getCount() < 1) {
 					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 					((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					setListAdapter(mAdapter);
+					// set actionBar refresh
+					((MainActivity) getActivity())
+							.setRefreshActionButtonState(false);
 				}
+
 			}
 
 		}
@@ -118,7 +127,6 @@ public class JokeListFragment extends BaseListFragment implements
 		if (MainActivity.class.isInstance(getActivity())) {
 		}
 		getListView().setOnScrollListener(this);
-		((MainActivity) getActivity()).setRefreshActionButtonState(true);
 		startService();
 	}
 
@@ -126,9 +134,7 @@ public class JokeListFragment extends BaseListFragment implements
 	public void onStart() {
 		super.onStart();
 		// getLoaderManager().restartLoader(mTopic, null, this);
-
 		Log.i(TAG, "::onStart()");
-
 	}
 
 	private void registerReceiver() {

@@ -144,7 +144,7 @@ public class MainActivity extends BaseActivity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		Log.i(TAG, "::onCreateOptionsMenu()");
-		this.mOptionsMenu = menu;
+		super.mOptionsMenu = menu;
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_actions, menu);
 
@@ -206,6 +206,9 @@ public class MainActivity extends BaseActivity {
 		// update the main content by replacing fragments
 		Log.i(TAG, String.format("::selectItem(%s)", position));
 		if (position != oldDrawerSelection) {
+			// set actionbar refresh
+			setRefreshActionButtonState(true);
+
 			mTopic = Topics.getInstance().getTopicID(position);
 			Fragment fragment = new JokeListFragment();
 			Bundle args = new Bundle();

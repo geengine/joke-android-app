@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.ui.UiManager;
 import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
 
 public class AboutActivity extends BaseActivity {
@@ -25,7 +26,8 @@ public class AboutActivity extends BaseActivity {
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
-			NavUtils.navigateUpFromSameTask(this);
+			// NavUtils.navigateUpFromSameTask(this);
+			UiManager.getInstance().finishActivity();
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
