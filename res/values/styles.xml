@@ -42,7 +42,7 @@
     </style>
 
     <style name="txt_joke_content">
-        <item name="android:textColor">@color/text</item>
+        <item name="android:textColor">@color/text_joke_content</item>
         <item name="android:padding">10dp</item>
         <item name="android:background">@drawable/joke_content_bg</item>
         <item name="android:textSize">16sp</item>
