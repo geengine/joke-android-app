@@ -160,7 +160,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	private void doReply() {
 		if (!App.isNetworkConnected()) {
-			showToast(R.string.error_network);
+			showToast(R.string.toast_error_network);
 			return;
 		}
 		if (!isReplying) {

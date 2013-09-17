@@ -58,10 +58,20 @@ public class JokeListFragment extends BaseListFragment implements
 					JokeService.EXTRA_CACHED, false);
 			final boolean isError = intent.getBooleanExtra(
 					JokeService.EXTRA_SERVER_ERROR, false);
+			final boolean isRefresh = intent.getBooleanExtra(
+					JokeService.EXTRA_REFRESH, false);
+			final boolean isNewData = intent.getBooleanExtra(
+					JokeService.EXTRA_NEW_DATA, false);
 			List<JokeBean> fetched = JokeService.loadJokeFromCache(
 					getActivity(), mTopic, mPage);
 			if (isError) {
-				Toast.makeText(getActivity(), "No network connection.",
+				Toast.makeText(getActivity(),
+						getString(R.string.toast_error_network),
+						Toast.LENGTH_SHORT).show();
+			}
+			if (!isNewData && isRefresh) {
+				Toast.makeText(getActivity(),
+						getString(R.string.toast_no_refresh_data),
 						Toast.LENGTH_SHORT).show();
 			}
 			if (isCached) {
@@ -75,7 +85,7 @@ public class JokeListFragment extends BaseListFragment implements
 					((JokeAdapter) mAdapter).appendWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					mIsAppend = !isAppend;
-				} else {
+				} else if ((isRefresh && isNewData) || mAdapter == null) {
 					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
@@ -84,6 +94,7 @@ public class JokeListFragment extends BaseListFragment implements
 					setListAdapter(mAdapter);
 				}
 			}
+
 		}
 	}
 

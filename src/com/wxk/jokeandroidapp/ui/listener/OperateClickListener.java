@@ -65,7 +65,7 @@ public class OperateClickListener implements OnClickListener {
 		switch (v.getId()) {
 		case R.id.btn_good:
 			if (!App.isNetworkConnected()) {
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				return;
 			}
 			if (!isUping && !isUped) {
@@ -89,7 +89,7 @@ public class OperateClickListener implements OnClickListener {
 
 		case R.id.btn_bad: // 踩
 			if (!App.isNetworkConnected()) {
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				return;
 			}
 			if (!isDowning && !isDowned) {
@@ -224,7 +224,7 @@ public class OperateClickListener implements OnClickListener {
 				// }
 				break;
 			case Constant.SERVER_ERROR:
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				break;
 			default:
 				break;
@@ -265,7 +265,7 @@ public class OperateClickListener implements OnClickListener {
 
 				break;
 			case Constant.SERVER_ERROR:
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				break;
 			default:
 				break;

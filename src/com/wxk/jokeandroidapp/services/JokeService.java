@@ -29,7 +29,7 @@ public class JokeService extends IntentService {
 	public static final String EXTRA_SERVER_ERROR = "52lxh:joke_server_error";
 	public static final String EXTRA_APPEND = "52lxh:joke_data_append";
 	public static final String EXTRA_REFRESH = "52lxh:joke_data_refresh";
-
+	public static final String EXTRA_NEW_DATA = "52lxh:joke_data_new";
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	public static final String ARG_JOKE_PAGE = "52lxh:joke_page";
 	public static final String ARG_JOKE_SIZE = "52lxh:joke_size";
@@ -72,6 +72,7 @@ public class JokeService extends IntentService {
 					final Intent refreshIntent = new Intent(
 							REFRESH_JOKE_UI_INTENT);
 					refreshIntent.putExtra(EXTRA_CACHED, true);
+
 					refreshIntent.putExtra(EXTRA_APPEND, isAppend);
 					sendBroadcast(refreshIntent);
 				}
@@ -79,12 +80,16 @@ public class JokeService extends IntentService {
 			if (updataFeedFromServer(jokeItems, jokePage, jokeTopic, jokeSize)) {
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
 				refreshIntent.putExtra(EXTRA_CACHED, false);
+				refreshIntent.putExtra(EXTRA_NEW_DATA, true);
+				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
 				refreshIntent.putExtra(EXTRA_APPEND, isAppend);
 				sendBroadcast(refreshIntent);
 			} else {
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
-				refreshIntent.putExtra(EXTRA_CACHED, true);
-				refreshIntent.putExtra(EXTRA_APPEND, isAppend);
+				refreshIntent.putExtra(EXTRA_CACHED, false);
+				refreshIntent.putExtra(EXTRA_NEW_DATA, false);
+				refreshIntent.putExtra(EXTRA_APPEND, false);
+				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
 				sendBroadcast(refreshIntent);
 			}
 		}
