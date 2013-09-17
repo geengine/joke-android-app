@@ -20,7 +20,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.Loader;
 
-import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
@@ -96,6 +96,8 @@ public class JokeListFragment extends BaseListFragment implements
 		if (args != null) {
 			mTopic = args.getInt(ARG_JOKE_TOPIC);
 		}
+
+		registerReceiver();
 	}
 
 	@Override
@@ -105,6 +107,8 @@ public class JokeListFragment extends BaseListFragment implements
 		if (MainActivity.class.isInstance(getActivity())) {
 		}
 		getListView().setOnScrollListener(this);
+		((MainActivity) getActivity()).setRefreshActionButtonState(true);
+		startService();
 	}
 
 	@Override
@@ -113,14 +117,16 @@ public class JokeListFragment extends BaseListFragment implements
 		// getLoaderManager().restartLoader(mTopic, null, this);
 
 		Log.i(TAG, "::onStart()");
+
+	}
+
+	private void registerReceiver() {
 		if (mJokeListReceiver == null) {
 			mJokeListReceiver = new JokeListReceiver();
 		}
 		IntentFilter refreshFilter = new IntentFilter(
 				JokeService.REFRESH_JOKE_UI_INTENT);
 		getActivity().registerReceiver(mJokeListReceiver, refreshFilter);
-		((MainActivity) getActivity()).setRefreshActionButtonState(true);
-		startService();
 	}
 
 	private void startService() {
@@ -153,6 +159,13 @@ public class JokeListFragment extends BaseListFragment implements
 	public void onStop() {
 		Log.i(TAG, "::onStop()");
 		super.onStop();
+
+	}
+
+	@Override
+	public void onDestroy() {
+		super.onDestroy();
+		Log.i(TAG, "::onDestroy()");
 		try {
 			if (mJokeListReceiver != null) {
 				getActivity().unregisterReceiver(mJokeListReceiver);
@@ -189,8 +202,8 @@ public class JokeListFragment extends BaseListFragment implements
 		intentDetail.putExtra(DetailActivity.EXTRA_JOKE_ID,
 				mAdapter.getItemId(position));
 
-		intentDetail.setClass(AppContext.context, DetailActivity.class);
-		AppContext.context.startActivity(intentDetail);
+		intentDetail.setClass(App.context, DetailActivity.class);
+		App.context.startActivity(intentDetail);
 	}
 
 	@Override

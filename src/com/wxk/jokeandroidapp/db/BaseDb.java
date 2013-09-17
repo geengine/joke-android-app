@@ -4,7 +4,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.App;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -25,7 +25,7 @@ public abstract class BaseDb<E> {
 	}
 
 	public BaseDb() {
-		this(AppContext.context);
+		this(App.context);
 	}
 
 	public abstract String getTableName();

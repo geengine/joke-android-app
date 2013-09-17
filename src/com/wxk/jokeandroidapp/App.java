@@ -1,13 +1,9 @@
 package com.wxk.jokeandroidapp;
 
 import java.io.File;
-import java.lang.ref.SoftReference;
-import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.Map;
 
 import com.wxk.jokeandroidapp.db.DbHelper;
-import com.wxk.util.BitmapUtil.WrapDrawable;
 import com.wxk.util.LogUtil;
 
 import android.app.Application;
@@ -15,7 +11,7 @@ import android.content.Context;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
-public class AppContext extends Application {
+public class App extends Application {
 	public static final String TAG = "HYY_APP";
 	public static final int NETTYPE_WIFI = 0x01;
 	public static final int NETTYPE_CMWAP = 0x02;
@@ -24,8 +20,6 @@ public class AppContext extends Application {
 
 	public static Context context;
 	public static ConnectivityManager connectMg;
-
-	public static Map<String, SoftReference<WrapDrawable>> imgCache = new HashMap<String, SoftReference<WrapDrawable>>();
 
 	private static Hashtable<String, Long> memCacheFingerMark = new Hashtable<String, Long>();
 
@@ -89,12 +83,11 @@ public class AppContext extends Application {
 	 * clear cache data
 	 */
 	public static void clearCacheData() {
-		DbHelper db = new DbHelper(AppContext.context);
+		DbHelper db = new DbHelper(App.context);
 		db.deleteDataTables();
-		imgCache.clear();
 		memCacheFingerMark.clear();
 		// clear cache file
-		File cacheDir = AppContext.context.getCacheDir();
+		File cacheDir = App.context.getCacheDir();
 		if (cacheDir.exists())
 			cacheDir.delete();
 	}

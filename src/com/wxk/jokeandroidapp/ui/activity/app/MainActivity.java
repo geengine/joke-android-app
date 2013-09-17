@@ -21,6 +21,7 @@ import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -30,15 +31,18 @@ import android.widget.TextView;
 
 public class MainActivity extends BaseActivity {
 
+	private static final String TAG = "52lxh:MainActivity";
 	private String[] mPlanetTitles;
 	private DrawerLayout mDrawerLayout;
 	private ListView mDrawerList;
 	private ActionBarDrawerToggle mDrawerToggle;
 	private BaseAdapter mDrawerAdapter;
 	private int mTopic;
+	private int oldDrawerSelection = -1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "::onCreate()");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
@@ -136,62 +140,11 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
-	public boolean onPrepareOptionsMenu(Menu menu) {
-
-		// boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
-		// MenuItem homeMenu = menu.getItem(android.R.id.home);
-		return super.onPrepareOptionsMenu(menu);
-	}
-
-	@Override
-	protected void onPostCreate(Bundle savedInstanceState) {
-		super.onPostCreate(savedInstanceState);
-		// Sync the toggle state after onRestoreInstanceState has occurred.
-		mDrawerToggle.syncState();
-	}
-
-	@Override
-	public void onConfigurationChanged(Configuration newConfig) {
-		super.onConfigurationChanged(newConfig);
-		mDrawerToggle.onConfigurationChanged(newConfig);
-	}
-
-	private class DrawerItemClickListener implements
-			ListView.OnItemClickListener {
-		@Override
-		public void onItemClick(AdapterView<?> parent, View view, int position,
-				long id) {
-			selectItem(position);
-		}
-	}
-
-	private void selectItem(int position) {
-		// update the main content by replacing fragments
-		Log.i(TAG, "selectItem: " + position);
-		mTopic = Topics.getInstance().getTopicID(position);
-		Fragment fragment = new JokeListFragment();
-		Bundle args = new Bundle();
-		args.putInt(JokeListFragment.ARG_JOKE_TOPIC, mTopic);
-		fragment.setArguments(args);
-
-		FragmentManager fragmentManager = getSupportFragmentManager();
-		fragmentManager.beginTransaction()
-				.replace(R.id.content_frame, fragment).commit();
-
-		// update selected item and title, then close the drawer
-		((DrawerAdapter) mDrawerAdapter).setSelectedPosition(position);
-
-		mDrawerList.setItemChecked(position, true);
-
-		setTitle(mPlanetTitles[position]);
-		mDrawerLayout.closeDrawer(mDrawerList);
-	}
-
-	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		super.mOptionsMenu = menu;
-		getMenuInflater().inflate(R.menu.main_activity_actions, menu);
+		Log.i(TAG, "::onCreateOptionsMenu()");
+		this.mOptionsMenu = menu;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.main_activity_actions, menu);
 
 		MenuItem menuItem = menu.findItem(R.id.action_about);
 
@@ -211,12 +164,72 @@ public class MainActivity extends BaseActivity {
 					}
 
 				});
-		return true;
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		boolean drawerOpen = mDrawerLayout.isDrawerOpen(mDrawerList);
+		MenuItem refresh = menu.findItem(R.id.action_refresh);
+		if (refresh != null)
+			refresh.setVisible(!drawerOpen);
+		return super.onPrepareOptionsMenu(menu);
+	}
+
+	@Override
+	protected void onPostCreate(Bundle savedInstanceState) {
+		super.onPostCreate(savedInstanceState);
+		Log.i(TAG, "::onPostCreate()");
+		// Sync the toggle state after onRestoreInstanceState has occurred.
+		mDrawerToggle.syncState();
+	}
+
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		Log.i(TAG, "::onConfigurationChanged()");
+		mDrawerToggle.onConfigurationChanged(newConfig);
+	}
+
+	private class DrawerItemClickListener implements
+			ListView.OnItemClickListener {
+		@Override
+		public void onItemClick(AdapterView<?> parent, View view, int position,
+				long id) {
+			selectItem(position);
+		}
+	}
+
+	private void selectItem(int position) {
+		// update the main content by replacing fragments
+		Log.i(TAG, String.format("::selectItem(%s)", position));
+		if (position != oldDrawerSelection) {
+			mTopic = Topics.getInstance().getTopicID(position);
+			Fragment fragment = new JokeListFragment();
+			Bundle args = new Bundle();
+			args.putInt(JokeListFragment.ARG_JOKE_TOPIC, mTopic);
+			fragment.setArguments(args);
+
+			FragmentManager fragmentManager = getSupportFragmentManager();
+			fragmentManager.beginTransaction()
+					.replace(R.id.content_frame, fragment).commit();
+
+			// update selected item and title, then close the drawer
+			((DrawerAdapter) mDrawerAdapter).setSelectedPosition(position);
+
+			mDrawerList.setItemChecked(position, true);
+
+			setTitle(mPlanetTitles[position]);
+
+			oldDrawerSelection = position;
+		}
+		// auto
+		mDrawerLayout.closeDrawer(mDrawerList);
 	}
 
 	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
-
+		Log.i(TAG, "::onOptionsItemSelected()");
 		if (mDrawerToggle.onOptionsItemSelected(item)) {
 			return true;
 		}
@@ -242,17 +255,26 @@ public class MainActivity extends BaseActivity {
 	}
 
 	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		Log.i(TAG, "::onRestoreInstanceState()");
+		super.onRestoreInstanceState(savedInstanceState);
+	}
+
+	@Override
 	public void onResume() {
+		Log.i(TAG, "::onResume()");
 		super.onResume();
 	}
 
 	@Override
 	public void onPause() {
+		Log.i(TAG, "::onPause()");
 		super.onPause();
 	}
 
 	@Override
 	public void onDestroy() {
+		Log.i(TAG, "::onDestroy()");
 		super.onDestroy();
 	}
 }

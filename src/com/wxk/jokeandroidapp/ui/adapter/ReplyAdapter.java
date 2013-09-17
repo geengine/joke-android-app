@@ -55,7 +55,7 @@ public class ReplyAdapter extends BaseAdapter {
 		ViewHolder holder;
 		if (convertView == null) {
 			convertView = LayoutInflater.from(mContext).inflate(
-					R.layout.reply_item, null);
+					R.layout.replyrow, null);
 			holder = new ViewHolder();
 			holder.txtvContext = (TextView) convertView
 					.findViewById(R.id.txtv_reply_content);

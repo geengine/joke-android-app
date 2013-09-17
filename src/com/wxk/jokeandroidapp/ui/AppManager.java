@@ -1,6 +1,8 @@
-package com.wxk.jokeandroidapp;
+package com.wxk.jokeandroidapp.ui;
 
 import java.util.Stack;
+
+import com.wxk.jokeandroidapp.App;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,7 +18,7 @@ public class AppManager {
 
 	public LayoutInflater getInflater() {
 		if (null == inflater)
-			inflater = LayoutInflater.from(AppContext.context);
+			inflater = LayoutInflater.from(App.context);
 		return inflater;
 	}
 

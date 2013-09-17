@@ -2,7 +2,7 @@ package com.wxk.jokeandroidapp.ui.activity.app;
 
 import java.util.List;
 
-import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.client.ReplyClient;
@@ -22,6 +22,8 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -87,6 +89,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		super.mOptionsMenu = menu;
+		MenuInflater inflater = getMenuInflater();
+		inflater.inflate(R.menu.detail_activity_actions, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
@@ -149,8 +159,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	}
 
 	private void doReply() {
-		if (!AppContext.isNetworkConnected()) {
-			showToast(R.string.error_no_network);
+		if (!App.isNetworkConnected()) {
+			showToast(R.string.error_network);
 			return;
 		}
 		if (!isReplying) {

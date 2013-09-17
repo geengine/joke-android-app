@@ -1,6 +1,6 @@
 package com.wxk.jokeandroidapp.ui.listener;
 
-import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
@@ -39,7 +39,7 @@ public class OperateClickListener implements OnClickListener {
 	}
 
 	public OperateClickListener(ViewHolder viewHolder, JokeBean jokeBean) {
-		this(viewHolder, jokeBean, AppContext.context);
+		this(viewHolder, jokeBean, App.context);
 	}
 
 	public Animation getIconAnim() {
@@ -64,8 +64,8 @@ public class OperateClickListener implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_good:
-			if (!AppContext.isNetworkConnected()) {
-				showToast(R.string.error_no_network);
+			if (!App.isNetworkConnected()) {
+				showToast(R.string.error_network);
 				return;
 			}
 			if (!isUping && !isUped) {
@@ -88,8 +88,8 @@ public class OperateClickListener implements OnClickListener {
 			break;
 
 		case R.id.btn_bad: // 踩
-			if (!AppContext.isNetworkConnected()) {
-				showToast(R.string.error_no_network);
+			if (!App.isNetworkConnected()) {
+				showToast(R.string.error_network);
 				return;
 			}
 			if (!isDowning && !isDowned) {
@@ -125,8 +125,8 @@ public class OperateClickListener implements OnClickListener {
 			intentDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			intentDetail.putExtra(DetailActivity.EXTRA_JOKE_ID, bean.getId());
 
-			intentDetail.setClass(AppContext.context, DetailActivity.class);
-			AppContext.context.startActivity(intentDetail);
+			intentDetail.setClass(App.context, DetailActivity.class);
+			App.context.startActivity(intentDetail);
 			break;
 		}
 	}

@@ -1,16 +1,17 @@
 package com.wxk.jokeandroidapp.ui.activity;
 
 import com.baidu.mobstat.StatService;
-import com.wxk.jokeandroidapp.AppManager;
 import com.wxk.jokeandroidapp.R;
+import com.wxk.jokeandroidapp.ui.AppManager;
+import com.wxk.jokeandroidapp.ui.activity.app.AboutActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.GestureDetector.OnGestureListener;
@@ -32,20 +33,15 @@ public class BaseActivity extends FragmentActivity {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		this.mOptionsMenu = menu;
-		MenuInflater inflater = getMenuInflater();
-		inflater.inflate(R.menu.main_activity_actions, menu);
-		return super.onCreateOptionsMenu(menu);
-	}
-
-	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case R.id.action_refresh:
 
 			break;
-
+		case R.id.action_about:
+			final Intent aboutIntent = new Intent(this, AboutActivity.class);
+			startActivity(aboutIntent);
+			return true;
 		default:
 			break;
 		}

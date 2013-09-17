@@ -15,9 +15,10 @@
 
     <ImageView
         android:id="@+id/imgv_jokeImg"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:contentDescription="@null" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="@null"
+        android:scaleType="centerInside" />
 
     <include layout="@layout/joke_operate" />
 
