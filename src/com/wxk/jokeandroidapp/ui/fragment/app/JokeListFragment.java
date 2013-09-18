@@ -40,7 +40,7 @@ public class JokeListFragment extends BaseListFragment implements
 	private JokeListReceiver mJokeListReceiver;
 	private int mPage = 1;
 	private int mTopic = 0;
-	private boolean mIsAppend = false;
+	private boolean mIsLoading = false;
 
 	private class JokeListReceiver extends BroadcastReceiver {
 		private static final String TAG = "52lxh:JokeListFragment>>JokeListReceiver";
@@ -52,8 +52,7 @@ public class JokeListFragment extends BaseListFragment implements
 			if (isDetached() || isRemoving()) {
 				return;
 			}
-			final boolean isAppend = intent.getBooleanExtra(
-					JokeService.EXTRA_APPEND, false);
+
 			final boolean isCached = intent.getBooleanExtra(
 					JokeService.EXTRA_CACHED, false);
 			final boolean isError = intent.getBooleanExtra(
@@ -62,6 +61,7 @@ public class JokeListFragment extends BaseListFragment implements
 					JokeService.EXTRA_REFRESH, false);
 			final boolean isNewData = intent.getBooleanExtra(
 					JokeService.EXTRA_NEW_DATA, false);
+			final int topic = intent.getIntExtra(JokeService.ARG_JOKE_TOPIC, 0);
 			List<JokeBean> fetched = JokeService.loadJokeFromCache(
 					getActivity(), mTopic, mPage);
 			if (isError) {
@@ -78,18 +78,28 @@ public class JokeListFragment extends BaseListFragment implements
 						.setRefreshActionButtonState(false);
 			}
 			if (isCached) {
-				Log.i(TAG, "cached");
+				final Intent refreshIntent = new Intent(
+						JokeService.REFRESH_JOKE_UI_INTENT + topic);
+				refreshIntent.putExtra(JokeService.EXTRA_CACHED, false);
+				refreshIntent.putExtra(JokeService.EXTRA_REFRESH, isRefresh);
+				JokeListFragment.this.getActivity()
+						.sendBroadcast(refreshIntent);
+				if (fetched != null)
+					Log.i(TAG, String.format("Cached data items:%s , topic=%s",
+							fetched.size(), topic));
+				else
+					Log.i(TAG, String.format("Cached no data !", topic));
 			}
-			if (fetched != null) {
+			if (fetched != null && fetched.size() > 0) {
 
-				if (isAppend && mAdapter != null) {
+				if ((mAdapter != null && isRefresh == false)) {
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 
 					((JokeAdapter) mAdapter).appendWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
-					mIsAppend = !isAppend;
-				} else if ((isRefresh && isNewData) || mAdapter == null
+
+				} else if (isRefresh || mAdapter == null
 						|| mAdapter.getCount() < 1) {
 					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
@@ -103,7 +113,7 @@ public class JokeListFragment extends BaseListFragment implements
 				}
 
 			}
-
+			mIsLoading = false;
 		}
 	}
 
@@ -142,15 +152,15 @@ public class JokeListFragment extends BaseListFragment implements
 			mJokeListReceiver = new JokeListReceiver();
 		}
 		IntentFilter refreshFilter = new IntentFilter(
-				JokeService.REFRESH_JOKE_UI_INTENT);
+				JokeService.REFRESH_JOKE_UI_INTENT + mTopic);
 		getActivity().registerReceiver(mJokeListReceiver, refreshFilter);
 	}
 
 	private void startService() {
+
 		final Intent startService = new Intent(getActivity(), JokeService.class);
 		startService.putExtra(JokeService.ARG_JOKE_TOPIC, mTopic);
 		startService.putExtra(JokeService.ARG_JOKE_PAGE, mPage);
-		startService.putExtra(JokeService.EXTRA_APPEND, mIsAppend);
 		startService.setAction(JokeService.GET_JOKE_DATA_INTENT);
 
 		getActivity().startService(startService);
@@ -230,8 +240,8 @@ public class JokeListFragment extends BaseListFragment implements
 	}
 
 	private void loadingMore() {
-		if (!mIsAppend) {
-			mIsAppend = true;
+		if (!mIsLoading) {
+			mIsLoading = true;
 			mPage = mPage + 1;
 			startService();
 		}

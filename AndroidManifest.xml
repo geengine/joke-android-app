@@ -67,10 +67,10 @@
         </activity>
         <activity
             android:name=".ui.activity.app.DetailActivity"
-            android:configChanges="keyboardHidden"
             android:label="@string/title_detail"
             android:parentActivityName=".ui.activity.app.MainActivity"
-            android:theme="@style/AppTheme" >
+            android:theme="@style/AppTheme"
+            android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.app.MainActivity" />

@@ -27,7 +27,6 @@ public class JokeService extends IntentService {
 
 	public static final String EXTRA_CACHED = "52lxh:joke_data_cached";
 	public static final String EXTRA_SERVER_ERROR = "52lxh:joke_server_error";
-	public static final String EXTRA_APPEND = "52lxh:joke_data_append";
 	public static final String EXTRA_REFRESH = "52lxh:joke_data_refresh";
 	public static final String EXTRA_NEW_DATA = "52lxh:joke_data_new";
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
@@ -57,8 +56,8 @@ public class JokeService extends IntentService {
 		Log.d(TAG, "::onHandleIntent()");
 		if (intent.getAction().equals(GET_JOKE_DATA_INTENT)) {
 			Log.d(TAG, "=>:action=" + GET_JOKE_DATA_INTENT);
-			boolean isAppend = intent.getBooleanExtra(EXTRA_APPEND, false);
 			boolean isRefresh = intent.getBooleanExtra(EXTRA_REFRESH, false);
+			boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, true);
 			int jokeTopic = intent.getIntExtra(ARG_JOKE_TOPIC, 0);
 			int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
 			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, 10);
@@ -66,29 +65,30 @@ public class JokeService extends IntentService {
 			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
 			/* Send any cached feed first */
 			List<JokeBean> cachedItems;
-			if (!isRefresh) {
-				cachedItems = loadJokeFromCache(this, jokeTopic, jokePage);
-				if (cachedItems != null) {
-					final Intent refreshIntent = new Intent(
-							REFRESH_JOKE_UI_INTENT);
-					refreshIntent.putExtra(EXTRA_CACHED, true);
+			cachedItems = loadJokeFromCache(this, jokeTopic, jokePage);
 
-					refreshIntent.putExtra(EXTRA_APPEND, isAppend);
-					sendBroadcast(refreshIntent);
-				}
+			if (cachedItems != null && isCached) {
+				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
+						+ jokeTopic);
+				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
+				refreshIntent.putExtra(EXTRA_CACHED, true);
+
+				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
+				sendBroadcast(refreshIntent);
+				return;
 			}
+
 			if (updataFeedFromServer(jokeItems, jokePage, jokeTopic, jokeSize)) {
-				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
-				refreshIntent.putExtra(EXTRA_CACHED, false);
+				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
+						+ jokeTopic);
 				refreshIntent.putExtra(EXTRA_NEW_DATA, true);
 				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
-				refreshIntent.putExtra(EXTRA_APPEND, isAppend);
 				sendBroadcast(refreshIntent);
 			} else {
-				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT);
-				refreshIntent.putExtra(EXTRA_CACHED, false);
+				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
+						+ jokeTopic);
+				// no data
 				refreshIntent.putExtra(EXTRA_NEW_DATA, false);
-				refreshIntent.putExtra(EXTRA_APPEND, false);
 				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
 				sendBroadcast(refreshIntent);
 			}

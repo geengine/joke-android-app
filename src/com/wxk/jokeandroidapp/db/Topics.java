@@ -33,18 +33,17 @@ public class Topics {
 
 	Topics() {
 		mTopics.add(new Topic("全部", 0));
+		mTopics.add(new Topic("冷笑话", 9));
 		mTopics.add(new Topic("成人笑话", 7));
 		mTopics.add(new Topic("夫妻笑话", 1));
-		//mTopics.add(new Topic("冷笑话", 9));
-		mTopics.add(new Topic("校园笑话", 3));
-		mTopics.add(new Topic("家庭笑话", 4));
-		//mTopics.add(new Topic("儿童笑话", 5));
-		//mTopics.add(new Topic("动物笑话", 6));
-		mTopics.add(new Topic("爱情笑话", 2));
-		mTopics.add(new Topic("恶心笑话", 8));
-		//mTopics.add(new Topic("经典笑话", 10));
 		mTopics.add(new Topic("搞笑图片", 18));
-
+		mTopics.add(new Topic("爱情笑话", 2));
+		mTopics.add(new Topic("校园笑话", 3));
+		// mTopics.add(new Topic("家庭笑话", 4));
+		// mTopics.add(new Topic("儿童笑话", 5));
+		// mTopics.add(new Topic("动物笑话", 6));
+		mTopics.add(new Topic("恶心笑话", 8));
+		mTopics.add(new Topic("经典笑话", 10));
 	}
 
 	public String[] getTopicKeys() {

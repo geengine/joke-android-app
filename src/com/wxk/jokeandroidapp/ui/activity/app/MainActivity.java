@@ -245,9 +245,9 @@ public class MainActivity extends BaseActivity {
 			Log.i(TAG, "onOptionsItemSelected::action_refresh");
 			setRefreshActionButtonState(true);
 			final Intent startService = new Intent(this, JokeService.class);
+			startService.putExtra(JokeService.EXTRA_CACHED, false);
 			startService.putExtra(JokeService.ARG_JOKE_TOPIC, mTopic);
 			startService.putExtra(JokeService.ARG_JOKE_PAGE, 1);
-			startService.putExtra(JokeService.EXTRA_APPEND, false);
 			startService.putExtra(JokeService.EXTRA_REFRESH, true);
 			startService.setAction(JokeService.GET_JOKE_DATA_INTENT);
 

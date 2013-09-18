@@ -68,6 +68,9 @@ public class JokeDb extends BaseDb<JokeBean> {
 	}
 
 	public List<JokeBean> getList(int page, int size, int topic) {
+		if (topic == 0) { // no filter
+			return this.getList(page, size);
+		}
 		return super.getList("topic=?", new String[] { "" + topic }, "id DESC",
 				page, size);
 	}
