@@ -1,12 +1,12 @@
 package com.wxk.jokeandroidapp.ui.listener;
 
-import com.wxk.jokeandroidapp.AppContext;
+import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.Constant;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
-import com.wxk.jokeandroidapp.dao.JokeDao;
-import com.wxk.jokeandroidapp.ui.DetailActivity;
-import com.wxk.jokeandroidapp.ui.adapter.JokesAdapter.ViewHolder;
+import com.wxk.jokeandroidapp.client.JokeClient;
+import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
+import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter.ViewHolder;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -39,7 +39,7 @@ public class OperateClickListener implements OnClickListener {
 	}
 
 	public OperateClickListener(ViewHolder viewHolder, JokeBean jokeBean) {
-		this(viewHolder, jokeBean, AppContext.context);
+		this(viewHolder, jokeBean, App.context);
 	}
 
 	public Animation getIconAnim() {
@@ -64,8 +64,8 @@ public class OperateClickListener implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.btn_good:
-			if (!AppContext.isNetworkConnected()) {
-				showToast(R.string.error_no_network);
+			if (!App.isNetworkConnected()) {
+				showToast(R.string.toast_error_network);
 				return;
 			}
 			if (!isUping && !isUped) {
@@ -88,8 +88,8 @@ public class OperateClickListener implements OnClickListener {
 			break;
 
 		case R.id.btn_bad: // 踩
-			if (!AppContext.isNetworkConnected()) {
-				showToast(R.string.error_no_network);
+			if (!App.isNetworkConnected()) {
+				showToast(R.string.toast_error_network);
 				return;
 			}
 			if (!isDowning && !isDowned) {
@@ -120,20 +120,13 @@ public class OperateClickListener implements OnClickListener {
 			intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 			context.startActivity(intent);
 			break;
-		case R.id.btn_comment://评论
+		case R.id.btn_comment:// 评论
 			Intent intentDetail = new Intent();
 			intentDetail.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-			intentDetail.putExtra("id", bean.getId());
-			intentDetail.putExtra("title", bean.getTitle());
-			intentDetail.putExtra("content", bean.getContent());
-			intentDetail.putExtra("replys", bean.getReplyCount());
-			intentDetail.putExtra("clicks", bean.getClickCount());
-			intentDetail.putExtra("goods", bean.getGooodCount());
-			intentDetail.putExtra("bads", bean.getBadCount());
-			intentDetail.putExtra("date", bean.getActiveDate());
-			intentDetail.putExtra("imgurl", bean.getImgUrl());
-			intentDetail.setClass(AppContext.context, DetailActivity.class);
-			AppContext.context.startActivity(intentDetail);
+			intentDetail.putExtra(DetailActivity.EXTRA_JOKE_ID, bean.getId());
+
+			intentDetail.setClass(App.context, DetailActivity.class);
+			App.context.startActivity(intentDetail);
 			break;
 		}
 	}
@@ -147,8 +140,15 @@ public class OperateClickListener implements OnClickListener {
 				@Override
 				public void run() {
 					super.run();
-					JokeDao dao = new JokeDao();
-					Boolean retVal = dao.doUp(bean.getId(), flag);
+					JokeClient dao = new JokeClient();
+					Boolean retVal = null;
+					try {
+						retVal = dao.postSupport(bean.getId(),
+								flag.equals("add") ? 1 : 0).getStatus();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if (retVal) {
 						Message msg = new Message();
 						msg.what = Constant.SERVER_SUCCESSFUL;
@@ -174,8 +174,15 @@ public class OperateClickListener implements OnClickListener {
 				@Override
 				public void run() {
 					super.run();
-					JokeDao dao = new JokeDao();
-					Boolean retVal = dao.doDown(bean.getId(), flag);
+					JokeClient dao = new JokeClient();
+					Boolean retVal = null;
+					try {
+						retVal = dao.postSupport(bean.getId(),
+								flag.equals("add") ? 2 : 0).getStatus();
+					} catch (Exception e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
 					if (retVal) {
 						Message msg = new Message();
 						msg.what = Constant.SERVER_SUCCESSFUL;
@@ -217,7 +224,7 @@ public class OperateClickListener implements OnClickListener {
 				// }
 				break;
 			case Constant.SERVER_ERROR:
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				break;
 			default:
 				break;
@@ -258,7 +265,7 @@ public class OperateClickListener implements OnClickListener {
 
 				break;
 			case Constant.SERVER_ERROR:
-				showToast(R.string.error_network);
+				showToast(R.string.toast_error_network);
 				break;
 			default:
 				break;

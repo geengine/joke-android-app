@@ -5,6 +5,15 @@
     <color name="titlebar_bg_end">#65a435</color>
     <color name="titlebar_bg_top">#7fb654</color>
     <color name="titlebar_bg_bottom">#4f8f1d</color>
+    <color name="action_bar_bg">#7caf00</color>
+    <color name="action_bar_sel_bg">#669900</color>
+    <color name="action_bar_text">#808080</color>
+    <color name="titlebar_bg">#7caf00</color>
+    <color name="navigation_drawer_bg">#f0f0f0</color>
+    <color name="navigation_drawer_item_bg">#ffffff</color>
+    <color name="navigation_drawer_item_sel_bg">#e2f0b6</color>
+    <color name="page_bg">#ffffff</color>
+    <color name="split_line">#f0f0f0</color>
     <color name="titlebar_txt_color">#f0f0f0</color>
     <color name="titlebar_icon_bg_default">#6ea841</color>
     <color name="titlebar_icon_bg_pressed">#387905</color>
@@ -22,9 +31,9 @@
     <!-- TextView -->
     <color name="txt_default">#323232</color>
     <color name="txtv_white">#ffffff</color>
-    <color name="text_joke_title">#4b4b4b</color>
-    <color name="text_joke_content">#5d5d5d</color>
-    <color name="text">#1E1E1E</color>
+    <color name="text_joke_title">#323232</color>
+    <color name="text_joke_content">#565656</color>
+    <color name="text">#565656</color>
     <color name="text_light">#AEAEAE</color>
     <color name="text_icon">#A8A8A8</color>
     <color name="text_recent">#3797C7</color>

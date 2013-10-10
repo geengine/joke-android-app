@@ -4,29 +4,28 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-import com.wxk.jokeandroidapp.AppContext;
-import com.wxk.jokeandroidapp.bean.PagerBean;
-import com.wxk.util.LogUtil;
-import com.wxk.util.StringUtil;
+import com.wxk.jokeandroidapp.App;
 
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.util.Log;
 
 public abstract class BaseDb<E> {
 
-	protected static final String TAG = "Db";
+	protected static final String TAG = "52lxh:sqlite";
 	private Context context;
 	private DbHelper dbHelper;
+	private SQLiteDatabase db;
 
 	public BaseDb(Context context) {
 		this.context = context;
-		dbHelper = new DbHelper(this.context);
+		dbHelper = DbHelper.newInstance(this.context);
 	}
 
 	public BaseDb() {
-		this(AppContext.context);
+		this(App.context);
 	}
 
 	public abstract String getTableName();
@@ -36,7 +35,10 @@ public abstract class BaseDb<E> {
 	}
 
 	protected SQLiteDatabase getDb() {
-		return getDbHelper().getReadableDatabase();
+		db = getDbHelper().getWritableDatabase();
+		if (!db.isOpen() || db == null)
+			db = getDbHelper().getWritableDatabase();
+		return db;
 	}
 
 	public boolean add(E e) {
@@ -47,8 +49,9 @@ public abstract class BaseDb<E> {
 
 		long r = db.insert(getTableName(), null, getContentValues(e));
 
-		db.close();
-
+		// db.close();
+		Log.d(TAG, String.format("::add(%s) => %s", e.getClass().getName(),
+				(r > 0)));
 		return r > 0;
 	};
 
@@ -56,12 +59,14 @@ public abstract class BaseDb<E> {
 
 	public boolean addAll(Collection<E> collection) {
 		if (null != collection) {
-
+			boolean isAdd = false;
 			Iterator<E> iterator = collection.iterator();
 			while (iterator.hasNext()) {
-				this.add(iterator.next());
+				if (this.add(iterator.next())) {
+					isAdd = true;
+				}
 			}
-			return true;
+			return isAdd;
 		}
 		return false;
 
@@ -92,38 +97,9 @@ public abstract class BaseDb<E> {
 		}
 
 		cursor.close();
-		db.close();
-		LogUtil.d(TAG, "ROW COUNT { " + getTableName() + " } : " + count);
+		//db.close();
 		return count;
 	};
-
-	public PagerBean<E> getPager(int page, int size) {
-		return getPager(null, null, null, page, size);
-	};
-
-	public PagerBean<E> getPager(String where, String[] whereArgs,
-			String orderBy, int page, int size) {
-
-		PagerBean<E> pager = new PagerBean<E>(page, size, getCount(where,
-				whereArgs));
-
-		SQLiteDatabase db = getDb();
-		Cursor cursor = db.query(getTableName(), null, where, whereArgs, null,
-				null, orderBy, ((page - 1) * size) + "," + size);
-
-		pager.setResult(getEntity(cursor));
-
-		cursor.close();
-		db.close();
-
-		LogUtil.d(TAG, "WHERE { " + where + "," + StringUtil.toStr(whereArgs)
-				+ " } ");
-		LogUtil.d(TAG, "ORDERBY { " + orderBy + " } ");
-		if (pager.getTotalSize() > 0)
-			return pager;
-		else
-			return null;
-	}
 
 	public List<E> getList(int page, int size) {
 		return getList(null, null, null, page, size);
@@ -133,17 +109,15 @@ public abstract class BaseDb<E> {
 			int page, int size) {
 		List<E> list = null;
 		SQLiteDatabase db = getDb();
-		Cursor cursor = db.query(getTableName(), null, where, whereArgs, null,
-				null, orderBy, ((page - 1) * size) + "," + size);
+		if (db.isOpen()) {
+			Cursor cursor = db.query(getTableName(), null, where, whereArgs,
+					null, null, orderBy, ((page - 1) * size) + "," + size);
 
-		list = getEntity(cursor);
+			list = getEntity(cursor);
 
-		cursor.close();
-		db.close();
-
-		LogUtil.d(TAG, "WHERE { " + where + "," + StringUtil.toStr(whereArgs)
-				+ " } ");
-		LogUtil.d(TAG, "ORDERBY { " + orderBy + " } ");
+			cursor.close();
+			//db.close();
+		}
 		return list;
 	}
 

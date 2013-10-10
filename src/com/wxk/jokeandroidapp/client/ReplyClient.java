@@ -12,7 +12,7 @@ public class ReplyClient extends BaseClient {
 	final String REPLY_LIST = Constant.API_URL + "/getnewreplylist.aspx";
 	final String ADD_REPLY = Constant.API_URL + "/doreply.aspx";
 
-	public ResponseData getReplys(int jokeid, int page, int size)
+	public ResponseData getReplys(long jokeid, int page, int size)
 			throws Exception {
 		ResponseData responseData = null;
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
@@ -24,7 +24,7 @@ public class ReplyClient extends BaseClient {
 		return responseData;
 	}
 
-	public ResponseData doReply(int jokeid, String content) throws Exception {
+	public ResponseData doReply(long jokeid, String content) throws Exception {
 		ResponseData responseData = null;
 		List<NameValuePair> params = new ArrayList<NameValuePair>();
 		params.add(new BasicNameValuePair("jokeid", "" + jokeid));

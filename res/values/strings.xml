@@ -2,21 +2,21 @@
 <resources>
 
     <string name="app_name">52冷笑话</string>
-    <string name="hint_replay_text">添加评论</string>
+    <string name="hint_replay_text">您想说的..</string>
     <string name="def_num">0</string>
-    <string name="menu_settings">Settings</string>
-    <string name="header_refresh_lastUpdate">2012 12 20 10:12:13</string>
-    <string name="refresh_list_footer_text">下拉获取更多</string>
-    <string name="no_reply">暂无评论</string>
-
+    <string name="title_detail">笑话详细</string>
     <!-- hint string -->
-    <string name="hint_list_footer">正在获取更多 ..</string>
-    <string name="hint_list_header">正在刷新数据 ..</string>
     <string name="toast_reply_empty">评论不能为空！</string>
-    <string name="toast_reply_success">评论发表成功！</string>
-    <string name="toast_reply_failure">评论发表失败！</string>
-    <string name="toast_reply_exists">评论已经发表！</string>
-    <string name="error_no_network">网络不可用，请打开网络再进行操作！</string>
-    <string name="error_network">网络错误！</string>
+    <string name="toast_reply_success">成功发表评论！</string>
+    <string name="toast_reply_failure">失败发表评论！</string>
+    <string name="toast_reply_exists">已经发表评论！</string>
+    <string name="toast_no_refresh_data">数据已经是最新！</string>
+    <string name="toast_error_network">对不起，你的网络不稳定！</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_about">关于我们</string>
+    <string name="drawer_open"></string>
+    <string name="drawer_close"></string>
+    <string name="info_fill_data_ing">嘿嘿，这里好空旷哦! 拼命填充中&#8230;</string>
+    <string name="website">www.52lxh.com</string>
 
 </resources>
