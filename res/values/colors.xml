@@ -13,7 +13,8 @@
     <color name="navigation_drawer_item_bg">#ffffff</color>
     <color name="navigation_drawer_item_sel_bg">#e2f0b6</color>
     <color name="page_bg">#ffffff</color>
-    <color name="split_line">#f0f0f0</color>
+    <color name="white">#ffffff</color>
+    <color name="split_line">#ffcccccc</color>
     <color name="titlebar_txt_color">#f0f0f0</color>
     <color name="titlebar_icon_bg_default">#6ea841</color>
     <color name="titlebar_icon_bg_pressed">#387905</color>

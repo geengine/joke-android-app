@@ -16,8 +16,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
-import android.support.v4.view.MenuItemCompat;
-import android.support.v4.view.MenuItemCompat.OnActionExpandListener;
 import android.support.v4.widget.DrawerLayout;
 import android.util.Log;
 import android.view.Menu;
@@ -148,24 +146,24 @@ public class MainActivity extends BaseActivity {
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.main_activity_actions, menu);
 
-		MenuItem menuItem = menu.findItem(R.id.action_about);
-
-		MenuItemCompat.setOnActionExpandListener(menuItem,
-				new OnActionExpandListener() {
-
-					@Override
-					public boolean onMenuItemActionCollapse(MenuItem arg0) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-
-					@Override
-					public boolean onMenuItemActionExpand(MenuItem arg0) {
-						// TODO Auto-generated method stub
-						return false;
-					}
-
-				});
+		// MenuItem menuItem = menu.findItem(R.id.action_about);
+		//
+		// MenuItemCompat.setOnActionExpandListener(menuItem,
+		// new OnActionExpandListener() {
+		//
+		// @Override
+		// public boolean onMenuItemActionCollapse(MenuItem arg0) {
+		// // TODO Auto-generated method stub
+		// return false;
+		// }
+		//
+		// @Override
+		// public boolean onMenuItemActionExpand(MenuItem arg0) {
+		// // TODO Auto-generated method stub
+		// return false;
+		// }
+		//
+		// });
 		return super.onCreateOptionsMenu(menu);
 	}
 

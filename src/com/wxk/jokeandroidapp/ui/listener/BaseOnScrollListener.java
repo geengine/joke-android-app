@@ -1,6 +1,6 @@
 package com.wxk.jokeandroidapp.ui.listener;
 
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 import com.wxk.util.LogUtil;
 
 import android.os.Handler;
@@ -42,7 +42,7 @@ public class BaseOnScrollListener implements OnScrollListener {
 	@Override
 	public void onScrollStateChanged(AbsListView view, int scrollState) {
 		if (scrollState == SCROLL_STATE_IDLE && lastItem == adapter.getCount()) {
-			handler.sendEmptyMessage(Constant.LOADING);
+			handler.sendEmptyMessage(Constants.LOADING);
 			LogUtil.i(TAG, "loading more ...");
 		}
 		if (scrollState == SCROLL_STATE_IDLE && firstItem == 0) {

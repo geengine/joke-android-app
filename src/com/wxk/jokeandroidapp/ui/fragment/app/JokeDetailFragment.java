@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.androidquery.AQuery;
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
@@ -249,7 +249,7 @@ public class JokeDetailFragment extends BaseListFragment {
 
 				AQuery aq = new AQuery(getActivity());
 				aq = aq.id(viewHolder.imgvJokePic).image(
-						Constant.BASE_URL + bean.getImgUrl(), true, true, 0, 0,
+						Constants.BASE_URL + bean.getImgUrl(), true, true, 0, 0,
 						null,0,AQuery.RATIO_PRESERVE);
 
 			} else {

@@ -3,11 +3,9 @@ package com.wxk.jokeandroidapp.ui.activity;
 import com.baidu.mobstat.StatService;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.ui.UiManager;
-import com.wxk.jokeandroidapp.ui.activity.app.AboutActivity;
 
-import android.content.Intent;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
@@ -17,7 +15,7 @@ import android.view.MotionEvent;
 import android.view.GestureDetector.OnGestureListener;
 import android.widget.Toast;
 
-public class BaseActivity extends FragmentActivity {
+public class BaseActivity extends ActionBarActivity {
 	protected final String TAG = "activity";
 	protected GestureDetector gestureDetector;
 	protected Menu mOptionsMenu;
@@ -38,10 +36,10 @@ public class BaseActivity extends FragmentActivity {
 		case R.id.action_refresh:
 
 			break;
-		case R.id.action_about:
-			final Intent aboutIntent = new Intent(this, AboutActivity.class);
-			startActivity(aboutIntent);
-			return true;
+		/*
+		 * case R.id.action_about: final Intent aboutIntent = new Intent(this,
+		 * AboutActivity.class); startActivity(aboutIntent); return true;
+		 */
 		default:
 			break;
 		}
@@ -56,12 +54,12 @@ public class BaseActivity extends FragmentActivity {
 				if (refreshing) {
 					Log.i(TAG,
 							"::setRefreshActionButtonState() => Action refresh...");
-					refreshItem
-							.setActionView(R.layout.actionbar_indeterminate_progress);
+					// refreshItem
+					// .setActionView(R.layout.actionbar_indeterminate_progress);
 				} else {
 					Log.i(TAG,
 							"::setRefreshActionButtonState() => Action unrefresh");
-					refreshItem.setActionView(null);
+					// refreshItem.setActionView(null);
 				}
 			}
 		}

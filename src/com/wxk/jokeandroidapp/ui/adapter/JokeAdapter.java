@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 import com.androidquery.AQuery;
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.ui.listener.OperateClickListener;
@@ -89,14 +89,11 @@ public class JokeAdapter extends BaseAdapter {
 			holder.txtContent.setVisibility(View.GONE);
 		}
 
-		holder.btnGood.setText("" + item.getGooodCount());
-		holder.btnBad.setText("" + item.getBadCount());
-		holder.btnComment.setText("" + item.getReplyCount());
 		final String imgURL = item.getImgUrl();
 		if (imgURL != null && !imgURL.equals("") && imgURL.length() > 6) {
 			Log.i(TAG, String.format("Loading image: %s", imgURL));
 			final AQuery aq = new AQuery(mContext);
-			aq.id(holder.imgvJokePic).image(Constant.BASE_URL + imgURL, true,
+			aq.id(holder.imgvJokePic).image(Constants.BASE_URL + imgURL, true,
 					true, 800, 0, null, AQuery.FADE_IN_NETWORK);
 			holder.imgvJokePic.setVisibility(View.VISIBLE);
 		} else {
