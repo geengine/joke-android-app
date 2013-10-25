@@ -1,10 +1,11 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="@android:style/Theme.Holo">
-        <item name="android:actionBarStyle">@style/MyActionBar</item>
+    <style name="AppBaseTheme" parent="@style/Theme.AppCompat">
+        <item name="actionBarStyle">@style/MyActionBar</item>
     </style>
 
-    <style name="MyActionBar" parent="@android:style/Widget.Holo.ActionBar">
+    <style name="MyActionBar" parent="@style/Widget.AppCompat.Base.ActionBar">
+        <item name="background">@drawable/action_bar_bg</item>
         <item name="android:background">@drawable/action_bar_bg</item>
         <item name="android:popupBackground">@color/action_bar_bg</item>
         <item name="android:dropDownSelector">@color/action_bar_sel_bg</item>
@@ -37,13 +38,13 @@
     <style name="txt_joke_title">
         <item name="android:textColor">@color/text_joke_title</item>
         <!-- <item name="android:background">@color/page_bg</item> -->
-        <item name="android:padding">10dp</item>
+        <item name="android:paddingBottom">@dimen/jokerow_padding</item>
         <item name="android:textSize">18sp</item>
     </style>
 
     <style name="txt_joke_content">
         <item name="android:textColor">@color/text_joke_content</item>
-        <item name="android:padding">10dp</item>
+        <item name="android:paddingTop">@dimen/jokerow_padding</item>
         <item name="android:background">@drawable/joke_content_bg</item>
         <item name="android:textSize">16sp</item>
     </style>

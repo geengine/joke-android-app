@@ -1,7 +1,7 @@
 package com.wxk.jokeandroidapp.ui.listener;
 
 import com.wxk.jokeandroidapp.App;
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.client.JokeClient;
@@ -151,12 +151,12 @@ public class OperateClickListener implements OnClickListener {
 					}
 					if (retVal) {
 						Message msg = new Message();
-						msg.what = Constant.SERVER_SUCCESSFUL;
+						msg.what = Constants.SERVER_SUCCESSFUL;
 						msg.arg1 = "add".equals(flag) ? 1 : -1;
 						upSuportHandler.sendMessage(msg);
 					} else {
 						Message msg = new Message();
-						msg.what = Constant.SERVER_ERROR;
+						msg.what = Constants.SERVER_ERROR;
 						upSuportHandler.sendMessage(msg);
 					}
 				}
@@ -185,12 +185,12 @@ public class OperateClickListener implements OnClickListener {
 					}
 					if (retVal) {
 						Message msg = new Message();
-						msg.what = Constant.SERVER_SUCCESSFUL;
+						msg.what = Constants.SERVER_SUCCESSFUL;
 						msg.arg1 = "add".equals(flag) ? 1 : -1;
 						downSuportHandler.sendMessage(msg);
 					} else {
 						Message msg = new Message();
-						msg.what = Constant.SERVER_ERROR;
+						msg.what = Constants.SERVER_ERROR;
 						downSuportHandler.sendMessage(msg);
 					}
 				}
@@ -206,7 +206,7 @@ public class OperateClickListener implements OnClickListener {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-			case Constant.SERVER_SUCCESSFUL:
+			case Constants.SERVER_SUCCESSFUL:
 				isUping = false;
 
 				bean.setGooodCount(bean.getGooodCount() + msg.arg1);
@@ -223,7 +223,7 @@ public class OperateClickListener implements OnClickListener {
 				//
 				// }
 				break;
-			case Constant.SERVER_ERROR:
+			case Constants.SERVER_ERROR:
 				showToast(R.string.toast_error_network);
 				break;
 			default:
@@ -247,7 +247,7 @@ public class OperateClickListener implements OnClickListener {
 		public void handleMessage(Message msg) {
 			super.handleMessage(msg);
 			switch (msg.what) {
-			case Constant.SERVER_SUCCESSFUL:
+			case Constants.SERVER_SUCCESSFUL:
 				isDowning = false;
 
 				bean.setBadCount(bean.getBadCount() + msg.arg1);
@@ -264,7 +264,7 @@ public class OperateClickListener implements OnClickListener {
 				// }
 
 				break;
-			case Constant.SERVER_ERROR:
+			case Constants.SERVER_ERROR:
 				showToast(R.string.toast_error_network);
 				break;
 			default:

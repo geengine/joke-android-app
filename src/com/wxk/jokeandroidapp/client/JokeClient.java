@@ -6,16 +6,16 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 
 public class JokeClient extends BaseClient {
 	// http://www.52lxh.com/appinterface/getnewdatalist.aspx?current="+ current + "&pagesize="
 	// + pageSize categoryid;
-	final String JOKE_LIST = Constant.API_URL + "/getnewdatalist.aspx";
+	final String JOKE_LIST = Constants.API_URL + "/getnewdatalist.aspx";
 
 	// "http://www.52lxh.com/appinterface/dosupport.aspx?id="
 	// + jokeID + "&type=1";
-	final String JOKE_SUPPORT = Constant.API_URL + "/dosupport.aspx";
+	final String JOKE_SUPPORT = Constants.API_URL + "/dosupport.aspx";
 
 	public ResponseData getJokes(int page, int pageSize,int topicid) throws Exception {
 		ResponseData responseData = null;

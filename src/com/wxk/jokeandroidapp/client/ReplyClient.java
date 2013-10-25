@@ -6,11 +6,11 @@ import java.util.List;
 import org.apache.http.NameValuePair;
 import org.apache.http.message.BasicNameValuePair;
 
-import com.wxk.jokeandroidapp.Constant;
+import com.wxk.jokeandroidapp.Constants;
 
 public class ReplyClient extends BaseClient {
-	final String REPLY_LIST = Constant.API_URL + "/getnewreplylist.aspx";
-	final String ADD_REPLY = Constant.API_URL + "/doreply.aspx";
+	final String REPLY_LIST = Constants.API_URL + "/getnewreplylist.aspx";
+	final String ADD_REPLY = Constants.API_URL + "/doreply.aspx";
 
 	public ResponseData getReplys(long jokeid, int page, int size)
 			throws Exception {
