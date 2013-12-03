@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">52冷笑话</string>
+    <string name="hint_replay_text">您想说的..</string>
+    <string name="def_num">0</string>
+    <string name="title_detail">笑话详细</string>
+    <!-- hint string -->
+    <string name="toast_reply_empty">评论不能为空！</string>
+    <string name="toast_reply_success">成功发表评论！</string>
+    <string name="toast_reply_failure">失败发表评论！</string>
+    <string name="toast_reply_exists">已经发表评论！</string>
+    <string name="toast_no_refresh_data">数据已经是最新！</string>
+    <string name="toast_error_network">对不起，你的网络不稳定！</string>
+    <string name="action_refresh">刷新</string>
+    <string name="action_about">关于我们</string>
+    <string name="action_share_app_wx_friend">分享应用给微信好友</string>
+    <string name="action_push_app_wx">推送应用到微信朋友圈</string>
+     <string name="action_share_wx_friend">分享给微信好友</string>
+    <string name="action_push_wx">推送到微信朋友圈</string>
+    <string name="drawer_open"></string>
+    <string name="drawer_close"></string>
+    <string name="info_fill_data_ing">嘿嘿，这里好空旷哦! 拼命填充中&#8230;</string>
+    <string name="website">www.52lxh.com</string>
+
+</resources>

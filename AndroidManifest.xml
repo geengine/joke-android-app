@@ -5,7 +5,9 @@
     android:versionCode="2"
     android:versionName="0.0.3" >
 
-    <uses-sdk android:minSdkVersion="10" />
+    <uses-sdk
+        android:minSdkVersion="8"
+        android:targetSdkVersion="18" />
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -58,7 +60,8 @@
 
         <activity
             android:name=".ui.activity.app.MainActivity"
-            android:theme="@style/AppTheme" >
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppTheme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -69,7 +72,8 @@
             android:name=".ui.activity.app.DetailActivity"
             android:label="@string/title_detail"
             android:parentActivityName=".ui.activity.app.MainActivity"
-            android:theme="@style/AppTheme"
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppTheme"
             android:windowSoftInputMode="stateHidden" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
@@ -79,7 +83,8 @@
             android:name=".ui.activity.app.AboutActivity"
             android:label="@string/action_about"
             android:parentActivityName=".ui.activity.app.MainActivity"
-            android:theme="@style/AppTheme" >
+            android:screenOrientation="portrait"
+            android:theme="@style/MyAppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".ui.app.MainActivity" />

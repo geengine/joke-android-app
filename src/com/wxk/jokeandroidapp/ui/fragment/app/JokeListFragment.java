@@ -3,6 +3,11 @@ package com.wxk.jokeandroidapp.ui.fragment.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,6 +18,7 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
+import android.annotation.TargetApi;
 import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -31,8 +37,10 @@ import com.wxk.jokeandroidapp.ui.loader.JokeLoader;
 import com.wxk.jokeandroidapp.services.JokeService;
 import com.wxk.util.LogUtil;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class JokeListFragment extends BaseListFragment implements
-		OnScrollListener, LoaderManager.LoaderCallbacks<List<JokeBean>> {
+		OnScrollListener, LoaderManager.LoaderCallbacks<List<JokeBean>>,
+		OnRefreshListener {
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	private static final String TAG = "52lxh:JokeListFragment";
 	private BaseAdapter mAdapter;
@@ -41,6 +49,7 @@ public class JokeListFragment extends BaseListFragment implements
 	private int mPage = 1;
 	private int mTopic = 0;
 	private boolean mIsLoading = false;
+	PullToRefreshLayout mPullToRefreshLayout;
 
 	private class JokeListReceiver extends BroadcastReceiver {
 		private static final String TAG = "52lxh:JokeListFragment>>JokeListReceiver";
@@ -48,7 +57,7 @@ public class JokeListFragment extends BaseListFragment implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.i(TAG, "::onReceive()");
-
+			mPullToRefreshLayout.setRefreshComplete();
 			if (isDetached() || isRemoving()) {
 				return;
 			}
@@ -73,10 +82,8 @@ public class JokeListFragment extends BaseListFragment implements
 				Toast.makeText(getActivity(),
 						getString(R.string.toast_no_refresh_data),
 						Toast.LENGTH_SHORT).show();
-				// set actionBar refresh
-				((MainActivity) getActivity())
-						.setRefreshActionButtonState(false);
 			}
+			
 			if (isCached) {
 				final Intent refreshIntent = new Intent(
 						JokeService.REFRESH_JOKE_UI_INTENT + topic);
@@ -107,9 +114,6 @@ public class JokeListFragment extends BaseListFragment implements
 					((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					setListAdapter(mAdapter);
-					// set actionBar refresh
-					((MainActivity) getActivity())
-							.setRefreshActionButtonState(false);
 				}
 
 			}
@@ -173,6 +177,27 @@ public class JokeListFragment extends BaseListFragment implements
 		// return super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_joke_list, null);
 		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		ViewGroup viewGroup = (ViewGroup) view;
+
+		// As we're using a ListFragment we create a PullToRefreshLayout
+		// manually
+		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
+		// We can now setup the PullToRefreshLayout
+		ActionBarPullToRefresh
+				.from(getActivity())
+				// We need to insert the PullToRefreshLayout into the Fragment's
+				// ViewGroup
+				.insertLayoutInto(viewGroup)
+				// Here we mark just the ListView and it's Empty View as
+				// pullable
+				.theseChildrenArePullable(android.R.id.list, android.R.id.empty)
+				.listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -245,6 +270,12 @@ public class JokeListFragment extends BaseListFragment implements
 			mPage = mPage + 1;
 			startService();
 		}
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		mPage = 1;
+		startService();
 	}
 
 	private int mLastItem;

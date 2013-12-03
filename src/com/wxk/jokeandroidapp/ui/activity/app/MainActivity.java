@@ -105,8 +105,8 @@ public class MainActivity extends BaseActivity {
 		mDrawerList.setOnItemClickListener(new DrawerItemClickListener());
 
 		//
-		getActionBar().setDisplayHomeAsUpEnabled(true);
-		getActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+		getSupportActionBar().setHomeButtonEnabled(true);
 		//
 
 		mDrawerToggle = new ActionBarDrawerToggle(this, /* host Activity */

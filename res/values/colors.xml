@@ -5,7 +5,7 @@
     <color name="titlebar_bg_end">#65a435</color>
     <color name="titlebar_bg_top">#7fb654</color>
     <color name="titlebar_bg_bottom">#4f8f1d</color>
-    <color name="action_bar_bg">#7caf00</color>
+    <color name="action_bar_bg">#669900</color>
     <color name="action_bar_sel_bg">#669900</color>
     <color name="action_bar_text">#808080</color>
     <color name="titlebar_bg">#7caf00</color>

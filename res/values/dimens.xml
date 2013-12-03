@@ -16,7 +16,7 @@
 -->
 
 <resources>
-
+	<dimen name="txt_title_size">18sp</dimen>
     <dimen name="title_bar_height">45dp</dimen>
     <dimen name="list_divider_height">15dp</dimen>	
     <dimen name="jokerow_padding">10dp</dimen>

@@ -1,0 +1,7 @@
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.AppCompat.CustomPtrHeader" parent="Theme.AppCompat">
+        <item name="android:actionBarStyle">@style/Widget.Custom.ActionBar</item>
+    </style>
+
+</resources>
