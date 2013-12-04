@@ -64,6 +64,7 @@ public class JokeListFragment extends BaseListFragment implements
 			final boolean isNoData = intent.getBooleanExtra(
 					JokeService.EXTRA_NO_DATA, false);
 			final int topic = intent.getIntExtra(JokeService.ARG_JOKE_TOPIC, 0);
+			final int page = intent.getIntExtra(JokeService.ARG_JOKE_PAGE, 0);
 			List<JokeBean> fetched = JokeService.loadJokeFromCache(
 					getActivity(), mTopic, mPage);
 			if (isError) {
@@ -74,7 +75,8 @@ public class JokeListFragment extends BaseListFragment implements
 
 			if (fetched != null && fetched.size() > 0) {
 
-				if ((mAdapter != null && !isRefresh)) {
+				if ((mAdapter != null && !isRefresh) || page > 1) {
+					Log.d(TAG, "$$$+++++%%%--- append");
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 
@@ -84,6 +86,7 @@ public class JokeListFragment extends BaseListFragment implements
 				} else if (isRefresh || mAdapter == null
 						|| mAdapter.getCount() < 1) {
 					// UI refresh
+					Log.d(TAG, "$$$+++++%%%--- refresh");
 					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);

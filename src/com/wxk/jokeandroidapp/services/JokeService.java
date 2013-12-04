@@ -81,6 +81,8 @@ public class JokeService extends IntentService {
 						+ jokeTopic);
 				Log.i(TAG, "##==>>::update data from server");
 				// update data and refresh UI
+
+				refreshIntent.putExtra(ARG_JOKE_PAGE, jokePage);
 				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
 				refreshIntent.putExtra(EXTRA_REFRESH, true);
 				sendBroadcast(refreshIntent);
