@@ -13,15 +13,17 @@ import com.wxk.jokeandroidapp.ui.activity.BaseActivity;
 import com.wxk.jokeandroidapp.ui.fragment.app.JokeDetailFragment;
 import com.wxk.util.GsonUtils;
 
-import android.app.ActionBar;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.support.v7.app.ActionBar;
+import android.support.v7.widget.ShareActionProvider;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -32,13 +34,16 @@ import android.widget.ImageButton;
 
 public class DetailActivity extends BaseActivity implements OnClickListener {
 
-	private boolean isReplying = false;
+	private ShareActionProvider mShareActionProvider;
 	private EditText etxtReplyContent;
 	private ViewPager mPager;
 	private JokePagerAdapter mAdapter;
-	public static final String EXTRA_JOKE_ID = "52lxh:joke_id";
+
 	public long mJokeID;
 	private JokeBean jokeBean;
+
+	public static final String EXTRA_JOKE_ID = "52lxh:joke_id";
+	private boolean isReplying = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +87,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			setTitle(jokeBean.getTitle());
 		}
 
-		final ActionBar actionBar = getActionBar();
+		final ActionBar actionBar = getSupportActionBar();
 		// Hide title text and set home as up
 		// actionBar.setDisplayShowTitleEnabled(false);
 		actionBar.setDisplayHomeAsUpEnabled(true);
@@ -93,6 +98,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		super.mOptionsMenu = menu;
 		MenuInflater inflater = getMenuInflater();
 		inflater.inflate(R.menu.detail_activity_actions, menu);
+
+		MenuItem shareItem = menu.findItem(R.id.action_share);
+		mShareActionProvider = (ShareActionProvider) MenuItemCompat
+				.getActionProvider(shareItem);
+		// mShareActionProvider.setShareHistoryFileName(null);
+		mShareActionProvider.setShareIntent(getDefaultIntent());
 		return super.onCreateOptionsMenu(menu);
 	}
 
@@ -104,7 +115,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			UiManager.getInstance().finishActivity();
 			return true;
 		case R.id.action_refresh:
-			setRefreshActionButtonState(true);
 			final Intent startService = new Intent(this, ReplyService.class);
 			startService.putExtra(ReplyService.ARG_JOKE_ID, mJokeID);
 			startService.putExtra(ReplyService.ARG_PAGE, 1);
@@ -114,6 +124,12 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 			return true;
 		}
 		return super.onOptionsItemSelected(item);
+	}
+
+	private Intent getDefaultIntent() {
+		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.setType("text/plain");
+		return intent;
 	}
 
 	private JokeDb db = new JokeDb();
@@ -216,10 +232,6 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 				startService.setAction(ReplyService.GET_REPLY_DATA_INTENT);
 
 				DetailActivity.this.startService(startService);
-				// refresh list view
-				// viewHolder.btnComment.setText(""
-				// + (Integer.parseInt(viewHolder.btnComment.getText()
-				// .toString()) + 1));
 			}
 		}
 
@@ -240,7 +252,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	}
 
 	public void setTitle(String title) {
-		final ActionBar bar = getActionBar();
+		final ActionBar bar = getSupportActionBar();
 		bar.setTitle(title);
 		initBtnClick();
 		etxtReplyContent.setText("");

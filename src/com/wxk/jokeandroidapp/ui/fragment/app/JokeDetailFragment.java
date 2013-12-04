@@ -51,7 +51,6 @@ public class JokeDetailFragment extends BaseListFragment {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.i(TAG, "::onReceive()");
-			((DetailActivity) getActivity()).setRefreshActionButtonState(false);
 			if (isDetached() || isRemoving()) {
 				return;
 			}
@@ -126,7 +125,6 @@ public class JokeDetailFragment extends BaseListFragment {
 		IntentFilter refreshFilter = new IntentFilter(
 				ReplyService.REFRESH_REPLY_UI_INTENT + mJokeBean.getId());
 		getActivity().registerReceiver(mReplyListReceiver, refreshFilter);
-		((DetailActivity) getActivity()).setRefreshActionButtonState(true);
 		getListView().addHeaderView(getJokeDetailView(mJokeBean));
 		startService();
 	}
@@ -249,8 +247,8 @@ public class JokeDetailFragment extends BaseListFragment {
 
 				AQuery aq = new AQuery(getActivity());
 				aq = aq.id(viewHolder.imgvJokePic).image(
-						Constants.BASE_URL + bean.getImgUrl(), true, true, 0, 0,
-						null,0,AQuery.RATIO_PRESERVE);
+						Constants.BASE_URL + bean.getImgUrl(), true, true, 0,
+						0, null, 0, AQuery.RATIO_PRESERVE);
 
 			} else {
 				viewHolder.imgvJokePic.setVisibility(View.GONE);
