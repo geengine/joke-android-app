@@ -7,7 +7,6 @@ import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLa
 import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
 import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
 
-import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,13 +17,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.annotation.TargetApi;
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 
 import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.R;
@@ -33,14 +29,11 @@ import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.activity.app.MainActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter;
 import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
-import com.wxk.jokeandroidapp.ui.loader.JokeLoader;
 import com.wxk.jokeandroidapp.services.JokeService;
 import com.wxk.util.LogUtil;
 
-@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 public class JokeListFragment extends BaseListFragment implements
-		OnScrollListener, LoaderManager.LoaderCallbacks<List<JokeBean>>,
-		OnRefreshListener {
+		OnScrollListener, OnRefreshListener {
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	private static final String TAG = "52lxh:JokeListFragment";
 	private BaseAdapter mAdapter;
@@ -234,25 +227,6 @@ public class JokeListFragment extends BaseListFragment implements
 	}
 
 	@Override
-	public Loader<List<JokeBean>> onCreateLoader(int arg0, Bundle arg1) {
-		Log.i(TAG, "::onCreateLoader()");
-
-		return new JokeLoader(getActivity(), mTopic);
-	}
-
-	@Override
-	public void onLoadFinished(Loader<List<JokeBean>> listLoader,
-			List<JokeBean> items) {
-		Log.i(TAG, "::onLoadFinished()");
-		mJokeItems = new ArrayList<JokeBean>();
-		mJokeItems.addAll(items);
-		mAdapter = new JokeAdapter(this.getActivity());
-		((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
-		mAdapter.notifyDataSetChanged();
-		setListAdapter(mAdapter);
-	}
-
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.i(TAG, String.format("position=%s, id=%s", position, id));
 		Intent intentDetail = new Intent();
@@ -262,12 +236,6 @@ public class JokeListFragment extends BaseListFragment implements
 
 		intentDetail.setClass(App.context, DetailActivity.class);
 		App.context.startActivity(intentDetail);
-	}
-
-	@Override
-	public void onLoaderReset(Loader<List<JokeBean>> arg0) {
-		Log.i(TAG, "::onLoaderReset()");
-		mJokeItems.clear();
 	}
 
 	private void loadingMore() {

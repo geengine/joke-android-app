@@ -54,7 +54,7 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		mAdapter = new JokePagerAdapter(getSupportFragmentManager());
 		mPager = (ViewPager) findViewById(R.id.pager);
 		mPager.setAdapter(mAdapter);
-		mPager.setOffscreenPageLimit(2);
+		mPager.setOffscreenPageLimit(3);
 		mPager.setOnPageChangeListener(new OnPageChangeListener() {
 
 			@Override
@@ -128,6 +128,8 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 
 	private Intent getDefaultIntent() {
 		Intent intent = new Intent(Intent.ACTION_SEND);
+		intent.putExtra(Intent.EXTRA_TEXT, getPageContent());
+		intent.putExtra(Intent.EXTRA_TITLE, getPageTitle());
 		intent.setType("text/plain");
 		return intent;
 	}
@@ -256,6 +258,14 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 		bar.setTitle(title);
 		initBtnClick();
 		etxtReplyContent.setText("");
+	}
+
+	public String getPageTitle() {
+		return getSupportActionBar().getTitle().toString();
+	}
+
+	public String getPageContent() {
+		return jokeBean == null ? "" : jokeBean.getContent();
 	}
 
 	@Override

@@ -12,7 +12,7 @@
     <string name="toast_reply_success">成功发表评论！</string>
     <string name="toast_reply_failure">失败发表评论！</string>
     <string name="toast_reply_exists">已经发表评论！</string>
-    <string name="toast_no_refresh_data">我的亲，数据已经更新了哦，你要赶快乐一下了哦！</string>
+    <string name="toast_no_refresh_data">我的亲，数据已经更新了哦！</string>
     <string name="toast_error_network">对不起，你的网络不稳定！</string>
 
     <!-- action -->
