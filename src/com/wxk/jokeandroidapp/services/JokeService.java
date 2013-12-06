@@ -35,6 +35,8 @@ public class JokeService extends IntentService {
 
 	private static final String TAG = "52lxh:JokeService";
 	private static JokeDb db;
+
+	private final static int mPageSize = 10;
 	static {
 		db = new JokeDb();
 	}
@@ -59,7 +61,7 @@ public class JokeService extends IntentService {
 			boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, false);
 			int jokeTopic = intent.getIntExtra(ARG_JOKE_TOPIC, 0);
 			int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
-			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, 10);
+			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, mPageSize);
 
 			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
 			/* Send any cached feed first */
@@ -67,7 +69,7 @@ public class JokeService extends IntentService {
 			cachedItems = loadJokeFromCache(this, jokeTopic, jokePage);
 
 			if (cachedItems != null && cachedItems.size() > 0 && isCached) {
-				Log.i(TAG, "##==>>::cached data");
+				Log.i(TAG, "##==>>::cached data " + cachedItems.size());
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
 				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
@@ -100,7 +102,7 @@ public class JokeService extends IntentService {
 
 	public static List<JokeBean> loadJokeFromCache(final Context context,
 			final int topicId, final int page) {
-		return db.getList(page, 10, topicId);
+		return db.getList(page, mPageSize, topicId);
 	}
 
 	public boolean updataFeedFromServer(final List<JokeBean> jokeItems,

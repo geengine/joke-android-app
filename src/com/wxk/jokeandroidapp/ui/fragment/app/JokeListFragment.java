@@ -98,12 +98,6 @@ public class JokeListFragment extends BaseListFragment implements
 			}
 			mIsLoading = false;
 
-			if (isNoData) {
-				Toast.makeText(getActivity(),
-						getString(R.string.toast_no_refresh_data),
-						Toast.LENGTH_SHORT).show();
-			}
-
 			if (isCached) {
 				startPullDataService(false);
 				if (fetched != null)
@@ -111,6 +105,11 @@ public class JokeListFragment extends BaseListFragment implements
 							fetched.size(), topic));
 				else
 					Log.i(TAG, String.format("Cached no data !", topic));
+			}
+			if (isNoData) {
+				// Toast.makeText(getActivity(),
+				// getString(R.string.toast_no_refresh_data),
+				// Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
