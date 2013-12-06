@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:yourapp="http://schemas.android.com/apk/res-auto" >
 
     <item
-        android:id="@+id/action_refresh"
-        android:icon="@drawable/action_refresh"
-        android:showAsAction="collapseActionView"
-        android:title="@string/action_refresh"/>
-    <item
-        android:id="@+id/action_share_wx"
-        android:showAsAction="collapseActionView"
-        android:title="@string/action_share_wx_friend"/>
-    <item
-        android:id="@+id/action_push_wx"
-        android:showAsAction="collapseActionView"
-        android:title="@string/action_push_wx"/>
+        android:id="@+id/action_share"
+        android:icon="@drawable/ic_action_share"
+        android:title="@string/action_share"
+        yourapp:actionProviderClass="com.wxk.jokeandroidapp.widget.MyShareActionProvider"
+        yourapp:showAsAction="ifRoom"/>
 
 </menu>

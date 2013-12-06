@@ -1,21 +1,37 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <style name="AppBaseTheme" parent="@style/Theme.AppCompat">
-        <item name="actionBarStyle">@style/MyActionBar</item>
+    <!-- start action bar -->
+    <style name="MyAppTheme" parent="@style/Theme.AppCompat.CustomPtrHeader"></style>
+
+    <style name="Theme.AppCompat.CustomPtrHeader" parent="Theme.AppCompat">
+        <item name="ptrHeaderStyle">@style/Widget.Custom.PtrHeader</item>
+        <item name="actionBarStyle">@style/Widget.Custom.ActionBar</item>
     </style>
 
-    <style name="MyActionBar" parent="@style/Widget.AppCompat.Base.ActionBar">
+    <style name="Widget.Custom.ActionBar" parent="@style/Widget.AppCompat.Base.ActionBar">
         <item name="background">@drawable/action_bar_bg</item>
         <item name="android:background">@drawable/action_bar_bg</item>
-        <item name="android:popupBackground">@color/action_bar_bg</item>
-        <item name="android:dropDownSelector">@color/action_bar_sel_bg</item>
     </style>
 
-    <!-- Application theme. -->
-    <style name="AppTheme" parent="AppBaseTheme">
-        <!-- All customizations that are NOT specific to a particular API-level can go here. -->
+    <style name="Widget.Custom.PtrHeader" parent="android:Widget">
+        <item name="ptrHeaderBackground">@color/action_bar_bg</item>
+
+        <!-- This is commented out as you should not set this unless you know what you're doing -->
+        <!-- <item name="ptrHeaderHeight"></item> -->
+
+        <item name="ptrHeaderTitleTextAppearance">@style/TextAppearance.Custom.PtrHeader.Title</item>
+        <item name="android:textColor">#ffffffff</item>
+        <item name="ptrProgressBarStyle">inside</item>
+        <item name="ptrProgressBarColor">@color/progress_bg</item>
+        <item name="ptrPullText">@string/hint_push_gon</item>
+        <item name="ptrRefreshingText">@string/hint_push_loading</item>
+        <item name="ptrReleaseText">Let go if you want me to refresh!</item>
     </style>
 
+    <style name="TextAppearance.Custom.PtrHeader.Title" parent="android:TextAppearance.Large.Inverse">
+        <item name="android:textSize">@dimen/txt_title_size</item>
+    </style>
+    <!-- /end action bar -->
     <style name="custom_window_title_background">
         <item name="android:background">@drawable/title</item>
     </style>

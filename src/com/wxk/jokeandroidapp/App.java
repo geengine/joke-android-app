@@ -3,8 +3,6 @@ package com.wxk.jokeandroidapp;
 import java.io.File;
 import java.util.Hashtable;
 
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.wxk.jokeandroidapp.db.DbHelper;
 import com.wxk.util.LogUtil;
 
@@ -92,12 +90,5 @@ public class App extends Application {
 		File cacheDir = App.context.getCacheDir();
 		if (cacheDir.exists())
 			cacheDir.delete();
-	}
-
-	public static IWXAPI pullWXAPI(Context context) {
-		IWXAPI api = WXAPIFactory.createWXAPI(context, Constants.WX_APP_ID,
-				true);
-		api.registerApp(Constants.WX_APP_ID);
-		return api;
 	}
 }

@@ -17,7 +17,7 @@ import org.apache.http.entity.mime.content.FileBody;
 import org.apache.http.entity.mime.content.StringBody;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import com.wxk.util.LogUtil;
+import android.util.Log;
 
 public class BaseClient {
 
@@ -69,7 +69,7 @@ public class BaseClient {
 					uriString += strParams;
 				}
 			}
-			LogUtil.i(TAG, "HTTP GET: " + uriString);
+			Log.i(TAG, "HTTP GET: " + uriString);
 			HttpGet httpGet = new HttpGet(uriString);
 			// set cookieStore
 			if (getCookieStore() != null) {
@@ -120,7 +120,7 @@ public class BaseClient {
 			}
 		}
 		try {
-			LogUtil.i(TAG, "HTTP PUT: " + uriString);
+			Log.i(TAG, "HTTP PUT: " + uriString);
 			// get http response object
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			// update cookieStore
@@ -135,10 +135,10 @@ public class BaseClient {
 		}
 		// http request successful
 		if (responseData.getStatus()) {
-			LogUtil.i(TAG, "PUT DATA: " + logParams(params));
+			Log.i(TAG, "PUT DATA: " + logParams(params));
 		} else {
-			LogUtil.w(TAG, "PUT DATA: " + logParams(params));
-			LogUtil.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
+			Log.w(TAG, "PUT DATA: " + logParams(params));
+			Log.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
 		}
 		return responseData;
 	}
@@ -219,7 +219,7 @@ public class BaseClient {
 			}
 		}
 		try {
-			LogUtil.i(TAG, "HTTP POST: " + uriString);
+			Log.i(TAG, "HTTP POST: " + uriString);
 			// get http response object
 			HttpResponse httpResponse = httpClient.execute(httpPost);
 			// update cookieStore
@@ -234,10 +234,10 @@ public class BaseClient {
 		}
 		// http request successful
 		if (responseData.getStatus()) {
-			LogUtil.i(TAG, "POST DATA: " + logParams(params));
+			Log.i(TAG, "POST DATA: " + logParams(params));
 		} else {
-			LogUtil.w(TAG, "POST DATA: " + logParams(params));
-			LogUtil.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
+			Log.w(TAG, "POST DATA: " + logParams(params));
+			Log.w(TAG, "HTTP CODE: " + responseData.getHttpcode());
 		}
 		return responseData;
 	}

@@ -28,13 +28,15 @@ public class JokeService extends IntentService {
 	public static final String EXTRA_CACHED = "52lxh:joke_data_cached";
 	public static final String EXTRA_SERVER_ERROR = "52lxh:joke_server_error";
 	public static final String EXTRA_REFRESH = "52lxh:joke_data_refresh";
-	public static final String EXTRA_NEW_DATA = "52lxh:joke_data_new";
+	public static final String EXTRA_NO_DATA = "52lxh:joke_data_null";
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	public static final String ARG_JOKE_PAGE = "52lxh:joke_page";
 	public static final String ARG_JOKE_SIZE = "52lxh:joke_size";
 
 	private static final String TAG = "52lxh:JokeService";
 	private static JokeDb db;
+
+	private final static int mPageSize = 10;
 	static {
 		db = new JokeDb();
 	}
@@ -56,24 +58,22 @@ public class JokeService extends IntentService {
 		Log.d(TAG, "::onHandleIntent()");
 		if (intent.getAction().equals(GET_JOKE_DATA_INTENT)) {
 			Log.d(TAG, "=>:action=" + GET_JOKE_DATA_INTENT);
-			boolean isRefresh = intent.getBooleanExtra(EXTRA_REFRESH, false);
-			boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, true);
+			boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, false);
 			int jokeTopic = intent.getIntExtra(ARG_JOKE_TOPIC, 0);
 			int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
-			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, 10);
+			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, mPageSize);
 
 			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
 			/* Send any cached feed first */
 			List<JokeBean> cachedItems;
 			cachedItems = loadJokeFromCache(this, jokeTopic, jokePage);
 
-			if (cachedItems != null && isCached) {
+			if (cachedItems != null && cachedItems.size() > 0 && isCached) {
+				Log.i(TAG, "##==>>::cached data " + cachedItems.size());
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
 				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
 				refreshIntent.putExtra(EXTRA_CACHED, true);
-
-				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
 				sendBroadcast(refreshIntent);
 				return;
 			}
@@ -81,15 +81,20 @@ public class JokeService extends IntentService {
 			if (updataFeedFromServer(jokeItems, jokePage, jokeTopic, jokeSize)) {
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
-				refreshIntent.putExtra(EXTRA_NEW_DATA, true);
-				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
+				Log.i(TAG, "##==>>::update data from server");
+				// update data and refresh UI
+
+				refreshIntent.putExtra(ARG_JOKE_PAGE, jokePage);
+				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
+				refreshIntent.putExtra(EXTRA_REFRESH, true);
 				sendBroadcast(refreshIntent);
 			} else {
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
-				// no data
-				refreshIntent.putExtra(EXTRA_NEW_DATA, false);
-				refreshIntent.putExtra(EXTRA_REFRESH, isRefresh);
+				Log.i(TAG, "##==>>::no data");
+				// cache or server no data
+				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
+				refreshIntent.putExtra(EXTRA_NO_DATA, true);
 				sendBroadcast(refreshIntent);
 			}
 		}
@@ -97,12 +102,14 @@ public class JokeService extends IntentService {
 
 	public static List<JokeBean> loadJokeFromCache(final Context context,
 			final int topicId, final int page) {
-		return db.getList(page, 10, topicId);
+		return db.getList(page, mPageSize, topicId);
 	}
 
 	public boolean updataFeedFromServer(final List<JokeBean> jokeItems,
 			final int page, final int topicId, final int size) {
-		Log.d(TAG, "::updataFeedFromServer()");
+		Log.d(TAG, String.format(
+				"::updataFeedFromServer(page=%s,topicID=%s,size%s)", page,
+				topicId, size));
 		try {
 			JokeClient client = new JokeClient();
 			ResponseData responseData = client.getJokes(page, size, topicId);

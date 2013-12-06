@@ -10,15 +10,14 @@
         style="@style/txt_joke_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingTop="10dp"
+        android:padding="10dp"
         android:textIsSelectable="false" />
 
     <ImageView
         android:id="@+id/imgv_jokeImg"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:contentDescription="@null"
-    />
+        android:contentDescription="@null" />
 
     <include layout="@layout/joke_operate" />
 

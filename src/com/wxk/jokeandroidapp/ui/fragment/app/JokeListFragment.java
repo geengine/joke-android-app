@@ -3,6 +3,10 @@ package com.wxk.jokeandroidapp.ui.fragment.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import uk.co.senab.actionbarpulltorefresh.extras.actionbarcompat.PullToRefreshLayout;
+import uk.co.senab.actionbarpulltorefresh.library.ActionBarPullToRefresh;
+import uk.co.senab.actionbarpulltorefresh.library.listeners.OnRefreshListener;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,12 +17,10 @@ import android.widget.AbsListView.OnScrollListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
-import android.app.LoaderManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.Loader;
 
 import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.R;
@@ -27,12 +29,11 @@ import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.activity.app.MainActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter;
 import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
-import com.wxk.jokeandroidapp.ui.loader.JokeLoader;
 import com.wxk.jokeandroidapp.services.JokeService;
 import com.wxk.util.LogUtil;
 
 public class JokeListFragment extends BaseListFragment implements
-		OnScrollListener, LoaderManager.LoaderCallbacks<List<JokeBean>> {
+		OnScrollListener, OnRefreshListener {
 	public static final String ARG_JOKE_TOPIC = "52lxh:joke_topic";
 	private static final String TAG = "52lxh:JokeListFragment";
 	private BaseAdapter mAdapter;
@@ -41,6 +42,7 @@ public class JokeListFragment extends BaseListFragment implements
 	private int mPage = 1;
 	private int mTopic = 0;
 	private boolean mIsLoading = false;
+	PullToRefreshLayout mPullToRefreshLayout;
 
 	private class JokeListReceiver extends BroadcastReceiver {
 		private static final String TAG = "52lxh:JokeListFragment>>JokeListReceiver";
@@ -48,7 +50,7 @@ public class JokeListFragment extends BaseListFragment implements
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			Log.i(TAG, "::onReceive()");
-
+			mPullToRefreshLayout.setRefreshComplete();
 			if (isDetached() || isRemoving()) {
 				return;
 			}
@@ -59,9 +61,10 @@ public class JokeListFragment extends BaseListFragment implements
 					JokeService.EXTRA_SERVER_ERROR, false);
 			final boolean isRefresh = intent.getBooleanExtra(
 					JokeService.EXTRA_REFRESH, false);
-			final boolean isNewData = intent.getBooleanExtra(
-					JokeService.EXTRA_NEW_DATA, false);
+			final boolean isNoData = intent.getBooleanExtra(
+					JokeService.EXTRA_NO_DATA, false);
 			final int topic = intent.getIntExtra(JokeService.ARG_JOKE_TOPIC, 0);
+			final int page = intent.getIntExtra(JokeService.ARG_JOKE_PAGE, 0);
 			List<JokeBean> fetched = JokeService.loadJokeFromCache(
 					getActivity(), mTopic, mPage);
 			if (isError) {
@@ -69,30 +72,11 @@ public class JokeListFragment extends BaseListFragment implements
 						getString(R.string.toast_error_network),
 						Toast.LENGTH_SHORT).show();
 			}
-			if (!isNewData && isRefresh) {
-				Toast.makeText(getActivity(),
-						getString(R.string.toast_no_refresh_data),
-						Toast.LENGTH_SHORT).show();
-				// set actionBar refresh
-				((MainActivity) getActivity())
-						.setRefreshActionButtonState(false);
-			}
-			if (isCached) {
-				final Intent refreshIntent = new Intent(
-						JokeService.REFRESH_JOKE_UI_INTENT + topic);
-				refreshIntent.putExtra(JokeService.EXTRA_CACHED, false);
-				refreshIntent.putExtra(JokeService.EXTRA_REFRESH, isRefresh);
-				JokeListFragment.this.getActivity()
-						.sendBroadcast(refreshIntent);
-				if (fetched != null)
-					Log.i(TAG, String.format("Cached data items:%s , topic=%s",
-							fetched.size(), topic));
-				else
-					Log.i(TAG, String.format("Cached no data !", topic));
-			}
+
 			if (fetched != null && fetched.size() > 0) {
 
-				if ((mAdapter != null && isRefresh == false)) {
+				if ((mAdapter != null && !isRefresh) || page > 1) {
+					Log.d(TAG, "$$$+++++%%%--- append");
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 
@@ -101,20 +85,41 @@ public class JokeListFragment extends BaseListFragment implements
 
 				} else if (isRefresh || mAdapter == null
 						|| mAdapter.getCount() < 1) {
+					// UI refresh
+					Log.d(TAG, "$$$+++++%%%--- refresh");
 					mAdapter = new JokeAdapter(getActivity());
 					mJokeItems = new ArrayList<JokeBean>();
 					mJokeItems.addAll(fetched);
 					((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
 					mAdapter.notifyDataSetChanged();
 					setListAdapter(mAdapter);
-					// set actionBar refresh
-					((MainActivity) getActivity())
-							.setRefreshActionButtonState(false);
 				}
 
 			}
 			mIsLoading = false;
+
+			if (isCached) {
+				startPullDataService(false);
+				if (fetched != null)
+					Log.i(TAG, String.format("Cached data items:%s , topic=%s",
+							fetched.size(), topic));
+				else
+					Log.i(TAG, String.format("Cached no data !", topic));
+			}
+			if (isNoData) {
+				// Toast.makeText(getActivity(),
+				// getString(R.string.toast_no_refresh_data),
+				// Toast.LENGTH_SHORT).show();
+			}
 		}
+	}
+
+	public static JokeListFragment newInstance(int topicId) {
+		JokeListFragment f = new JokeListFragment();
+		Bundle b = new Bundle();
+		b.putInt(ARG_JOKE_TOPIC, topicId);
+		f.setArguments(b);
+		return f;
 	}
 
 	@Override
@@ -137,7 +142,7 @@ public class JokeListFragment extends BaseListFragment implements
 		if (MainActivity.class.isInstance(getActivity())) {
 		}
 		getListView().setOnScrollListener(this);
-		startService();
+		startPullDataService(true);
 	}
 
 	@Override
@@ -156,7 +161,7 @@ public class JokeListFragment extends BaseListFragment implements
 		getActivity().registerReceiver(mJokeListReceiver, refreshFilter);
 	}
 
-	private void startService() {
+	private void startPullDataService(boolean isCached) {
 
 		final Intent startService = new Intent(getActivity(), JokeService.class);
 		startService.putExtra(JokeService.ARG_JOKE_TOPIC, mTopic);
@@ -173,6 +178,27 @@ public class JokeListFragment extends BaseListFragment implements
 		// return super.onCreateView(inflater, container, savedInstanceState);
 		View view = inflater.inflate(R.layout.fragment_joke_list, null);
 		return view;
+	}
+
+	@Override
+	public void onViewCreated(View view, Bundle savedInstanceState) {
+		super.onViewCreated(view, savedInstanceState);
+		ViewGroup viewGroup = (ViewGroup) view;
+
+		// As we're using a ListFragment we create a PullToRefreshLayout
+		// manually
+		mPullToRefreshLayout = new PullToRefreshLayout(viewGroup.getContext());
+
+		// We can now setup the PullToRefreshLayout
+		ActionBarPullToRefresh
+				.from(getActivity())
+				// We need to insert the PullToRefreshLayout into the Fragment's
+				// ViewGroup
+				.insertLayoutInto(viewGroup)
+				// Here we mark just the ListView and it's Empty View as
+				// pullable
+				.theseChildrenArePullable(android.R.id.list, android.R.id.empty)
+				.listener(this).setup(mPullToRefreshLayout);
 	}
 
 	@Override
@@ -203,25 +229,6 @@ public class JokeListFragment extends BaseListFragment implements
 	}
 
 	@Override
-	public Loader<List<JokeBean>> onCreateLoader(int arg0, Bundle arg1) {
-		Log.i(TAG, "::onCreateLoader()");
-
-		return new JokeLoader(getActivity(), mTopic);
-	}
-
-	@Override
-	public void onLoadFinished(Loader<List<JokeBean>> listLoader,
-			List<JokeBean> items) {
-		Log.i(TAG, "::onLoadFinished()");
-		mJokeItems = new ArrayList<JokeBean>();
-		mJokeItems.addAll(items);
-		mAdapter = new JokeAdapter(this.getActivity());
-		((JokeAdapter) mAdapter).fillWithItems(mJokeItems);
-		mAdapter.notifyDataSetChanged();
-		setListAdapter(mAdapter);
-	}
-
-	@Override
 	public void onListItemClick(ListView l, View v, int position, long id) {
 		Log.i(TAG, String.format("position=%s, id=%s", position, id));
 		Intent intentDetail = new Intent();
@@ -233,18 +240,18 @@ public class JokeListFragment extends BaseListFragment implements
 		App.context.startActivity(intentDetail);
 	}
 
-	@Override
-	public void onLoaderReset(Loader<List<JokeBean>> arg0) {
-		Log.i(TAG, "::onLoaderReset()");
-		mJokeItems.clear();
-	}
-
 	private void loadingMore() {
 		if (!mIsLoading) {
 			mIsLoading = true;
 			mPage = mPage + 1;
-			startService();
+			startPullDataService(true);
 		}
+	}
+
+	@Override
+	public void onRefreshStarted(View view) {
+		mPage = 1;
+		startPullDataService(false);
 	}
 
 	private int mLastItem;
