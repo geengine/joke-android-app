@@ -164,8 +164,10 @@ public class JokeListFragment extends BaseListFragment implements
 	private void startPullDataService(boolean isCached) {
 
 		final Intent startService = new Intent(getActivity(), JokeService.class);
+		startService.putExtra(JokeService.EXTRA_CACHED, isCached);
 		startService.putExtra(JokeService.ARG_JOKE_TOPIC, mTopic);
 		startService.putExtra(JokeService.ARG_JOKE_PAGE, mPage);
+		// set action
 		startService.setAction(JokeService.GET_JOKE_DATA_INTENT);
 
 		getActivity().startService(startService);
