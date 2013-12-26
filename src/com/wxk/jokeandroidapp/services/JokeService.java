@@ -9,6 +9,7 @@ import javax.xml.parsers.SAXParserFactory;
 
 import org.xml.sax.InputSource;
 
+import com.wxk.jokeandroidapp.App;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.core.JokeBeanHandler;
 import com.wxk.jokeandroidapp.client.JokeClient;
@@ -58,27 +59,30 @@ public class JokeService extends IntentService {
 		Log.d(TAG, "::onHandleIntent()");
 		if (intent.getAction().equals(GET_JOKE_DATA_INTENT)) {
 			Log.d(TAG, "=>:action=" + GET_JOKE_DATA_INTENT);
-			boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, false);
-			int jokeTopic = intent.getIntExtra(ARG_JOKE_TOPIC, 0);
-			int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
-			int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, mPageSize);
+			final boolean isCached = intent.getBooleanExtra(EXTRA_CACHED, true);
+			final int jokeTopic = intent.getIntExtra(ARG_JOKE_TOPIC, 0);
+			final int jokePage = intent.getIntExtra(ARG_JOKE_PAGE, 1);
+			final int jokeSize = intent.getIntExtra(ARG_JOKE_SIZE, mPageSize);
+			final String cached_key = GET_JOKE_DATA_INTENT + jokeTopic
+					+ jokePage;
+			final boolean cached_expired = App.isCacheDataFailure(cached_key);
 
-			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
-			/* Send any cached feed first */
-			List<JokeBean> cachedItems;
-			cachedItems = loadJokeFromCache(this, jokeTopic, jokePage);
+			List<JokeBean> cachedItems = loadJokeFromCache(this, jokeTopic,
+					jokePage);
 
-			if (cachedItems != null && cachedItems.size() > 0 && isCached) {
+			if (cachedItems != null && cachedItems.size() > 0
+					&& (isCached || !cached_expired)) {
 				Log.i(TAG, "##==>>::cached data " + cachedItems.size());
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
 				refreshIntent.putExtra(ARG_JOKE_TOPIC, jokeTopic);
-				refreshIntent.putExtra(EXTRA_CACHED, true);
+				refreshIntent.putExtra(EXTRA_CACHED, cached_expired);
 				sendBroadcast(refreshIntent);
 				return;
 			}
 
-			if (updataFeedFromServer(jokeItems, jokePage, jokeTopic, jokeSize)) {
+			if (updataFeedFromServer(jokePage, jokeTopic, jokeSize)) {
+				App.setMemCacheFinger(cached_key);
 				final Intent refreshIntent = new Intent(REFRESH_JOKE_UI_INTENT
 						+ jokeTopic);
 				Log.i(TAG, "##==>>::update data from server");
@@ -105,12 +109,13 @@ public class JokeService extends IntentService {
 		return db.getList(page, mPageSize, topicId);
 	}
 
-	public boolean updataFeedFromServer(final List<JokeBean> jokeItems,
-			final int page, final int topicId, final int size) {
+	public boolean updataFeedFromServer(final int page, final int topicId,
+			final int size) {
 		Log.d(TAG, String.format(
 				"::updataFeedFromServer(page=%s,topicID=%s,size%s)", page,
 				topicId, size));
 		try {
+			List<JokeBean> jokeItems = new ArrayList<JokeBean>();
 			JokeClient client = new JokeClient();
 			ResponseData responseData = client.getJokes(page, size, topicId);
 

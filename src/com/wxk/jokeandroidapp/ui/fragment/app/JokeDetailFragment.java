@@ -115,20 +115,6 @@ public class JokeDetailFragment extends BaseListFragment {
 
 	}
 
-	@Override
-	public void onStart() {
-		Log.i(TAG, "::onStart()");
-		super.onStart();
-		if (mReplyListReceiver == null) {
-			mReplyListReceiver = new JokeReplyReceiver();
-		}
-		IntentFilter refreshFilter = new IntentFilter(
-				ReplyService.REFRESH_REPLY_UI_INTENT + mJokeBean.getId());
-		getActivity().registerReceiver(mReplyListReceiver, refreshFilter);
-		getListView().addHeaderView(getJokeDetailView(mJokeBean));
-		startService();
-	}
-
 	private void startService() {
 		final Intent startService = new Intent(getActivity(),
 				ReplyService.class);
@@ -166,6 +152,25 @@ public class JokeDetailFragment extends BaseListFragment {
 	}
 
 	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		Log.i(TAG, "::onCreate()");
+		super.onCreate(savedInstanceState);
+		String bean_json = getArguments() != null ? getArguments().getString(
+				EXTRA_JOKE_JSON) : null;
+		if (bean_json != null)
+			mJokeBean = GsonUtils.fromJson(bean_json, JokeBean.class);
+
+		if (mReplyListReceiver == null) {
+			mReplyListReceiver = new JokeReplyReceiver();
+		}
+		IntentFilter refreshFilter = new IntentFilter(
+				ReplyService.REFRESH_REPLY_UI_INTENT + mJokeBean.getId());
+		getActivity().registerReceiver(mReplyListReceiver, refreshFilter);
+		getListView().addHeaderView(getJokeDetailView(mJokeBean));
+		startService();
+	}
+
+	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.i(TAG, "::onActivityCreated()");
 		super.onActivityCreated(savedInstanceState);
@@ -175,41 +180,12 @@ public class JokeDetailFragment extends BaseListFragment {
 	}
 
 	@Override
-	public void onCreate(Bundle savedInstanceState) {
-		Log.i(TAG, "::onCreate()");
-		super.onCreate(savedInstanceState);
-		String bean_json = getArguments() != null ? getArguments().getString(
-				EXTRA_JOKE_JSON) : null;
-		if (bean_json != null)
-			mJokeBean = GsonUtils.fromJson(bean_json, JokeBean.class);
-	}
-
-	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		final View v = inflater.inflate(R.layout.fragment_joke_detail,
 				container, false);
 		Log.i(TAG, "::onCreateView()");
 		return v;
-	}
-
-	@Override
-	public void onPause() {
-		super.onPause();
-		Log.i(TAG, "::onPause()");
-	}
-
-	@Override
-	public void onStop() {
-		Log.i(TAG, "::onStop()");
-		super.onStop();
-		try {
-			if (mReplyListReceiver != null) {
-				getActivity().unregisterReceiver(mReplyListReceiver);
-			}
-		} catch (IllegalArgumentException e) {
-			e.printStackTrace();
-		}
 	}
 
 	@Override
