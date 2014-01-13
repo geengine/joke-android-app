@@ -3,14 +3,18 @@ package com.wxk.jokeandroidapp.ui.fragment.app;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONObject;
+
 import com.androidquery.AQuery;
+import com.baidu.mobads.AdSettings;
+import com.baidu.mobads.AdView;
+import com.baidu.mobads.AdViewListener;
 import com.wxk.jokeandroidapp.Constants;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.JokeBean;
 import com.wxk.jokeandroidapp.bean.ReplyBean;
 import com.wxk.jokeandroidapp.services.ReplyService;
 import com.wxk.jokeandroidapp.ui.UiManager;
-import com.wxk.jokeandroidapp.ui.activity.app.DetailActivity;
 import com.wxk.jokeandroidapp.ui.adapter.JokeAdapter.ViewHolder;
 import com.wxk.jokeandroidapp.ui.adapter.ReplyAdapter;
 import com.wxk.jokeandroidapp.ui.fragment.BaseListFragment;
@@ -30,6 +34,8 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,8 +85,7 @@ public class JokeDetailFragment extends BaseListFragment {
 			List<ReplyBean> fetched = ReplyService.loadReplyFromCache(
 					getActivity(), jokeId, mPage, 50);
 			try {
-				if (fetched != null
-						&& JokeDetailFragment.this.getListView() != null) {
+				if (fetched != null) {
 					Log.i(TAG, "Fetched items:" + fetched.size());
 					if (isAppend && mAdapter != null) {
 						mReplyItems = new ArrayList<ReplyBean>();
@@ -93,14 +98,9 @@ public class JokeDetailFragment extends BaseListFragment {
 						mReplyItems = new ArrayList<ReplyBean>();
 						mReplyItems.addAll(fetched);
 						((ReplyAdapter) mAdapter).fillWithItems(mReplyItems);
-						if (JokeDetailFragment.this.getListView()
-								.getHeaderViewsCount() == 0) {
-							JokeDetailFragment.this
-									.getListView()
-									.addHeaderView(getJokeDetailView(mJokeBean));
-						}
+						
 						setListAdapter(mAdapter);
-						// mAdapter.notifyDataSetChanged();
+						mAdapter.notifyDataSetChanged();
 					}
 					if (viewHolder != null) {
 						viewHolder.btnComment.setText(""
@@ -166,7 +166,6 @@ public class JokeDetailFragment extends BaseListFragment {
 		IntentFilter refreshFilter = new IntentFilter(
 				ReplyService.REFRESH_REPLY_UI_INTENT + mJokeBean.getId());
 		getActivity().registerReceiver(mReplyListReceiver, refreshFilter);
-		getListView().addHeaderView(getJokeDetailView(mJokeBean));
 		startService();
 	}
 
@@ -174,8 +173,10 @@ public class JokeDetailFragment extends BaseListFragment {
 	public void onActivityCreated(Bundle savedInstanceState) {
 		Log.i(TAG, "::onActivityCreated()");
 		super.onActivityCreated(savedInstanceState);
-		if (DetailActivity.class.isInstance(getActivity())) {
-
+		View v = this.getView();
+		ListView lv = (ListView)v.findViewById(android.R.id.list);
+		if(lv.getHeaderViewsCount()==0){
+			lv.addHeaderView(getJokeDetailView(mJokeBean));
 		}
 	}
 
@@ -185,6 +186,8 @@ public class JokeDetailFragment extends BaseListFragment {
 		final View v = inflater.inflate(R.layout.fragment_joke_detail,
 				container, false);
 		Log.i(TAG, "::onCreateView()");
+		
+		addBaiduAd(v);
 		return v;
 	}
 
@@ -252,5 +255,68 @@ public class JokeDetailFragment extends BaseListFragment {
 		Log.i(TAG, "=>::getJokeDetailView()");
 		headerDetail.setVisibility(View.VISIBLE);
 		return headerDetail;
+	}
+	private void addBaiduAd(View view){
+		// 代码设置AppSid和Appsec，此函数必须在AdView实例化前调用
+				// AdView.setAppSid("debug");
+				// AdView.setAppSec("debug");
+
+				// 人群属性
+				AdSettings.setKey(new String[] { "baidu", "中 国 " });
+				// AdSettings.setSex(AdSettings.Sex.FEMALE);
+				// AdSettings.setBirthday(Calendar.getInstance());
+				// AdSettings.setCity("上海");
+				// AdSettings.setZip("123456");
+				// AdSettings.setJob("工程师");
+				// AdSettings.setEducation(AdSettings.Education.BACHELOR);
+				// AdSettings.setSalary(AdSettings.Salary.F10kT15k);
+				// AdSettings.setHob(new String[]{"羽毛球", "足球", "baseball"});
+				// AdSettings.setUserAttr("k1","v1");
+				// AdSettings.setUserAttr("k2","v2");
+
+				RelativeLayout rlMain = (RelativeLayout) view.findViewById(R.id.rl_bd_ad);
+				// 创建广告View
+				AdView adView = new AdView(getActivity());
+				// 设置监听器
+				adView.setListener(new AdViewListener() {
+					public void onAdSwitch() {
+						Log.w("", "onAdSwitch");
+					}
+					public void onAdShow(JSONObject info) {
+						Log.w("", "onAdShow " + info.toString());
+					}
+					public void onAdReady(AdView adView) {
+						Log.w("", "onAdReady " + adView);
+					}
+					public void onAdFailed(String reason) {
+						Log.w("", "onAdFailed " + reason);
+					}
+					public void onAdClick(JSONObject info) {
+						Log.w("", "onAdClick " + info.toString());
+					}
+					public void onVideoStart() {
+						Log.w("", "onVideoStart");
+					}
+					public void onVideoFinish() {
+						Log.w("", "onVideoFinish");
+					}
+					@Override
+					public void onVideoClickAd() {
+						Log.w("", "onVideoFinish");
+					}
+					@Override
+					public void onVideoClickClose() {
+						Log.w("", "onVideoFinish");
+					}
+					@Override
+					public void onVideoClickReplay() {
+						Log.w("", "onVideoFinish");
+					}
+					@Override
+					public void onVideoError() {
+						Log.w("", "onVideoFinish");
+					}
+				});
+				rlMain.addView(adView);
 	}
 }
