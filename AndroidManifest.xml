@@ -2,25 +2,33 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.wxk.jokeandroidapp"
     android:installLocation="auto"
-    android:versionCode="4"
-    android:versionName="0.0.4" >
+    android:versionCode="5"
+    android:versionName="0.0.5" >
 
     <uses-sdk
-        android:minSdkVersion="8"
+        android:minSdkVersion="7"
         android:targetSdkVersion="19" />
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
-
+	<uses-permission android:name="android.permission.READ_PHONE_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+	<uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+	
     <application
         android:name="com.wxk.jokeandroidapp.App"
         android:allowBackup="false"
         android:icon="@drawable/head"
         android:label="@string/app_name" >
 
+        <!-- 百度联盟广告 -->
+        <meta-data android:name="BaiduMobAd_APP_ID" android:value="fd0a383b" /> 
+		<meta-data android:name="BaiduMobAd_APP_SEC" android:value="fd0a383b" />
+		<activity android:name="com.baidu.mobads.AppActivity" 
+		    android:configChanges="keyboard|keyboardHidden|orientation" />
+
+		<!-- /end -->        
         <!-- 您从百度网站获取的APP KEY -->
         <meta-data
             android:name="BaiduMobAd_STAT_ID"

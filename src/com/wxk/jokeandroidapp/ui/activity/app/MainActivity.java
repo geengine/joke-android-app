@@ -2,7 +2,7 @@ package com.wxk.jokeandroidapp.ui.activity.app;
 
 import java.util.List;
 
-import com.astuetz.viewpager.extensions.PagerSlidingTabStrip;
+import com.astuetz.PagerSlidingTabStrip;
 import com.wxk.jokeandroidapp.R;
 import com.wxk.jokeandroidapp.bean.TopicBean;
 import com.wxk.jokeandroidapp.services.JokeService;

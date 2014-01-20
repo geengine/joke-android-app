@@ -282,4 +282,5 @@ public class DetailActivity extends BaseActivity implements OnClickListener {
 	protected void onDestroy() {
 		super.onDestroy();
 	}
+	
 }

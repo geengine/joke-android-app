@@ -8,13 +8,12 @@
         android:id="@android:id/list"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="97dp"
         android:cacheColorHint="@null"
         android:divider="@color/bg_gray"
         android:dividerHeight="1dp"
         android:footerDividersEnabled="false"
         android:headerDividersEnabled="true"
-        android:padding="5dp"
         android:scrollbars="vertical" >
     </ListView>
 
@@ -28,5 +27,13 @@
         android:gravity="bottom"
         android:text="@string/no_data" />
     -->
+    <RelativeLayout android:id="@+id/rl_bd_ad"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginBottom="47dp"
+        android:layout_alignParentBottom="true">
+       
+    </RelativeLayout>
 
 </RelativeLayout>
